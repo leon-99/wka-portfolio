@@ -52,9 +52,9 @@
               </div>
               <div class="code-content">
                 <div class="code-line">
-                  <span class="code-keyword">const</span>
+                  <span class="code-keyword">const </span>
                   <span class="code-variable">developer</span>
-                  <span class="code-operator">=</span>
+                  <span class="code-operator"> = </span>
                   <span class="code-punctuation">{</span>
                 </div>
                 <div class="code-line code-indent">
@@ -70,7 +70,7 @@
                   <span class="code-string">'Dubai, UAE'</span>,
                 </div>
                 <div class="code-line code-indent">
-                  <span class="code-property">languages:</span>
+                  <span class="code-property">languages: </span>
                   <span class="code-punctuation">[</span>
                 </div>
                 <div class="code-line code-indent-2">
