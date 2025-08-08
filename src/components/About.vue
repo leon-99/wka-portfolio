@@ -58,15 +58,15 @@
                   <span class="code-punctuation">{</span>
                 </div>
                 <div class="code-line code-indent">
-                  <span class="code-property">name:</span>
+                  <span class="code-property">name: </span>
                   <span class="code-string">'Win Khant Aung'</span>,
                 </div>
                 <div class="code-line code-indent">
-                  <span class="code-property">role:</span>
+                  <span class="code-property">role: </span>
                   <span class="code-string">'Full Stack Developer'</span>,
                 </div>
                 <div class="code-line code-indent">
-                  <span class="code-property">location:</span>
+                  <span class="code-property">location: </span>
                   <span class="code-string">'Dubai, UAE'</span>,
                 </div>
                 <div class="code-line code-indent">
@@ -86,7 +86,11 @@
                   <span class="code-punctuation">]</span>,
                 </div>
                 <div class="code-line code-indent">
-                  <span class="code-property">passionate:</span>
+                  <span class="code-property">passionate: </span>
+                  <span class="code-boolean">true</span>
+                </div>
+                <div class="code-line code-indent">
+                  <span class="code-property">coffee: </span>
                   <span class="code-boolean">true</span>
                 </div>
                 <div class="code-line">
