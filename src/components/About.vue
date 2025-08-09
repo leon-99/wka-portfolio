@@ -106,7 +106,201 @@
 </template>
 
 <script setup lang="ts">
-// About component with professional information
+import { onMounted, nextTick } from 'vue'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+
+onMounted(async () => {
+  await nextTick()
+  
+  // Section title animation
+  gsap.fromTo('.section-title', {
+    opacity: 0,
+    y: 100,
+    scale: 0.8
+  }, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 1,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.about',
+      start: 'top 90%',
+      end: 'bottom 10%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // About content animation
+  gsap.fromTo('.about-text', {
+    opacity: 0,
+    x: -100,
+    rotationY: -15
+  }, {
+    opacity: 1,
+    x: 0,
+    rotationY: 0,
+    duration: 1.2,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '.about-content',
+      start: 'top 85%',
+      end: 'bottom 15%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Visual card animation
+  gsap.fromTo('.about-visual', {
+    opacity: 0,
+    x: 100,
+    rotationY: 15,
+    scale: 0.8
+  }, {
+    opacity: 1,
+    x: 0,
+    rotationY: 0,
+    scale: 1,
+    duration: 1.2,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '.about-content',
+      start: 'top 85%',
+      end: 'bottom 15%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Animate code lines
+  gsap.fromTo('.code-line', {
+    opacity: 0,
+    x: -30
+  }, {
+    opacity: 1,
+    x: 0,
+    duration: 0.6,
+    stagger: 0.1,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: '.code-preview',
+      start: 'top 80%',
+      end: 'bottom 20%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Typing effect for code (preserve HTML structure)
+  const codeLines = document.querySelectorAll('.code-line')
+  codeLines.forEach((line, index) => {
+    const originalHTML = line.innerHTML
+    const tempDiv = document.createElement('div')
+    tempDiv.innerHTML = originalHTML
+    const text = tempDiv.textContent || ''
+    
+    // Hide the line initially
+    gsap.set(line, { opacity: 0 })
+    
+    // Simple fade in animation instead of typing to preserve colors
+    gsap.to(line, {
+      opacity: 1,
+      duration: 0.6,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.code-preview',
+        start: 'top 85%',
+        toggleActions: 'play none none reverse'
+      },
+      delay: index * 0.1
+    })
+  })
+  
+  // Stats animation
+  gsap.fromTo('.stat-item', {
+    opacity: 0,
+    y: 50,
+    scale: 0.5
+  }, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.8,
+    stagger: 0.2,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.about-stats',
+      start: 'top 85%',
+      end: 'bottom 15%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Animate stat numbers with counting effect
+  const statNumbers = document.querySelectorAll('.stat-number')
+  statNumbers.forEach(stat => {
+    const text = stat.textContent || '0'
+    const number = parseInt(text.replace(/\D/g, ''))
+    const suffix = text.replace(/\d/g, '')
+    
+    gsap.fromTo(stat, {
+      textContent: '0' + suffix
+    }, {
+      duration: 2,
+      textContent: number + suffix,
+      ease: 'power2.out',
+      snap: { textContent: 1 },
+      scrollTrigger: {
+        trigger: '.about-stats',
+        start: 'top 80%',
+        toggleActions: 'play none none reverse'
+      }
+    })
+  })
+  
+  // Floating animation for visual card
+  gsap.to('.visual-card', {
+    y: -10,
+    rotation: 1,
+    duration: 3,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1
+  })
+  
+  // Interactive hover effects
+  const aboutText = document.querySelector('.about-text')
+  if (aboutText) {
+    aboutText.addEventListener('mouseenter', () => {
+      gsap.to('.about-text', {
+        scale: 1.02,
+        rotationY: 2,
+        duration: 0.4,
+        ease: 'power2.out'
+      })
+    })
+    
+    aboutText.addEventListener('mouseleave', () => {
+      gsap.to('.about-text', {
+        scale: 1,
+        rotationY: 0,
+        duration: 0.4,
+        ease: 'power2.out'
+      })
+    })
+  }
+  
+  // Code dots animation
+  gsap.to('.dot', {
+    scale: 1.2,
+    duration: 1,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1,
+    stagger: 0.3
+  })
+})
 </script>
 
 <style scoped>

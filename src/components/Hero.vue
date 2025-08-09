@@ -53,6 +53,10 @@ import {
   animateRotation 
 } from '@/utils/threeHelpers'
 import * as THREE from 'three'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const canvasRef = ref<HTMLCanvasElement>()
 const { scene, camera, renderer, init, animate } = useThree(canvasRef)
@@ -61,6 +65,114 @@ const { updateRaycaster } = useRaycaster(camera, scene)
 
 onMounted(() => {
   const cleanup = init()
+  
+  // GSAP Hero Animations
+  const tl = gsap.timeline()
+  
+  // Initial state - hide elements
+  gsap.set(['.hero-title', '.hero-subtitle', '.hero-description', '.hero-actions'], {
+    opacity: 0,
+    y: 100,
+    scale: 0.8
+  })
+  
+  // Set skill tags initial state without affecting their CSS positioning
+  gsap.set('.skill-tag', {
+    opacity: 0,
+    scale: 0.8,
+    // Don't set y position to preserve CSS positioning
+  })
+  
+  // Animate elements in sequence
+  tl.to('.hero-title', {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 1.2,
+    ease: 'elastic.out(1, 0.8)'
+  })
+  .to('.hero-subtitle', {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.8,
+    ease: 'back.out(1.7)'
+  }, '-=0.8')
+  .to('.hero-description', {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.6,
+    ease: 'power2.out'
+  }, '-=0.4')
+  .to('.hero-actions', {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.8,
+    ease: 'back.out(1.7)'
+  }, '-=0.2')
+  .to('.skill-tag', {
+    opacity: 1,
+    scale: 1,
+    duration: 0.6,
+    stagger: 0.2,
+    ease: 'back.out(1.7)'
+  }, '-=0.6')
+  
+  // Floating skill tags animation
+  gsap.to('.skill-tag', {
+    y: '-=15',
+    rotation: 2,
+    duration: 3,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1,
+    stagger: {
+      each: 0.5,
+      from: 'random'
+    }
+  })
+  
+  // Continuous title glow effect - removed for cleaner look
+  // gsap.to('.hero-title .text-gradient', {
+  //   textShadow: '0 0 20px rgba(144, 238, 144, 0.8), 0 0 40px rgba(144, 238, 144, 0.4)',
+  //   duration: 2,
+  //   ease: 'sine.inOut',
+  //   yoyo: true,
+  //   repeat: -1
+  // })
+  
+  // Button hover effects
+  const buttons = document.querySelectorAll('.btn-primary, .btn-secondary')
+  buttons.forEach(button => {
+    button.addEventListener('mouseenter', () => {
+      gsap.to(button, {
+        scale: 1.05,
+        y: -5,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+    
+    button.addEventListener('mouseleave', () => {
+      gsap.to(button, {
+        scale: 1,
+        y: 0,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+  })
+  
+  // Scroll indicator animation
+  gsap.to('.scroll-arrow', {
+    y: 10,
+    duration: 1.5,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1
+  })
   
   setTimeout(() => {
     if (!scene.value || !camera.value) return
@@ -98,9 +210,9 @@ onMounted(() => {
       // Update mouse interaction
       updateRaycaster(normalizedMouse.value)
       
-      // Mouse-interactive particle movement
+      // Mouse-interactive particle movement (slowed down)
       const positionAttribute = particles.geometry.getAttribute('position')
-      const mouseInfluence = normalizedMouse.value.length() * 2
+      const mouseInfluence = normalizedMouse.value.length() * 0.5 // Reduced from 2 to 0.5
       
       for (let i = 0; i < particleCount; i++) {
         const i3 = i * 3
@@ -108,9 +220,9 @@ onMounted(() => {
         // Organic floating movement
         const wave = Math.sin(time * 0.5 + i * 0.1) * 0.5
         
-        // Mouse attraction/repulsion effect
-        const mouseX = normalizedMouse.value.x * 10
-        const mouseY = normalizedMouse.value.y * 10
+        // Mouse attraction/repulsion effect (reduced sensitivity)
+        const mouseX = normalizedMouse.value.x * 3 // Reduced from 10 to 3
+        const mouseY = normalizedMouse.value.y * 3 // Reduced from 10 to 3
         
         // Calculate distance from mouse (in screen space)
         const dx = positionAttribute.array[i3] - mouseX
@@ -124,13 +236,13 @@ onMounted(() => {
         if (distance < 5 && mouseInfluence > 0.1) {
           const force = (5 - distance) / 5
           if (distance < 2) {
-            // Repulsion when very close
-            mouseForceX = (dx / distance) * force * 0.5
-            mouseForceY = (dy / distance) * force * 0.5
+            // Repulsion when very close (reduced force)
+            mouseForceX = (dx / distance) * force * 0.15 // Reduced from 0.5 to 0.15
+            mouseForceY = (dy / distance) * force * 0.15 // Reduced from 0.5 to 0.15
           } else {
-            // Attraction when moderately close
-            mouseForceX = -(dx / distance) * force * 0.2
-            mouseForceY = -(dy / distance) * force * 0.2
+            // Attraction when moderately close (reduced force)
+            mouseForceX = -(dx / distance) * force * 0.08 // Reduced from 0.2 to 0.08
+            mouseForceY = -(dy / distance) * force * 0.08 // Reduced from 0.2 to 0.08
           }
         }
         
@@ -165,23 +277,23 @@ onMounted(() => {
       
       positionAttribute.needsUpdate = true
       
-      // Enhanced particle rotation (base movement + mouse influence)
+      // Enhanced particle rotation (base movement + reduced mouse influence)
       const baseRotationY = 0.003 + Math.sin(time * 0.1) * 0.002
       const baseRotationX = 0.002 + Math.cos(time * 0.15) * 0.001
       
-      particles.rotation.y += baseRotationY + mouseInfluence * 0.01
-      particles.rotation.x += baseRotationX + mouseInfluence * 0.005
+      particles.rotation.y += baseRotationY + mouseInfluence * 0.003 // Reduced from 0.01 to 0.003
+      particles.rotation.x += baseRotationX + mouseInfluence * 0.002 // Reduced from 0.005 to 0.002
       
-      // Dynamic particle size with base pulsing + mouse interaction
+      // Dynamic particle size with base pulsing + reduced mouse interaction
       if (particleMaterial.size) {
         const basePulse = Math.sin(time * 1.5) * 0.008 + 0.035 // Base pulsing size
-        particleMaterial.size = basePulse + mouseInfluence * 0.02
+        particleMaterial.size = basePulse + mouseInfluence * 0.008 // Reduced from 0.02 to 0.008
       }
       
-      // Camera movement with mouse influence
+      // Camera movement with reduced mouse influence
       if (camera.value) {
-        camera.value.position.x = Math.sin(time * 0.1) * 0.3 + normalizedMouse.value.x * 0.5
-        camera.value.position.y = Math.cos(time * 0.15) * 0.2 + normalizedMouse.value.y * 0.3
+        camera.value.position.x = Math.sin(time * 0.1) * 0.3 + normalizedMouse.value.x * 0.15 // Reduced from 0.5 to 0.15
+        camera.value.position.y = Math.cos(time * 0.15) * 0.2 + normalizedMouse.value.y * 0.1 // Reduced from 0.3 to 0.1
         camera.value.lookAt(0, 0, 0)
       }
     })
@@ -340,7 +452,7 @@ onMounted(() => {
   border: 1px solid rgba(34, 139, 34, 0.4);
   box-shadow: 0 4px 15px rgba(50, 205, 50, 0.2);
   white-space: nowrap;
-  animation: float 6s ease-in-out infinite;
+  /* animation: float 6s ease-in-out infinite; */ /* Disabled - GSAP handles floating */
   transition: all 0.3s ease;
 }
 
@@ -353,39 +465,33 @@ onMounted(() => {
 
 /* Individual positioning and animation delays */
 .skill-tag-1 {
-  top: 20%;
-  left: 15%;
-  animation-delay: 0s;
+  top: 20% !important;
+  left: 15% !important;
 }
 
 .skill-tag-2 {
-  top: 35%;
-  right: 12%;
-  animation-delay: 1s;
+  top: 35% !important;
+  right: 12% !important;
 }
 
 .skill-tag-3 {
-  top: 15%;
-  right: 25%;
-  animation-delay: 2s;
+  top: 15% !important;
+  right: 25% !important;
 }
 
 .skill-tag-4 {
-  bottom: 35%;
-  left: 10%;
-  animation-delay: 3s;
+  bottom: 35% !important;
+  left: 10% !important;
 }
 
 .skill-tag-5 {
-  bottom: 20%;
-  right: 20%;
-  animation-delay: 4s;
+  bottom: 20% !important;
+  right: 20% !important;
 }
 
 .skill-tag-6 {
-  top: 50%;
-  left: 8%;
-  animation-delay: 5s;
+  top: 50% !important;
+  left: 8% !important;
 }
 
 /* Floating animation */

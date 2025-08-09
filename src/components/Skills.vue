@@ -46,7 +46,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const activeCategory = ref(-1)
 
@@ -100,6 +104,215 @@ const skillCategories = ref([
 const setActiveCategory = (index: number) => {
   activeCategory.value = index
 }
+
+onMounted(async () => {
+  await nextTick()
+  
+  // Section title animation
+  gsap.fromTo('.section-title', {
+    opacity: 0,
+    y: 100,
+    scale: 0.5
+  }, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 1.2,
+    ease: 'elastic.out(1, 0.8)',
+    scrollTrigger: {
+      trigger: '.skills',
+      start: 'top 90%',
+      end: 'bottom 10%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Skills grid animation
+  gsap.fromTo('.skill-category', {
+    opacity: 0,
+    y: 100,
+    rotationX: -90,
+    scale: 0.5
+  }, {
+    opacity: 1,
+    y: 0,
+    rotationX: 0,
+    scale: 1,
+    duration: 1,
+    stagger: 0.2,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.skills-grid',
+      start: 'top 85%',
+      end: 'bottom 15%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Animate skill progress bars
+  gsap.fromTo('.skill-progress', {
+    width: '0%',
+    backgroundColor: 'rgba(50, 205, 50, 0.3)'
+  }, {
+    width: (index, target) => {
+      const skillItem = target.closest('.skill-item')
+      const levelText = skillItem?.querySelector('.skill-level')?.textContent || '0%'
+      return levelText
+    },
+    backgroundColor: 'linear-gradient(135deg, #32CD32, #228B22)',
+    duration: 1.5,
+    ease: 'power2.out',
+    stagger: 0.1,
+    scrollTrigger: {
+      trigger: '.skills-grid',
+      start: 'top 80%',
+      end: 'bottom 20%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Animate skill levels with counting effect
+  const skillLevels = document.querySelectorAll('.skill-level')
+  skillLevels.forEach(level => {
+    const targetValue = parseInt(level.textContent?.replace('%', '') || '0')
+    
+    gsap.fromTo(level, {
+      textContent: '0%'
+    }, {
+      duration: 2,
+      textContent: targetValue + '%',
+      ease: 'power2.out',
+      snap: { textContent: 1 },
+      scrollTrigger: {
+        trigger: level.closest('.skill-category'),
+        start: 'top 85%',
+        toggleActions: 'play none none reverse'
+      }
+    })
+  })
+  
+  // Category icons animation
+  gsap.fromTo('.category-icon', {
+    scale: 0,
+    rotation: -180
+  }, {
+    scale: 1,
+    rotation: 0,
+    duration: 0.8,
+    stagger: 0.1,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.skills-grid',
+      start: 'top 85%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Continuous icon animation - removed for cleaner look
+  // gsap.to('.category-icon', {
+  //   rotationY: 360,
+  //   duration: 8,
+  //   ease: 'none',
+  //   repeat: -1,
+  //   stagger: 2
+  // })
+  
+  // Interactive hover effects for skill categories
+  const skillCategories = document.querySelectorAll('.skill-category')
+  skillCategories.forEach((category, index) => {
+    category.addEventListener('mouseenter', () => {
+      gsap.to(category, {
+        scale: 1.05,
+        rotationY: 5,
+        z: 50,
+        duration: 0.4,
+        ease: 'power2.out'
+      })
+      
+      // Highlight skill bars in this category
+      const skillBars = category.querySelectorAll('.skill-progress')
+      gsap.to(skillBars, {
+        boxShadow: '0 0 20px rgba(50, 205, 50, 0.8)',
+        duration: 0.3,
+        stagger: 0.05
+      })
+      
+      // Animate category icon
+      const icon = category.querySelector('.category-icon')
+      gsap.to(icon, {
+        scale: 1.2,
+        // rotation: 15, // Removed rotation
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+    
+    category.addEventListener('mouseleave', () => {
+      gsap.to(category, {
+        scale: 1,
+        rotationY: 0,
+        z: 0,
+        duration: 0.4,
+        ease: 'power2.out'
+      })
+      
+      const skillBars = category.querySelectorAll('.skill-progress')
+      gsap.to(skillBars, {
+        boxShadow: 'none',
+        duration: 0.3
+      })
+      
+      const icon = category.querySelector('.category-icon')
+      gsap.to(icon, {
+        scale: 1,
+        // rotation: 0, // Removed rotation
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+  })
+  
+  // Skill name typewriter effect
+  const skillNames = document.querySelectorAll('.skill-name')
+  skillNames.forEach((name, index) => {
+    const text = name.textContent || ''
+    name.textContent = ''
+    
+    gsap.to(name, {
+      duration: text.length * 0.05,
+      ease: 'none',
+      onUpdate: function() {
+        const progress = this.progress()
+        const currentLength = Math.floor(progress * text.length)
+        name.textContent = text.slice(0, currentLength) + (progress < 1 ? '_' : '')
+      },
+      scrollTrigger: {
+        trigger: name.closest('.skill-category'),
+        start: 'top 85%',
+        toggleActions: 'play none none reverse'
+      },
+      delay: index * 0.1
+    })
+  })
+  
+  // Floating animation for the entire skills section
+  gsap.to('.skills-grid', {
+    y: -5,
+    duration: 4,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1
+  })
+  
+  // Shimmer effect enhancement
+  gsap.to('.skill-progress::after', {
+    x: '200%',
+    duration: 2,
+    ease: 'power2.inOut',
+    repeat: -1,
+    repeatDelay: 3
+  })
+})
 
 
 </script>

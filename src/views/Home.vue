@@ -12,7 +12,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, nextTick } from 'vue'
+import { gsap } from 'gsap'
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 import Navigation from '@/components/Navigation.vue'
 import Hero from '@/components/Hero.vue'
 import About from '@/components/About.vue'
@@ -21,25 +23,63 @@ import Projects from '@/components/Projects.vue'
 import Experience from '@/components/Experience.vue'
 import Contact from '@/components/Contact.vue'
 import ThreeCursor from '@/components/ThreeCursor.vue'
+import { usePageTransitions } from '@/composables/usePageTransitions'
 
-onMounted(() => {
-  // Smooth scroll behavior for navigation links
+gsap.registerPlugin(ScrollToPlugin)
+
+const {
+  scrollToSection,
+  initPageEntrance,
+  initSectionReveals,
+  initCursorTrail,
+  initMagneticButtons,
+  initTextReveal
+} = usePageTransitions()
+
+onMounted(async () => {
+  await nextTick()
+  
+  // Skip entrance animation to avoid scroll conflicts
+  // initPageEntrance()
+  
+  // Initialize page transition effects immediately
+  setTimeout(() => {
+    initSectionReveals()
+    initCursorTrail()
+    initMagneticButtons()
+    // initTextReveal() // Disabled to fix section titles
+  }, 500) // Reduced delay
+  
+  // Simple smooth scroll behavior for navigation links
   const handleAnchorClick = (e: Event) => {
     const target = e.target as HTMLAnchorElement
     if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
       e.preventDefault()
+      e.stopPropagation()
+      
       const id = target.getAttribute('href')?.substring(1)
       const element = document.getElementById(id!)
       if (element) {
-        element.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
+        // Kill any existing scroll animations first
+        gsap.killTweensOf(window)
+        
+        // Use simple GSAP scroll
+        gsap.to(window, {
+          duration: 1.2,
+          scrollTo: {
+            y: element,
+            offsetY: 80
+          },
+          ease: 'power2.inOut'
         })
       }
     }
   }
 
-  document.addEventListener('click', handleAnchorClick)
+  // Add event listener with a small delay to ensure DOM is ready
+  setTimeout(() => {
+    document.addEventListener('click', handleAnchorClick, { capture: true })
+  }, 100)
 
   return () => {
     document.removeEventListener('click', handleAnchorClick)

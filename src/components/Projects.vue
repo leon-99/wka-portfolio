@@ -82,6 +82,10 @@ import { ref, onMounted, nextTick, watch, markRaw } from 'vue'
 import { useThree } from '@/composables/useThree'
 import { useMouseInteraction } from '@/composables/useMouseInteraction'
 import * as THREE from 'three'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const hoveredProject = ref(-1)
 const projectRefs = ref<HTMLElement[]>([])
@@ -178,207 +182,310 @@ const setHoveredProject = (index: number) => {
 onMounted(async () => {
   await nextTick()
   
-  // Create 3D hover effects for each project card
-  projectRefs.value.forEach((card, index) => {
-    if (!card) return
-    
-    // Create canvas for 3D effect
-    const canvas = document.createElement('canvas')
-    canvas.className = 'project-3d-canvas'
-    canvas.style.position = 'absolute'
-    canvas.style.top = '0'
-    canvas.style.left = '0'
-    canvas.style.width = '100%'
-    canvas.style.height = '100%'
-    canvas.style.pointerEvents = 'none'
-    canvas.style.opacity = '0'
-    canvas.style.transition = 'opacity 0.3s ease'
-    canvas.style.zIndex = '1'
-    
-    card.style.position = 'relative'
-    card.appendChild(canvas)
-    
-    projectCanvases.value[index] = canvas
-    
-    // Initialize Three.js for this project
-    const scene = markRaw(new THREE.Scene())
-    const camera = markRaw(new THREE.PerspectiveCamera(75, 1, 0.1, 1000))
-    const renderer = markRaw(new THREE.WebGLRenderer({ 
-      canvas, 
-      alpha: true, 
-      antialias: true 
-    }))
-    
-    camera.position.z = 5
-    
-    // Create floating geometric shapes for each project
-    const geometries: THREE.Mesh[] = []
-    
-    // Different shapes for each project type
-    const shapeTypes = [
-      () => new THREE.BoxGeometry(1, 1, 1),
-      () => new THREE.SphereGeometry(0.8, 32, 32),
-      () => new THREE.ConeGeometry(0.8, 1.5, 8),
-      () => new THREE.CylinderGeometry(0.5, 0.8, 1.5, 6),
-      () => new THREE.OctahedronGeometry(1),
-      () => new THREE.TorusGeometry(0.8, 0.3, 8, 16)
-    ]
-    
-    const shapeGeometry = shapeTypes[index % shapeTypes.length]()
-    
-    for (let i = 0; i < 3; i++) {
-      const material = markRaw(new THREE.ShaderMaterial({
-        uniforms: {
-          time: { value: 0 },
-          hovered: { value: 0.0 },
-          color: { value: new THREE.Color().setHSL(0.3 + i * 0.1, 0.7, 0.6) }
-        },
-        vertexShader: `
-          uniform float time;
-          uniform float hovered;
-          varying vec3 vPosition;
-          varying vec3 vNormal;
-          
-          void main() {
-            vPosition = position;
-            vNormal = normal;
-            
-            vec3 pos = position;
-            
-            // Floating animation
-            pos.y += sin(time * 2.0 + position.x * 2.0) * 0.1;
-            pos.x += cos(time * 1.5 + position.y * 2.0) * 0.05;
-            
-            // Hover effect
-            pos *= 1.0 + hovered * 0.2;
-            
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-          }
-        `,
-        fragmentShader: `
-          uniform float time;
-          uniform float hovered;
-          uniform vec3 color;
-          varying vec3 vPosition;
-          varying vec3 vNormal;
-          
-          void main() {
-            vec3 viewDirection = normalize(cameraPosition - vPosition);
-            float fresnel = pow(1.0 - dot(vNormal, viewDirection), 2.0);
-            
-            vec3 finalColor = color + fresnel * 0.3;
-            finalColor += hovered * vec3(0.3, 0.6, 0.2);
-            
-            float alpha = 0.6 + fresnel * 0.4 + hovered * 0.3;
-            gl_FragColor = vec4(finalColor, alpha);
-          }
-        `,
-        transparent: true,
-        side: THREE.DoubleSide
-      }))
-      
-      const mesh = markRaw(new THREE.Mesh(shapeGeometry.clone(), material))
-      
-      // Position shapes
-      mesh.position.set(
-        (i - 1) * 1.5,
-        Math.sin(i * Math.PI / 3) * 0.5,
-        Math.cos(i * Math.PI / 3) * 0.5
-      )
-      
-      mesh.rotation.set(
-        Math.random() * Math.PI,
-        Math.random() * Math.PI,
-        Math.random() * Math.PI
-      )
-      
-      scene.add(mesh)
-      geometries.push(mesh)
+  // Section title and subtitle animation
+  gsap.fromTo('.section-title', {
+    opacity: 0,
+    y: 100,
+    scale: 0.8
+  }, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 1.2,
+    ease: 'elastic.out(1, 0.8)',
+    scrollTrigger: {
+      trigger: '.projects',
+      start: 'top 90%',
+      end: 'bottom 10%',
+      toggleActions: 'play none none reverse'
     }
-    
-    // Lighting
-    const ambientLight = markRaw(new THREE.AmbientLight(0x404040, 0.6))
-    scene.add(ambientLight)
-    
-    const pointLight = markRaw(new THREE.PointLight(0x32CD32, 1, 10))
-    pointLight.position.set(2, 2, 2)
-    scene.add(pointLight)
-    
-    // Store scene data
-    projectScenes.value[index] = {
-      scene,
-      camera,
-      renderer,
-      geometries,
-      time: 0
+  })
+  
+  gsap.fromTo('.section-subtitle', {
+    opacity: 0,
+    y: 50
+  }, {
+    opacity: 1,
+    y: 0,
+    duration: 0.8,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: '.projects',
+      start: 'top 85%',
+      toggleActions: 'play none none reverse'
+    },
+    delay: 0.3
+  })
+  
+  // Project cards animation
+  gsap.fromTo('.project-card', {
+    opacity: 0,
+    y: 100,
+    rotationX: -90,
+    scale: 0.5
+  }, {
+    opacity: 1,
+    y: 0,
+    rotationX: 0,
+    scale: 1,
+    duration: 1,
+    stagger: 0.2,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.projects-grid',
+      start: 'top 85%',
+      end: 'bottom 15%',
+      toggleActions: 'play none none reverse'
     }
-    
-    // Resize handler
-    const resizeCanvas = () => {
-      const rect = card.getBoundingClientRect()
-      renderer.setSize(rect.width, rect.height)
-      camera.aspect = rect.width / rect.height
-      camera.updateProjectionMatrix()
+  })
+  
+  // Project content animations
+  gsap.fromTo('.project-title', {
+    opacity: 0,
+    x: -30
+  }, {
+    opacity: 1,
+    x: 0,
+    duration: 0.6,
+    stagger: 0.1,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: '.projects-grid',
+      start: 'top 85%',
+      toggleActions: 'play none none reverse'
     }
-    
-    resizeCanvas()
-    window.addEventListener('resize', resizeCanvas)
-    
-    // Animation loop for this project
-    const animate = () => {
-      const sceneData = projectScenes.value[index]
-      if (!sceneData) return
-      
-      sceneData.time += 0.016
-      
-      const isHovered = hoveredProject.value === index ? 1.0 : 0.0
-      
-      sceneData.geometries.forEach((mesh: THREE.Mesh, i: number) => {
-        // Update shader uniforms
-        if (mesh.material instanceof THREE.ShaderMaterial) {
-          mesh.material.uniforms.time.value = sceneData.time
-          mesh.material.uniforms.hovered.value = isHovered
-        }
-        
-        // Rotation
-        mesh.rotation.x += 0.005 + i * 0.002
-        mesh.rotation.y += 0.008 + i * 0.001
-        mesh.rotation.z += 0.003 + i * 0.003
-        
-        // Mouse interaction
-        const mouseInfluence = normalizedMouse.value.length() * 0.1
-        mesh.position.y += Math.sin(sceneData.time + i) * 0.02 + mouseInfluence
+  })
+  
+  gsap.fromTo('.project-description', {
+    opacity: 0,
+    y: 20
+  }, {
+    opacity: 1,
+    y: 0,
+    duration: 0.6,
+    stagger: 0.1,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: '.projects-grid',
+      start: 'top 80%',
+      toggleActions: 'play none none reverse'
+    },
+    delay: 0.2
+  })
+  
+  // Tech tags animation
+  gsap.fromTo('.tech-tag', {
+    opacity: 0,
+    scale: 0,
+    rotation: -180
+  }, {
+    opacity: 1,
+    scale: 1,
+    rotation: 0,
+    duration: 0.5,
+    stagger: 0.05,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.project-technologies',
+      start: 'top 90%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Featured badge animation
+  gsap.fromTo('.featured-badge', {
+    opacity: 0,
+    scale: 0,
+    rotation: -360
+  }, {
+    opacity: 1,
+    scale: 1,
+    rotation: 0,
+    duration: 0.8,
+    ease: 'elastic.out(1, 0.8)',
+    scrollTrigger: {
+      trigger: '.featured-badge',
+      start: 'top 95%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Project stats animation
+  gsap.fromTo('.stat', {
+    opacity: 0,
+    x: -20,
+    scale: 0.8
+  }, {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    duration: 0.6,
+    stagger: 0.1,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.project-stats',
+      start: 'top 95%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Enhanced project card hover effects
+  const projectCards = document.querySelectorAll('.project-card')
+  projectCards.forEach((card, index) => {
+    card.addEventListener('mouseenter', () => {
+      gsap.to(card, {
+        scale: 1.03,
+        rotationY: 3,
+        z: 50,
+        duration: 0.4,
+        ease: 'power2.out'
       })
       
-      // Camera movement
-      sceneData.camera.position.x = Math.sin(sceneData.time * 0.1) * 0.5
-      sceneData.camera.position.y = Math.cos(sceneData.time * 0.15) * 0.3
-      sceneData.camera.lookAt(0, 0, 0)
+      // Animate project icon
+      const icon = card.querySelector('.project-icon')
+      gsap.to(icon, {
+        scale: 1.2,
+        rotation: 15,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
       
-      sceneData.renderer.render(sceneData.scene, sceneData.camera)
-      requestAnimationFrame(animate)
-    }
+      // Animate tech dots
+      const techDots = card.querySelectorAll('.tech-dot')
+      gsap.to(techDots, {
+        scale: 1.5,
+        duration: 0.3,
+        stagger: 0.05,
+        ease: 'back.out(1.7)'
+      })
+      
+      // Glow effect for featured projects
+      if (card.classList.contains('featured')) {
+        gsap.to(card, {
+          boxShadow: '0 25px 50px rgba(255, 215, 0, 0.3), 0 0 40px rgba(144, 238, 144, 0.4)',
+          duration: 0.3
+        })
+      }
+    })
     
-    animate()
+    card.addEventListener('mouseleave', () => {
+      gsap.to(card, {
+        scale: 1,
+        rotationY: 0,
+        z: 0,
+        duration: 0.4,
+        ease: 'power2.out'
+      })
+      
+      const icon = card.querySelector('.project-icon')
+      gsap.to(icon, {
+        scale: 1,
+        rotation: 0,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+      
+      const techDots = card.querySelectorAll('.tech-dot')
+      gsap.to(techDots, {
+        scale: 1,
+        duration: 0.3,
+        stagger: 0.05,
+        ease: 'back.out(1.7)'
+      })
+      
+      if (card.classList.contains('featured')) {
+        gsap.to(card, {
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(34, 139, 34, 0.3)',
+          duration: 0.3
+        })
+      }
+    })
   })
+  
+  // Action buttons animation
+  const actionButtons = document.querySelectorAll('.btn-demo, .btn-code')
+  actionButtons.forEach(button => {
+    button.addEventListener('mouseenter', () => {
+      gsap.to(button, {
+        scale: 1.1,
+        y: -3,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+    
+    button.addEventListener('mouseleave', () => {
+      gsap.to(button, {
+        scale: 1,
+        y: 0,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+    
+    button.addEventListener('click', () => {
+      gsap.to(button, {
+        scale: 0.95,
+        duration: 0.1,
+        ease: 'power2.out',
+        yoyo: true,
+        repeat: 1
+      })
+    })
+  })
+  
+  // Continuous floating animation for project cards
+  gsap.to('.project-card', {
+    y: -5,
+    duration: 4,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1,
+    stagger: 0.5
+  })
+  
+  // Tech tag hover effects
+  const techTags = document.querySelectorAll('.tech-tag')
+  techTags.forEach(tag => {
+    tag.addEventListener('mouseenter', () => {
+      gsap.to(tag, {
+        scale: 1.1,
+        rotation: 5,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+    
+    tag.addEventListener('mouseleave', () => {
+      gsap.to(tag, {
+        scale: 1,
+        rotation: 0,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+  })
+  
+  // Featured badge pulsing animation
+  gsap.to('.featured-badge', {
+    boxShadow: '0 0 20px rgba(255, 215, 0, 0.8)',
+    duration: 2,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1
+  })
+  
+  // 3D hover effects removed for cleaner look
+  // projectRefs.value.forEach((card, index) => {
+  //   // ... Complex 3D Three.js code removed
+  // })
+  console.log('3D project effects disabled for cleaner appearance')
 })
 
-// Watch for hover changes to show/hide 3D effects
-const watchHover = () => {
-  Object.keys(projectCanvases.value).forEach(key => {
-    const index = parseInt(key)
-    const canvas = projectCanvases.value[index]
-    if (canvas) {
-      canvas.style.opacity = hoveredProject.value === index ? '1' : '0'
-    }
-  })
-}
-
-// Watch hoveredProject changes
-const unwatchHover = ref<Function>()
-onMounted(() => {
-  unwatchHover.value = watch(hoveredProject, watchHover)
-})
+// 3D hover watch effects removed
+// const watchHover = () => { ... }
+// const unwatchHover = ref<Function>()
+// onMounted(() => { unwatchHover.value = watch(hoveredProject, watchHover) })
 
 
 </script>

@@ -170,7 +170,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, nextTick } from 'vue'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const form = reactive({
   name: '',
@@ -219,6 +223,329 @@ const handleSubmit = async () => {
     isSubmitting.value = false
   }
 }
+
+onMounted(async () => {
+  await nextTick()
+  
+  // Section title and subtitle animation
+  gsap.fromTo('.section-title', {
+    opacity: 0,
+    y: 100,
+    scale: 0.8
+  }, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 1.2,
+    ease: 'elastic.out(1, 0.8)',
+    scrollTrigger: {
+      trigger: '.contact',
+      start: 'top 90%',
+      end: 'bottom 10%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  gsap.fromTo('.section-subtitle', {
+    opacity: 0,
+    y: 50
+  }, {
+    opacity: 1,
+    y: 0,
+    duration: 0.8,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: '.contact',
+      start: 'top 85%',
+      toggleActions: 'play none none reverse'
+    },
+    delay: 0.3
+  })
+  
+  // Contact info animation
+  gsap.fromTo('.contact-card', {
+    opacity: 0,
+    x: -100,
+    rotationY: -15,
+    scale: 0.8
+  }, {
+    opacity: 1,
+    x: 0,
+    rotationY: 0,
+    scale: 1,
+    duration: 1.2,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.contact-content',
+      start: 'top 85%',
+      end: 'bottom 15%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Form animation
+  gsap.fromTo('.form', {
+    opacity: 0,
+    x: 100,
+    rotationY: 15,
+    scale: 0.8
+  }, {
+    opacity: 1,
+    x: 0,
+    rotationY: 0,
+    scale: 1,
+    duration: 1.2,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.contact-content',
+      start: 'top 85%',
+      end: 'bottom 15%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Contact methods animation
+  gsap.fromTo('.contact-method', {
+    opacity: 0,
+    x: -50,
+    scale: 0.8
+  }, {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    duration: 0.8,
+    stagger: 0.2,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.contact-methods',
+      start: 'top 90%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Form fields animation
+  gsap.fromTo('.form-group', {
+    opacity: 0,
+    y: 30,
+    scale: 0.9
+  }, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.6,
+    stagger: 0.1,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.form',
+      start: 'top 85%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Availability status animation
+  gsap.fromTo('.availability', {
+    opacity: 0,
+    y: 20,
+    scale: 0.9
+  }, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.8,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.availability',
+      start: 'top 95%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Footer animation
+  gsap.fromTo('.contact-footer', {
+    opacity: 0,
+    y: 50
+  }, {
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: '.contact-footer',
+      start: 'top 90%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Interactive form field effects
+  const formInputs = document.querySelectorAll('.form-group input, .form-group textarea')
+  formInputs.forEach(input => {
+    input.addEventListener('focus', () => {
+      gsap.to(input.closest('.form-group'), {
+        scale: 1.02,
+        duration: 0.3,
+        ease: 'power2.out'
+      })
+      
+      gsap.to(input, {
+        borderColor: '#32CD32',
+        boxShadow: '0 0 20px rgba(50, 205, 50, 0.3)',
+        duration: 0.3,
+        ease: 'power2.out'
+      })
+    })
+    
+    input.addEventListener('blur', () => {
+      gsap.to(input.closest('.form-group'), {
+        scale: 1,
+        duration: 0.3,
+        ease: 'power2.out'
+      })
+      
+      gsap.to(input, {
+        borderColor: 'rgba(34, 139, 34, 0.3)',
+        boxShadow: 'none',
+        duration: 0.3,
+        ease: 'power2.out'
+      })
+    })
+  })
+  
+  // Submit button animation
+  const submitBtn = document.querySelector('.btn-submit')
+  if (submitBtn) {
+    submitBtn.addEventListener('mouseenter', () => {
+      gsap.to(submitBtn, {
+        scale: 1.05,
+        boxShadow: '0 10px 25px rgba(34, 139, 34, 0.4)',
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+    
+    submitBtn.addEventListener('mouseleave', () => {
+      gsap.to(submitBtn, {
+        scale: 1,
+        boxShadow: '0 8px 20px rgba(34, 139, 34, 0.3)',
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+    
+    submitBtn.addEventListener('click', () => {
+      gsap.to(submitBtn, {
+        scale: 0.95,
+        duration: 0.1,
+        ease: 'power2.out',
+        yoyo: true,
+        repeat: 1
+      })
+    })
+  }
+  
+  // Contact method hover effects
+  const contactMethods = document.querySelectorAll('.contact-method')
+  contactMethods.forEach(method => {
+    method.addEventListener('mouseenter', () => {
+      gsap.to(method, {
+        scale: 1.05,
+        x: 10,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+      
+      const icon = method.querySelector('.method-icon')
+      gsap.to(icon, {
+        scale: 1.2,
+        rotation: 10,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+    
+    method.addEventListener('mouseleave', () => {
+      gsap.to(method, {
+        scale: 1,
+        x: 0,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+      
+      const icon = method.querySelector('.method-icon')
+      gsap.to(icon, {
+        scale: 1,
+        rotation: 0,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+  })
+  
+  // Status indicator pulsing animation
+  gsap.to('.status-indicator.available', {
+    boxShadow: '0 0 20px rgba(50, 205, 50, 0.8)',
+    duration: 1.5,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1
+  })
+  
+  // Footer social icons animation
+  const socialIcons = document.querySelectorAll('.footer-social a')
+  socialIcons.forEach((icon, index) => {
+    icon.addEventListener('mouseenter', () => {
+      gsap.to(icon, {
+        scale: 1.2,
+        y: -5,
+        rotation: 15,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+    
+    icon.addEventListener('mouseleave', () => {
+      gsap.to(icon, {
+        scale: 1,
+        y: 0,
+        rotation: 0,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+  })
+  
+  // Floating animation for contact card
+  gsap.to('.contact-card', {
+    y: -5,
+    rotation: 0.5,
+    duration: 4,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1
+  })
+  
+  // Form typing animation
+  const formLabels = document.querySelectorAll('.form-group label')
+  formLabels.forEach((label, index) => {
+    const text = label.textContent || ''
+    label.textContent = ''
+    
+    gsap.to(label, {
+      duration: text.length * 0.05,
+      ease: 'none',
+      onUpdate: function() {
+        const progress = this.progress()
+        const currentLength = Math.floor(progress * text.length)
+        label.textContent = text.slice(0, currentLength)
+      },
+      scrollTrigger: {
+        trigger: label.closest('.form-group'),
+        start: 'top 90%',
+        toggleActions: 'play none none reverse'
+      },
+      delay: index * 0.1
+    })
+  })
+})
 </script>
 
 <style scoped>

@@ -24,7 +24,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const isScrolled = ref(false)
 const isMenuOpen = ref(false)
@@ -41,12 +45,164 @@ const closeMenu = () => {
   isMenuOpen.value = false
 }
 
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener('scroll', handleScroll)
+  
+  await nextTick()
+  
+  // Initial navigation animation
+  gsap.fromTo('.nav', {
+    y: -100,
+    opacity: 0
+  }, {
+    y: 0,
+    opacity: 1,
+    duration: 1,
+    ease: 'back.out(1.7)'
+  })
+  
+  // Animate navigation links
+  gsap.fromTo('.nav-links li', {
+    y: -20,
+    opacity: 0
+  }, {
+    y: 0,
+    opacity: 1,
+    duration: 0.6,
+    stagger: 0.1,
+    ease: 'power2.out',
+    delay: 0.3
+  })
+  
+  // Brand animation
+  gsap.fromTo('.nav-brand', {
+    scale: 0,
+    rotation: -180
+  }, {
+    scale: 1,
+    rotation: 0,
+    duration: 0.8,
+    ease: 'back.out(1.7)',
+    delay: 0.2
+  })
+  
+  // Enhanced link hover effects
+  const navLinks = document.querySelectorAll('.nav-links a')
+  navLinks.forEach(link => {
+    link.addEventListener('mouseenter', () => {
+      gsap.to(link, {
+        scale: 1.1,
+        color: '#90EE90',
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+      
+      // Animate the underline
+      gsap.to(link.querySelector('::after') || link, {
+        width: '100%',
+        duration: 0.3,
+        ease: 'power2.out'
+      })
+    })
+    
+    link.addEventListener('mouseleave', () => {
+      gsap.to(link, {
+        scale: 1,
+        color: '#e8f5e8',
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+    
+    // Click animation
+    link.addEventListener('click', () => {
+      gsap.to(link, {
+        scale: 0.95,
+        duration: 0.1,
+        ease: 'power2.out',
+        yoyo: true,
+        repeat: 1
+      })
+    })
+  })
+  
+  // Mobile menu toggle animation
+  const navToggle = document.querySelector('.nav-toggle')
+  if (navToggle) {
+    navToggle.addEventListener('click', () => {
+      if (isMenuOpen.value) {
+        // Closing animation
+        gsap.to('.nav-links', {
+          opacity: 0,
+          y: -20,
+          duration: 0.3,
+          ease: 'power2.in'
+        })
+      } else {
+        // Opening animation
+        gsap.fromTo('.nav-links', {
+          opacity: 0,
+          y: -20
+        }, {
+          opacity: 1,
+          y: 0,
+          duration: 0.4,
+          ease: 'back.out(1.7)'
+        })
+        
+        // Stagger mobile menu items
+        gsap.fromTo('.nav-links li', {
+          x: -50,
+          opacity: 0
+        }, {
+          x: 0,
+          opacity: 1,
+          duration: 0.4,
+          stagger: 0.1,
+          ease: 'back.out(1.7)',
+          delay: 0.1
+        })
+      }
+    })
+  }
+})
+
+// Watch for scroll changes and animate navigation
+watch(isScrolled, (newValue) => {
+  if (newValue) {
+    gsap.to('.nav', {
+      backgroundColor: 'rgba(0, 0, 0, 0.15)',
+      backdropFilter: 'blur(25px)',
+      padding: '0.75rem 0',
+      duration: 0.3,
+      ease: 'power2.out'
+    })
+    
+    gsap.to('.nav-brand', {
+      scale: 0.9,
+      duration: 0.3,
+      ease: 'power2.out'
+    })
+  } else {
+    gsap.to('.nav', {
+      backgroundColor: 'rgba(10, 26, 10, 0.7)',
+      backdropFilter: 'blur(15px)',
+      padding: '1rem 0',
+      duration: 0.3,
+      ease: 'power2.out'
+    })
+    
+    gsap.to('.nav-brand', {
+      scale: 1,
+      duration: 0.3,
+      ease: 'power2.out'
+    })
+  }
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  ScrollTrigger.getAll().forEach(trigger => trigger.kill())
 })
 </script>
 

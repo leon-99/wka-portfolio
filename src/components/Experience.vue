@@ -78,7 +78,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const experiences = ref([
   {
@@ -165,6 +169,304 @@ const education = ref([
     icon: '🏆'
   }
 ])
+
+onMounted(async () => {
+  await nextTick()
+  
+  // Section title animation
+  gsap.fromTo('.section-title', {
+    opacity: 0,
+    y: 100,
+    scale: 0.8
+  }, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 1.2,
+    ease: 'elastic.out(1, 0.8)',
+    scrollTrigger: {
+      trigger: '.experience',
+      start: 'top 90%',
+      end: 'bottom 10%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Timeline line animation
+  gsap.fromTo('.timeline::before', {
+    scaleY: 0,
+    transformOrigin: 'top'
+  }, {
+    scaleY: 1,
+    duration: 2,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: '.timeline',
+      start: 'top 85%',
+      end: 'bottom 15%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Timeline items animation
+  const timelineItems = document.querySelectorAll('.timeline-item')
+  timelineItems.forEach((item, index) => {
+    const isLeft = index % 2 === 0
+    
+    // Content animation
+    gsap.fromTo(item.querySelector('.timeline-content'), {
+      opacity: 0,
+      x: isLeft ? -100 : 100,
+      rotationY: isLeft ? -15 : 15,
+      scale: 0.8
+    }, {
+      opacity: 1,
+      x: 0,
+      rotationY: 0,
+      scale: 1,
+      duration: 1,
+      ease: 'back.out(1.7)',
+      scrollTrigger: {
+        trigger: item,
+        start: 'top 85%',
+        end: 'bottom 15%',
+        toggleActions: 'play none none reverse'
+      }
+    })
+    
+    // Timeline dot animation
+    gsap.fromTo(item.querySelector('.timeline-dot'), {
+      scale: 0,
+      rotation: -180
+    }, {
+      scale: 1,
+      rotation: 0,
+      duration: 0.8,
+      ease: 'back.out(1.7)',
+      scrollTrigger: {
+        trigger: item,
+        start: 'top 90%',
+        toggleActions: 'play none none reverse'
+      }
+    })
+    
+    // Timeline date animation
+    gsap.fromTo(item.querySelector('.timeline-date'), {
+      opacity: 0,
+      y: -20,
+      scale: 0.5
+    }, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.6,
+      ease: 'back.out(1.7)',
+      scrollTrigger: {
+        trigger: item,
+        start: 'top 85%',
+        toggleActions: 'play none none reverse'
+      },
+      delay: 0.2
+    })
+  })
+  
+  // Job responsibilities animation
+  gsap.fromTo('.job-responsibilities li', {
+    opacity: 0,
+    x: -30
+  }, {
+    opacity: 1,
+    x: 0,
+    duration: 0.6,
+    stagger: 0.1,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: '.job-responsibilities',
+      start: 'top 90%',
+      end: 'bottom 10%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Tech badges animation
+  gsap.fromTo('.tech-badge', {
+    opacity: 0,
+    scale: 0,
+    rotation: -180
+  }, {
+    opacity: 1,
+    scale: 1,
+    rotation: 0,
+    duration: 0.5,
+    stagger: 0.05,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.tech-list',
+      start: 'top 95%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Achievements animation
+  gsap.fromTo('.job-achievements li', {
+    opacity: 0,
+    x: -30,
+    scale: 0.8
+  }, {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    duration: 0.6,
+    stagger: 0.1,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.job-achievements',
+      start: 'top 95%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Education section animation
+  gsap.fromTo('.education-title', {
+    opacity: 0,
+    y: 50,
+    scale: 0.8
+  }, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 1,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.education-section',
+      start: 'top 90%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Education cards animation
+  gsap.fromTo('.education-card', {
+    opacity: 0,
+    y: 100,
+    rotationX: -90,
+    scale: 0.5
+  }, {
+    opacity: 1,
+    y: 0,
+    rotationX: 0,
+    scale: 1,
+    duration: 1,
+    stagger: 0.2,
+    ease: 'back.out(1.7)',
+    scrollTrigger: {
+      trigger: '.education-grid',
+      start: 'top 85%',
+      toggleActions: 'play none none reverse'
+    }
+  })
+  
+  // Interactive hover effects
+  const timelineContents = document.querySelectorAll('.timeline-content')
+  timelineContents.forEach(content => {
+    content.addEventListener('mouseenter', () => {
+      gsap.to(content, {
+        scale: 1.02,
+        rotationY: 2,
+        z: 20,
+        duration: 0.4,
+        ease: 'power2.out'
+      })
+      
+      // Animate job status
+      const status = content.querySelector('.job-status')
+      gsap.to(status, {
+        scale: 1.1,
+        rotation: 3,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+    
+    content.addEventListener('mouseleave', () => {
+      gsap.to(content, {
+        scale: 1,
+        rotationY: 0,
+        z: 0,
+        duration: 0.4,
+        ease: 'power2.out'
+      })
+      
+      const status = content.querySelector('.job-status')
+      gsap.to(status, {
+        scale: 1,
+        rotation: 0,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+  })
+  
+  // Continuous timeline dot pulsing
+  gsap.to('.timeline-dot', {
+    boxShadow: '0 0 30px rgba(50, 205, 50, 0.8)',
+    duration: 2,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1,
+    stagger: 0.5
+  })
+  
+  // Education card hover effects
+  const educationCards = document.querySelectorAll('.education-card')
+  educationCards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      gsap.to(card, {
+        scale: 1.05,
+        rotationY: 5,
+        z: 30,
+        duration: 0.4,
+        ease: 'power2.out'
+      })
+      
+      const icon = card.querySelector('.education-icon')
+      gsap.to(icon, {
+        scale: 1.2,
+        rotation: 15,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+    
+    card.addEventListener('mouseleave', () => {
+      gsap.to(card, {
+        scale: 1,
+        rotationY: 0,
+        z: 0,
+        duration: 0.4,
+        ease: 'power2.out'
+      })
+      
+      const icon = card.querySelector('.education-icon')
+      gsap.to(icon, {
+        scale: 1,
+        rotation: 0,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+  })
+  
+  // Floating animation for education icons
+  gsap.to('.education-icon', {
+    y: -5,
+    rotation: 3,
+    duration: 3,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1,
+    stagger: 1
+  })
+})
 </script>
 
 <style scoped>
