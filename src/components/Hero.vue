@@ -174,6 +174,57 @@ onMounted(() => {
     repeat: -1
   })
   
+  // Magnetic cursor effect for skill badges
+  const skillTags = document.querySelectorAll('.skill-tag')
+  skillTags.forEach(tag => {
+    let isHovered = false
+    
+    tag.addEventListener('mouseenter', () => {
+      isHovered = true
+      gsap.to(tag, {
+        scale: 1.1,
+        duration: 0.3,
+        ease: 'back.out(1.7)'
+      })
+    })
+    
+    tag.addEventListener('mouseleave', () => {
+      isHovered = false
+      gsap.to(tag, {
+        scale: 1,
+        x: 0,
+        y: 0,
+        duration: 0.5,
+        ease: 'elastic.out(1, 0.3)'
+      })
+    })
+    
+    tag.addEventListener('mousemove', (e) => {
+      if (!isHovered) return
+      
+      const rect = tag.getBoundingClientRect()
+      const centerX = rect.left + rect.width / 2
+      const centerY = rect.top + rect.height / 2
+      
+      const deltaX = e.clientX - centerX
+      const deltaY = e.clientY - centerY
+      
+      // Magnetic pull effect - move towards cursor but with limits
+      const magnetStrength = 0.3
+      const maxDistance = 15
+      
+      const magnetX = Math.max(-maxDistance, Math.min(maxDistance, deltaX * magnetStrength))
+      const magnetY = Math.max(-maxDistance, Math.min(maxDistance, deltaY * magnetStrength))
+      
+      gsap.to(tag, {
+        x: magnetX,
+        y: magnetY,
+        duration: 0.3,
+        ease: 'power2.out'
+      })
+    })
+  })
+  
   setTimeout(() => {
     if (!scene.value || !camera.value) return
 
@@ -436,7 +487,7 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;
+  pointer-events: none; /* Container has no pointer events */
   z-index: 2;
 }
 
@@ -444,7 +495,7 @@ onMounted(() => {
   position: absolute;
   background: rgba(26, 47, 26, 0.9);
   backdrop-filter: blur(10px);
-  color: #90EE90;
+  color: #a8d8a8; /* Slightly softer default green */
   padding: 0.75rem 1.25rem;
   border-radius: 25px;
   font-size: 0.9rem;
@@ -453,14 +504,17 @@ onMounted(() => {
   box-shadow: 0 4px 15px rgba(50, 205, 50, 0.2);
   white-space: nowrap;
   /* animation: float 6s ease-in-out infinite; */ /* Disabled - GSAP handles floating */
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Only transition colors, let GSAP handle transforms */
+  cursor: default; /* Changed from pointer to default */
+  user-select: none;
+  pointer-events: auto; /* Enable pointer events on skill tags */
 }
 
 .skill-tag:hover {
-  background: rgba(34, 139, 34, 0.9);
-  color: #e8f5e8;
-  box-shadow: 0 6px 25px rgba(50, 205, 50, 0.4);
-  transform: translateY(-5px);
+  background: rgba(30, 60, 30, 0.95); /* Darker, less bright green */
+  color: #d0e8d0; /* Softer text color */
+  box-shadow: 0 6px 25px rgba(40, 100, 40, 0.3); /* More subtle glow */
+  /* transform: translateY(-5px); */ /* Disabled - GSAP handles transforms */
 }
 
 /* Individual positioning and animation delays */
