@@ -5,7 +5,26 @@
     <div class="hero-content">
       <div class="hero-text">
         <h1 class="hero-title">
-          <span class="text-gradient">Win Khant Aung</span>
+          <div class="name-animation-container">
+            <div class="name-particles"></div>
+            <div class="name-text">
+              <span class="letter" data-char="W">W</span>
+              <span class="letter" data-char="i">i</span>
+              <span class="letter" data-char="n">n</span>
+              <span class="space"> </span>
+              <span class="letter" data-char="K">K</span>
+              <span class="letter" data-char="h">h</span>
+              <span class="letter" data-char="a">a</span>
+              <span class="letter" data-char="n">n</span>
+              <span class="letter" data-char="t">t</span>
+              <span class="space"> </span>
+              <span class="letter" data-char="A">A</span>
+              <span class="letter" data-char="u">u</span>
+              <span class="letter" data-char="n">n</span>
+              <span class="letter" data-char="g">g</span>
+            </div>
+            <div class="name-glow-overlay"></div>
+          </div>
         </h1>
         <h2 class="hero-subtitle">Full Stack Developer</h2>
         <p class="hero-description">
@@ -41,17 +60,6 @@
 import { ref, onMounted, markRaw } from 'vue'
 import { useThree } from '@/composables/useThree'
 import { useMouseInteraction, useRaycaster } from '@/composables/useMouseInteraction'
-import { 
-  createAdvancedParticleSystem, 
-  createMorphingSphere, 
-  createWireframeGeometry, 
-  createDynamicBackground,
-  createFloatingOrbs,
-  createEnergyField,
-  updateAdvancedParticles,
-  animateFloat, 
-  animateRotation 
-} from '@/utils/threeHelpers'
 import * as THREE from 'three'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -59,66 +67,159 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const canvasRef = ref<HTMLCanvasElement>()
-const { scene, camera, renderer, init, animate } = useThree(canvasRef)
+const { scene, camera, init, animate } = useThree(canvasRef)
 const { normalizedMouse } = useMouseInteraction()
 const { updateRaycaster } = useRaycaster(camera, scene)
 
 onMounted(() => {
   const cleanup = init()
   
-  // GSAP Hero Animations
+  // GSAP Creative Name Animation
   const tl = gsap.timeline()
   
   // Initial state - hide elements
-  gsap.set(['.hero-title', '.hero-subtitle', '.hero-description', '.hero-actions'], {
+  gsap.set(['.hero-subtitle', '.hero-description', '.hero-actions'], {
     opacity: 0,
     y: 100,
     scale: 0.8
   })
   
-  // Set skill tags initial state without affecting their CSS positioning
   gsap.set('.skill-tag', {
     opacity: 0,
     scale: 0.8,
-    // Don't set y position to preserve CSS positioning
   })
   
-  // Animate elements in sequence
-  tl.to('.hero-title', {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    duration: 1.2,
-    ease: 'elastic.out(1, 0.8)'
+  // Name Animation Setup
+  const letters = document.querySelectorAll('.letter')
+  let nameContainer = document.querySelector('.name-animation-container')
+  
+  // Set initial states for name animation
+  gsap.set(nameContainer, { opacity: 1 })
+  gsap.set(letters, {
+    opacity: 0,
+    scale: 0,
+    rotationY: 180,
+    rotationX: 90,
+    z: -200,
+    transformOrigin: 'center center',
   })
+  
+  // Create morphing text effect
+  const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*'
+  letters.forEach((letter, index) => {
+    const originalChar = letter.getAttribute('data-char')
+    let morphCount = 0
+    
+    const morphInterval = setInterval(() => {
+      if (morphCount < 8) {
+        letter.textContent = randomChars[Math.floor(Math.random() * randomChars.length)]
+        morphCount++
+      } else {
+        letter.textContent = originalChar
+        clearInterval(morphInterval)
+      }
+    }, 50 + index * 20)
+  })
+  
+  // Start all animations simultaneously
+  // Name animation
+  tl.to(letters, {
+    opacity: 1,
+    scale: 1,
+    rotationY: 0,
+    rotationX: 0,
+    z: 0,
+    duration: 1.5,
+    stagger: {
+      each: 0.1,
+      from: 'random'
+    },
+    ease: 'elastic.out(1, 0.6)',
+    onComplete: () => {
+      // Add continuous floating and rotation
+      gsap.to(letters, {
+        rotationY: '+=5',
+        rotationX: '+=2',
+        duration: 2,
+        stagger: 0.1,
+        yoyo: true,
+        repeat: -1,
+        ease: 'sine.inOut'
+      })
+    }
+  })
+  
+  // All other elements start at the same time as name animation
   .to('.hero-subtitle', {
     opacity: 1,
     y: 0,
     scale: 1,
     duration: 0.8,
     ease: 'back.out(1.7)'
-  }, '-=0.8')
+  }, 0)  // Start at the same time as name animation
+  
   .to('.hero-description', {
     opacity: 1,
     y: 0,
     scale: 1,
-    duration: 0.6,
+    duration: 1.0,
     ease: 'power2.out'
-  }, '-=0.4')
+  }, 0.2)  // Start just slightly after
+  
   .to('.hero-actions', {
     opacity: 1,
     y: 0,
     scale: 1,
     duration: 0.8,
     ease: 'back.out(1.7)'
-  }, '-=0.2')
+  }, 0.4)  // Start shortly after
+  
   .to('.skill-tag', {
     opacity: 1,
     scale: 1,
     duration: 0.6,
     stagger: 0.2,
     ease: 'back.out(1.7)'
-  }, '-=0.6')
+  }, 0.1)  // Start almost immediately
+  
+  // Set green color
+  .set(letters, {
+    color: '#32CD32',
+    textShadow: '0 0 10px rgba(50, 205, 50, 0.3)'
+  }, 0)
+  
+  // Magnetic pull effect - happens during the main animation
+  .to(letters, {
+    y: -20,
+    duration: 0.6,
+    stagger: 0.05,
+    ease: 'back.out(2)',
+    yoyo: true,
+    repeat: 1
+  }, 0.8)
+  
+  // Glitch effect - brief and during main animation
+  .to(letters, {
+    x: () => Math.random() * 10 - 5,
+    duration: 0.1,
+    stagger: 0.02,
+    repeat: 3,
+    yoyo: true,
+    ease: 'power2.inOut'
+  }, 1.0)
+  
+  // Reset position
+  .to(letters, {
+    x: 0,
+    scale: 1.05,
+    duration: 0.4,
+    ease: 'back.out(1.7)'
+  }, 1.2)
+  .to(letters, {
+    scale: 1,
+    duration: 0.3,
+    ease: 'power2.out'
+  }, 1.4)
   
   // Floating skill tags animation
   gsap.to('.skill-tag', {
@@ -174,6 +275,42 @@ onMounted(() => {
     repeat: -1
   })
   
+  // Interactive name letters on mouse move
+  nameContainer = document.querySelector('.name-animation-container')
+  if (nameContainer) {
+    nameContainer.addEventListener('mousemove', (e) => {
+      const rect = nameContainer.getBoundingClientRect()
+      const centerX = rect.left + rect.width / 2
+      const centerY = rect.top + rect.height / 2
+      
+      const deltaX = ((e as MouseEvent).clientX - centerX) / rect.width
+      const deltaY = ((e as MouseEvent).clientY - centerY) / rect.height
+      
+      letters.forEach((letter, index) => {
+        const delay = index * 0.02
+        gsap.to(letter, {
+          rotationY: deltaX * 15,
+          rotationX: -deltaY * 10,
+          z: Math.abs(deltaX + deltaY) * 20,
+          duration: 0.6,
+          delay: delay,
+          ease: 'power2.out'
+        })
+      })
+    })
+    
+    nameContainer.addEventListener('mouseleave', () => {
+      gsap.to(letters, {
+        rotationY: 0,
+        rotationX: 0,
+        z: 0,
+        duration: 0.8,
+        stagger: 0.02,
+        ease: 'elastic.out(1, 0.5)'
+      })
+    })
+  }
+  
   // Magnetic cursor effect for skill badges
   const skillTags = document.querySelectorAll('.skill-tag')
   skillTags.forEach(tag => {
@@ -206,8 +343,8 @@ onMounted(() => {
       const centerX = rect.left + rect.width / 2
       const centerY = rect.top + rect.height / 2
       
-      const deltaX = e.clientX - centerX
-      const deltaY = e.clientY - centerY
+      const deltaX = (e as MouseEvent).clientX - centerX
+      const deltaY = (e as MouseEvent).clientY - centerY
       
       // Magnetic pull effect - move towards cursor but with limits
       const magnetStrength = 0.3
@@ -389,6 +526,76 @@ onMounted(() => {
   line-height: 1.1;
 }
 
+.name-animation-container {
+  position: relative;
+  display: inline-block;
+  perspective: 1000px;
+}
+
+.name-text {
+  position: relative;
+  z-index: 2;
+}
+
+.letter {
+  display: inline-block;
+  font-weight: 700;
+  color: #32CD32;
+  text-shadow: 0 0 10px rgba(50, 205, 50, 0.3);
+  transform-style: preserve-3d;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.letter:hover {
+  transform: rotateY(15deg) rotateX(5deg) translateZ(10px) scale(1.1);
+  color: #90EE90;
+  text-shadow: 0 0 15px rgba(144, 238, 144, 0.6);
+  filter: brightness(1.2);
+}
+
+.space {
+  display: inline-block;
+  width: 0.3em;
+}
+
+.name-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.name-glow-overlay {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  background: radial-gradient(ellipse at center, 
+    rgba(232, 245, 232, 0.05) 0%,
+    rgba(232, 245, 232, 0.02) 50%,
+    transparent 70%);
+  border-radius: 50%;
+  opacity: 0.3;
+  z-index: 0;
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.4;
+  }
+}
+
 .hero-subtitle {
   font-size: 1.5rem;
   color: #90EE90;
@@ -454,6 +661,19 @@ onMounted(() => {
   
   .hero-title {
     font-size: 2.5rem;
+  }
+  
+  .letter:hover {
+    transform: scale(1.05);
+    /* Simplify hover effects on mobile */
+  }
+  
+  .name-glow-overlay {
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    opacity: 0.2;
   }
   
   .hero-subtitle {
