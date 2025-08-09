@@ -171,34 +171,35 @@ body::before {
 }
 
 .btn-primary {
-  background: rgba(232, 245, 232, 0.1);
-  color: #e8f5e8;
-  border: 1px solid rgba(232, 245, 232, 0.2);
+  background: linear-gradient(135deg, #32CD32, #228B22);
+  color: #ffffff;
+  border: 1px solid rgba(50, 205, 50, 0.3);
   padding: 12px 24px;
   border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
+  font-weight: 600;
+  cursor: none !important;
   transition: all 0.3s ease;
   text-decoration: none;
   display: inline-block;
   backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(50, 205, 50, 0.3);
 }
 
 .btn-primary:hover {
-  background: rgba(232, 245, 232, 0.2);
-  border-color: rgba(232, 245, 232, 0.4);
+  background: linear-gradient(135deg, #228B22, #006400);
+  border-color: rgba(50, 205, 50, 0.6);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(232, 245, 232, 0.1);
+  box-shadow: 0 8px 25px rgba(50, 205, 50, 0.4);
 }
 
 .btn-secondary {
   background: transparent;
-  color: rgba(232, 245, 232, 0.7);
-  border: 1px solid rgba(232, 245, 232, 0.3);
+  color: #90EE90;
+  border: 2px solid rgba(50, 205, 50, 0.5);
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 500;
-  cursor: pointer;
+  cursor: none !important;
   transition: all 0.3s ease;
   text-decoration: none;
   display: inline-block;
@@ -206,10 +207,11 @@ body::before {
 }
 
 .btn-secondary:hover {
-  background: rgba(232, 245, 232, 0.1);
-  border-color: rgba(232, 245, 232, 0.5);
-  color: #e8f5e8;
+  background: rgba(50, 205, 50, 0.1);
+  border-color: rgba(50, 205, 50, 0.8);
+  color: #ffffff;
   transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(50, 205, 50, 0.2);
 }
 
 /* Page Transitions */
