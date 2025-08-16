@@ -40,15 +40,33 @@
       </div>
     </div>
     
-    <!-- Floating Skills Tags -->
-    <div class="floating-skills">
-      <div class="skill-tag skill-tag-1" data-skill="Node.js">Node.js</div>
-      <div class="skill-tag skill-tag-2" data-skill="PHP">PHP</div>
-      <div class="skill-tag skill-tag-3" data-skill="Laravel">Laravel</div>
-      <div class="skill-tag skill-tag-4" data-skill="Vue.js">Vue.js</div>
-      <div class="skill-tag skill-tag-5" data-skill="DevOps">DevOps</div>
-      <div class="skill-tag skill-tag-6" data-skill="Web Animations">Web Animations</div>
-    </div>
+         <!-- Floating Skills Tags -->
+     <div class="floating-skills">
+       <div class="skill-tag skill-tag-1" data-skill="Node.js">
+         <span class="skill-text">Node.js</span>
+         <Icon icon="devicon:nodejs" class="skill-icon" />
+       </div>
+       <div class="skill-tag skill-tag-2" data-skill="PHP">
+         <span class="skill-text">PHP</span>
+         <Icon icon="devicon:php" class="skill-icon" />
+       </div>
+       <div class="skill-tag skill-tag-3" data-skill="Laravel">
+         <span class="skill-text">Laravel</span>
+         <Icon icon="devicon:laravel" class="skill-icon" />
+       </div>
+       <div class="skill-tag skill-tag-4" data-skill="Vue.js">
+         <span class="skill-text">Vue.js</span>
+         <Icon icon="devicon:vuejs" class="skill-icon" />
+       </div>
+               <div class="skill-tag skill-tag-5" data-skill="DevOps">
+          <span class="skill-text">DevOps</span>
+          <Icon icon="mdi:server" class="skill-icon" />
+        </div>
+       <div class="skill-tag skill-tag-6" data-skill="Web Animations">
+         <span class="skill-text">Web Animations</span>
+         <Icon icon="mdi:animation" class="skill-icon" />
+       </div>
+     </div>
     
     <div class="scroll-indicator">
       <div class="scroll-arrow"></div>
@@ -63,6 +81,7 @@ import { useMouseInteraction, useRaycaster } from '@/composables/useMouseInterac
 import * as THREE from 'three'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Icon } from '@iconify/vue'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -222,15 +241,17 @@ onMounted(() => {
   }, 1.4)
   
   // Floating skill tags animation
+  const isMobile = window.innerWidth <= 768
+  
   gsap.to('.skill-tag', {
-    y: '-=15',
-    rotation: 2,
-    duration: 3,
+    y: isMobile ? '-=8' : '-=15', // Reduced movement on mobile
+    rotation: isMobile ? 1 : 2, // Reduced rotation on mobile
+    duration: isMobile ? 4 : 3, // Slower animation on mobile for better performance
     ease: 'sine.inOut',
     yoyo: true,
     repeat: -1,
     stagger: {
-      each: 0.5,
+      each: isMobile ? 0.8 : 0.5, // Slower stagger on mobile
       from: 'random'
     }
   })
@@ -313,53 +334,76 @@ onMounted(() => {
   
   // Magnetic cursor effect for skill badges
   const skillTags = document.querySelectorAll('.skill-tag')
+  
   skillTags.forEach(tag => {
     let isHovered = false
     
-    tag.addEventListener('mouseenter', () => {
-      isHovered = true
-      gsap.to(tag, {
-        scale: 1.1,
-        duration: 0.3,
-        ease: 'back.out(1.7)'
+    // Only add mouse events on non-mobile devices
+    if (!isMobile) {
+      tag.addEventListener('mouseenter', () => {
+        isHovered = true
+        gsap.to(tag, {
+          scale: 1.1,
+          duration: 0.3,
+          ease: 'back.out(1.7)'
+        })
       })
-    })
+      
+      tag.addEventListener('mouseleave', () => {
+        isHovered = false
+        gsap.to(tag, {
+          scale: 1,
+          x: 0,
+          y: 0,
+          duration: 0.5,
+          ease: 'elastic.out(1, 0.3)'
+        })
+      })
+      
+      tag.addEventListener('mousemove', (e) => {
+        if (!isHovered) return
+        
+        const rect = tag.getBoundingClientRect()
+        const centerX = rect.left + rect.width / 2
+        const centerY = rect.top + rect.height / 2
+        
+        const deltaX = (e as MouseEvent).clientX - centerX
+        const deltaY = (e as MouseEvent).clientY - centerY
+        
+        // Magnetic pull effect - move towards cursor but with limits
+        const magnetStrength = 0.3
+        const maxDistance = 15
+        
+        const magnetX = Math.max(-maxDistance, Math.min(maxDistance, deltaX * magnetStrength))
+        const magnetY = Math.max(-maxDistance, Math.min(maxDistance, deltaY * magnetStrength))
+        
+        gsap.to(tag, {
+          x: magnetX,
+          y: magnetY,
+          duration: 0.3,
+          ease: 'power2.out'
+        })
+      })
+    }
     
-    tag.addEventListener('mouseleave', () => {
-      isHovered = false
-      gsap.to(tag, {
-        scale: 1,
-        x: 0,
-        y: 0,
-        duration: 0.5,
-        ease: 'elastic.out(1, 0.3)'
+    // Add touch events for mobile devices
+    if (isMobile) {
+      tag.addEventListener('touchstart', () => {
+        gsap.to(tag, {
+          scale: 1.05,
+          duration: 0.2,
+          ease: 'power2.out'
+        })
       })
-    })
-    
-    tag.addEventListener('mousemove', (e) => {
-      if (!isHovered) return
       
-      const rect = tag.getBoundingClientRect()
-      const centerX = rect.left + rect.width / 2
-      const centerY = rect.top + rect.height / 2
-      
-      const deltaX = (e as MouseEvent).clientX - centerX
-      const deltaY = (e as MouseEvent).clientY - centerY
-      
-      // Magnetic pull effect - move towards cursor but with limits
-      const magnetStrength = 0.3
-      const maxDistance = 15
-      
-      const magnetX = Math.max(-maxDistance, Math.min(maxDistance, deltaX * magnetStrength))
-      const magnetY = Math.max(-maxDistance, Math.min(maxDistance, deltaY * magnetStrength))
-      
-      gsap.to(tag, {
-        x: magnetX,
-        y: magnetY,
-        duration: 0.3,
-        ease: 'power2.out'
+      tag.addEventListener('touchend', () => {
+        gsap.to(tag, {
+          scale: 1,
+          duration: 0.3,
+          ease: 'elastic.out(1, 0.3)'
+        })
       })
-    })
+    }
   })
   
   setTimeout(() => {
@@ -696,7 +740,112 @@ onMounted(() => {
   }
   
   .floating-skills {
-    display: none; /* Hide on mobile */
+    display: block; /* Show on mobile */
+  }
+  
+  /* Mobile-specific floating skills positioning */
+  .skill-tag {
+    font-size: 0.8rem;
+    padding: 0.6rem 1rem;
+    border-radius: 20px;
+  }
+  
+  /* Show only icons on mobile */
+  .skill-text {
+    display: none !important;
+  }
+  
+  .skill-icon {
+    display: block !important;
+    font-size: 1.1rem;
+  }
+  
+  .skill-tag-1 {
+    top: 18% !important;
+    left: 8% !important;
+  }
+  
+  .skill-tag-2 {
+    top: 22% !important;
+    right: 8% !important;
+  }
+  
+  .skill-tag-3 {
+    top: 16% !important;
+    right: 15% !important;
+  }
+  
+  .skill-tag-4 {
+    bottom: 8% !important;
+    left: 8% !important;
+  }
+  
+  .skill-tag-5 {
+    bottom: 12% !important;
+    right: 8% !important;
+  }
+  
+  .skill-tag-6 {
+    top: 28% !important;
+    left: 6% !important;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .floating-skills {
+    display: block;
+  }
+  
+  .skill-tag {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 18px;
+    max-width: 120px;
+    text-align: center;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+  
+  /* Show only icons on extra small mobile */
+  .skill-text {
+    display: none !important;
+  }
+  
+  .skill-icon {
+    display: block !important;
+    font-size: 1rem;
+  }
+  
+  /* Adjust positioning for very small screens */
+  .skill-tag-1 {
+    top: 16% !important;
+    left: 6% !important;
+  }
+  
+  .skill-tag-2 {
+    top: 20% !important;
+    right: 6% !important;
+  }
+  
+  .skill-tag-3 {
+    top: 14% !important;
+    right: 12% !important;
+  }
+  
+  .skill-tag-4 {
+    bottom: 6% !important;
+    left: 6% !important;
+  }
+  
+  .skill-tag-5 {
+    bottom: 10% !important;
+    right: 6% !important;
+  }
+  
+  .skill-tag-6 {
+    top: 26% !important;
+    left: 4% !important;
   }
 }
 
@@ -728,6 +877,22 @@ onMounted(() => {
   cursor: default; /* Changed from pointer to default */
   user-select: none;
   pointer-events: auto; /* Enable pointer events on skill tags */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Desktop styles - show text, hide icons */
+@media (min-width: 769px) {
+  .skill-text {
+    display: block;
+  }
+  
+  .skill-icon {
+    display: none;
+    font-size: 1.2rem;
+    color: #a8d8a8;
+  }
 }
 
 .skill-tag:hover {
@@ -737,35 +902,37 @@ onMounted(() => {
   /* transform: translateY(-5px); */ /* Disabled - GSAP handles transforms */
 }
 
-/* Individual positioning and animation delays */
-.skill-tag-1 {
-  top: 20% !important;
-  left: 15% !important;
-}
-
-.skill-tag-2 {
-  top: 35% !important;
-  right: 12% !important;
-}
-
-.skill-tag-3 {
-  top: 15% !important;
-  right: 25% !important;
-}
-
-.skill-tag-4 {
-  bottom: 35% !important;
-  left: 10% !important;
-}
-
-.skill-tag-5 {
-  bottom: 20% !important;
-  right: 20% !important;
-}
-
-.skill-tag-6 {
-  top: 50% !important;
-  left: 8% !important;
+/* Individual positioning and animation delays - Desktop */
+@media (min-width: 769px) {
+  .skill-tag-1 {
+    top: 20% !important;
+    left: 15% !important;
+  }
+  
+  .skill-tag-2 {
+    top: 35% !important;
+    right: 12% !important;
+  }
+  
+  .skill-tag-3 {
+    top: 15% !important;
+    right: 25% !important;
+  }
+  
+  .skill-tag-4 {
+    bottom: 35% !important;
+    left: 10% !important;
+  }
+  
+  .skill-tag-5 {
+    bottom: 20% !important;
+    right: 20% !important;
+  }
+  
+  .skill-tag-6 {
+    top: 50% !important;
+    left: 8% !important;
+  }
 }
 
 /* Floating animation */
