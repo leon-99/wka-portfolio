@@ -73,7 +73,7 @@ const skillCategories = ref([
   {
     title: 'Cloud & DevOps',
     skills: [
-      { name: 'AWS', icon: 'devicon:amazonwebservices', iconClass: 'devicon', featured: true },
+      { name: 'AWS', icon: 'logos:aws', iconClass: 'logos', featured: true },
       { name: 'Docker', icon: 'devicon:docker', iconClass: 'devicon', featured: true },
       { name: 'CI/CD', icon: 'mdi:git', iconClass: 'mdi', featured: true },
       { name: 'Git', icon: 'devicon:git', iconClass: 'devicon', featured: true },
@@ -83,10 +83,25 @@ const skillCategories = ref([
     ]
   },
   {
+    title: 'Code Quality & Metrics',
+    skills: [
+      { name: 'Cyclomatic Complexity', icon: 'mdi:code-braces', iconClass: 'mdi', featured: true },
+      { name: 'Maintainability Index', icon: 'mdi:chart-line', iconClass: 'mdi', featured: true },
+      { name: 'Lines of Code', icon: 'mdi:format-list-numbered', iconClass: 'mdi', featured: false },
+      { name: 'Code Coverage', icon: 'mdi:shield-check', iconClass: 'mdi', featured: true },
+      { name: 'Technical Debt', icon: 'mdi:alert-circle', iconClass: 'mdi', featured: false },
+      { name: 'Code Review', icon: 'mdi:eye-check', iconClass: 'mdi', featured: true },
+      { name: 'Static Analysis', icon: 'mdi:magnify-scan', iconClass: 'mdi', featured: false },
+      { name: 'Performance Profiling', icon: 'mdi:speedometer', iconClass: 'mdi', featured: false }
+    ]
+  },
+  {
     title: 'Tools & Others',
     skills: [
-      { name: 'VS Code', icon: 'devicon:vscode', iconClass: 'devicon', featured: false },
-      { name: 'Cursor', icon: 'devicon:cursor', iconClass: 'devicon', featured: false },
+      { name: 'IDEs', icon: 'devicon:vscode', iconClass: 'devicon', featured: false },
+      { name: 'Prompt Engineering', icon: 'mdi:robot', iconClass: 'mdi', featured: true },
+      { name: 'MCP', icon: 'mdi:connection', iconClass: 'mdi', featured: true },
+      { name: 'AI Agents', icon: 'mdi:brain', iconClass: 'mdi', featured: true },
       { name: 'Postman', icon: 'devicon:postman', iconClass: 'devicon', featured: false },
       { name: 'Figma', icon: 'devicon:figma', iconClass: 'devicon', featured: false },
       { name: 'Obsidian', icon: 'devicon:obsidian', iconClass: 'devicon', featured: false },
@@ -316,6 +331,9 @@ onMounted(async () => {
   width: 120px;
   height: 120px;
   text-align: center;
+  overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .skill-item:hover {
@@ -355,12 +373,26 @@ onMounted(async () => {
   color: #90EE90;
 }
 
+.skill-icon.logos :deep(svg) {
+  color: #90EE90;
+}
+
 .skill-name {
   color: #e8f5e8;
   font-weight: 600;
   font-size: 0.9rem;
   text-align: center;
   line-height: 1.2;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+  padding: 0 0.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 1200px) {
@@ -391,8 +423,17 @@ onMounted(async () => {
     margin-bottom: 3rem;
   }
   
+  .skills-content {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+  
   .skills-categories {
     gap: 3rem;
+  }
+  
+  .skill-category {
+    gap: 1.5rem;
   }
   
   .category-title {
@@ -400,14 +441,18 @@ onMounted(async () => {
   }
   
   .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 1rem;
+    padding: 0 0.5rem;
+    justify-items: center;
   }
   
   .skill-item {
     padding: 0.75rem 0.5rem;
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
+    margin: 0.25rem;
+    overflow: hidden;
   }
   
   .skill-icon {
@@ -416,20 +461,66 @@ onMounted(async () => {
   }
   
   .skill-name {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    line-height: 1.1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
+    padding: 0 0.1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Special handling for Code Quality & Metrics category */
+  .skill-category:nth-child(4) .skill-item {
+    width: 95px;
+    height: 95px;
+  }
+  
+  .skill-category:nth-child(4) .skill-name {
+    font-size: 0.65rem;
+    -webkit-line-clamp: 3;
   }
 }
 
 @media (max-width: 480px) {
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 2.5rem;
+  }
+  
+  .skills-content {
+    padding: 0 0.5rem;
+  }
+  
+  .skills-categories {
+    gap: 2.5rem;
+  }
+  
+  .skill-category {
+    gap: 1.25rem;
+  }
+  
+  .category-title {
+    font-size: 1.5rem;
+  }
+  
   .skills-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
+    gap: 0.75rem;
+    padding: 0 0.25rem;
   }
   
   .skill-item {
-    padding: 0.5rem;
-    width: 70px;
-    height: 70px;
+    padding: 0.5rem 0.25rem;
+    width: 80px;
+    height: 80px;
+    margin: 0.25rem;
+    overflow: hidden;
   }
   
   .skill-icon {
@@ -438,7 +529,63 @@ onMounted(async () => {
   }
   
   .skill-name {
+    font-size: 0.65rem;
+    line-height: 1.1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
+    padding: 0 0.1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Special handling for Code Quality & Metrics category */
+  .skill-category:nth-child(4) .skill-item {
+    width: 85px;
+    height: 85px;
+  }
+  
+  .skill-category:nth-child(4) .skill-name {
+    font-size: 0.6rem;
+    -webkit-line-clamp: 3;
+  }
+}
+
+@media (max-width: 360px) {
+  .skills-content {
+    padding: 0 0.25rem;
+  }
+  
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+  }
+  
+  .skill-item {
+    width: 90px;
+    height: 90px;
+    margin: 0.25rem;
+    padding: 0.5rem 0.25rem;
+  }
+  
+  .skill-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .skill-name {
     font-size: 0.7rem;
+    line-height: 1.1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
+    padding: 0 0.1rem;
   }
 }
 </style>
