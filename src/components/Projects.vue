@@ -1,142 +1,228 @@
 <template>
   <section id="projects" class="projects section-padding">
     <div class="container">
-             <h2 class="section-title text-gradient">Featured Projects</h2>
-       <p class="section-subtitle">
-         Explore my latest projects showcasing modern web technologies and innovative solutions.
-       </p>
-       
-       <!-- Filter Buttons -->
-       <div class="filter-container">
-         <button 
-           class="filter-btn active" 
+      <h2 class="section-title text-gradient">Featured Projects</h2>
+      <p class="section-subtitle">
+        Explore my latest projects showcasing modern web technologies and innovative solutions.
+      </p>
+      
+      <!-- Filter Buttons -->
+      <div class="filter-container">
+                 <button 
+           class="filter-btn" 
            @click="filterProjects('all')"
            :class="{ active: activeFilter === 'all' }"
          >
-           <span>🌟</span>
-           All Projects
-         </button>
-         <button 
-           class="filter-btn" 
-           @click="filterProjects('websites')"
-           :class="{ active: activeFilter === 'websites' }"
-         >
-           <span>🌐</span>
-           Websites
-         </button>
-         <button 
-           class="filter-btn" 
-           @click="filterProjects('packages')"
-           :class="{ active: activeFilter === 'packages' }"
-         >
-           <span>📦</span>
-           Packages
-         </button>
-       </div>
-       
-       <div class="projects-grid">
-                 <!-- Weather App Project -->
-         <div class="project-card glass-card" data-project="weather" data-category="websites">
+          <span>🌟</span>
+          All Projects
+        </button>
+        <button 
+          class="filter-btn" 
+          @click="filterProjects('websites')"
+          :class="{ active: activeFilter === 'websites' }"
+        >
+          <span>🌐</span>
+          Websites
+        </button>
+        <button 
+          class="filter-btn" 
+          @click="filterProjects('packages')"
+          :class="{ active: activeFilter === 'packages' }"
+        >
+          <span>📦</span>
+          Packages
+        </button>
+      </div>
+      
+      <div class="projects-grid">
+        <div 
+          v-for="project in filteredProjects" 
+          :key="project.id"
+          class="project-card glass-card" 
+          :data-project="project.id"
+          :data-category="project.category"
+        >
           <div class="project-image">
-            <div class="project-icon">🌤️</div>
+            <div class="project-icon">{{ project.icon }}</div>
           </div>
           <div class="project-content">
-            <h3 class="project-title">Weather Info App</h3>
-            <p class="project-description">
-              A modern weather application built with Vue.js and Tailwind CSS, featuring real-time weather data, 
-              location-based forecasts, and a responsive design. Includes current conditions, hourly forecasts, 
-              and 7-day predictions with beautiful weather icons and intuitive user interface.
-            </p>
+            <h3 class="project-title">{{ project.title }}</h3>
+            <p class="project-description">{{ project.description }}</p>
             <div class="project-tech">
-              <span class="tech-tag">Vue.js</span>
-              <span class="tech-tag">Tailwind CSS</span>
-              <span class="tech-tag">JavaScript</span>
-              <span class="tech-tag">Weather API</span>
+              <span 
+                v-for="tech in project.technologies" 
+                :key="tech"
+                class="tech-tag"
+              >
+                {{ tech }}
+              </span>
             </div>
-            <div class="project-links">
-              <a href="https://weather-info-leon.netlify.app/" target="_blank" rel="noopener noreferrer" class="btn-live">
-                <span>🌐</span>
-                Live Demo
-              </a>
-              <a href="#" class="btn-code" @click="showComingSoon">
-                <span>📁</span>
-                View Code
-              </a>
-            </div>
+                         <div class="project-links">
+               <a 
+                 v-if="project.liveUrl"
+                 :href="project.liveUrl" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="btn-live"
+               >
+                 <span>{{ project.liveIcon }}</span>
+                 {{ project.liveText }}
+               </a>
+               <a 
+                 v-if="project.codeUrl"
+                 :href="project.codeUrl" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="btn-code"
+               >
+                 <span>{{ project.codeIcon }}</span>
+                 {{ project.codeText }}
+               </a>
+               <a 
+                 v-if="project.contactUrl"
+                 :href="project.contactUrl" 
+                 class="btn-contact"
+               >
+                 <span>{{ project.contactIcon }}</span>
+                 {{ project.contactText }}
+               </a>
+               <!-- Show coming soon message for projects without live/code URLs -->
+               <button 
+                 v-if="!project.liveUrl && !project.codeUrl && !project.contactUrl"
+                 @click="showComingSoon"
+                 class="btn-code"
+               >
+                 <span>{{ project.codeIcon }}</span>
+                 {{ project.codeText }}
+               </button>
+             </div>
           </div>
         </div>
-
-                 <!-- Oasify Postman Project -->
-         <div class="project-card glass-card" data-project="oasify-postman" data-category="packages">
-           <div class="project-image">
-             <div class="project-icon">📦</div>
-           </div>
-           <div class="project-content">
-             <h3 class="project-title">Oasify Postman</h3>
-             <p class="project-description">
-               An npm package that converts Postman collections to OpenAPI 3.0 specifications with automatic 
-               example response injection. Features CLI interface, programmatic API, and customizable metadata 
-               for seamless API documentation generation.
-             </p>
-             <div class="project-tech">
-               <span class="tech-tag">Node.js</span>
-               <span class="tech-tag">JavaScript</span>
-               <span class="tech-tag">CLI</span>
-               <span class="tech-tag">OpenAPI</span>
-             </div>
-             <div class="project-links">
-               <a href="https://www.npmjs.com/package/oasify-postman" target="_blank" rel="noopener noreferrer" class="btn-live">
-                 <span>📦</span>
-                 NPM Package
-               </a>
-               <a href="#" class="btn-code" @click="showComingSoon">
-                 <span>📁</span>
-                 View Code
-               </a>
-             </div>
-           </div>
-         </div>
-
-         <!-- Coming Soon Project -->
-         <div class="project-card glass-card coming-soon" data-project="coming-soon">
-           <div class="project-image">
-             <div class="project-icon">🚀</div>
-           </div>
-           <div class="project-content">
-             <h3 class="project-title">More Projects Coming Soon</h3>
-             <p class="project-description">
-               I'm currently working on exciting new projects that showcase modern web technologies, 
-               innovative solutions, and cutting-edge development practices. These projects will demonstrate 
-               my expertise in full-stack development, cloud architecture, and user experience design.
-             </p>
-             <div class="project-tech">
-               <span class="tech-tag">Full-Stack</span>
-               <span class="tech-tag">Cloud</span>
-               <span class="tech-tag">Modern UI/UX</span>
-               <span class="tech-tag">Innovation</span>
-             </div>
-             <div class="project-links">
-               <a href="#contact" class="btn-contact">
-                 <span>💬</span>
-                 Let's Connect
-               </a>
-             </div>
-           </div>
-         </div>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick, ref } from 'vue'
+import { onMounted, nextTick, ref, computed } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Project data structure
+interface Project {
+  id: string
+  title: string
+  description: string
+  icon: string
+  category: 'websites' | 'packages'
+  technologies: string[]
+  liveUrl?: string
+  liveIcon: string
+  liveText: string
+  codeUrl?: string
+  codeIcon: string
+  codeText: string
+  contactUrl?: string
+  contactIcon?: string
+  contactText?: string
+}
+
+// Projects data
+const projects = ref<Project[]>([
+  {
+    id: 'weather-app',
+    title: 'Weather Info App',
+    description: 'A modern weather application built with Vue.js and Tailwind CSS, featuring real-time weather data, location-based forecasts, and a responsive design. Includes current conditions, hourly forecasts, and 7-day predictions with beautiful weather icons and intuitive user interface.',
+    icon: '🌤️',
+    category: 'websites',
+    technologies: ['Vue.js', 'Tailwind CSS', 'JavaScript', 'Weather API'],
+    liveUrl: 'https://weather-info-leon.netlify.app/',
+    liveIcon: '🌐',
+    liveText: 'Live Demo',
+    codeIcon: '📁',
+    codeText: 'View Code'
+  },
+  {
+    id: 'solar-system',
+    title: 'Solar System Explorer',
+    description: 'An interactive solar system visualization app that allows users to explore planets, moons, and celestial bodies. Features 3D-like animations, educational content, and an immersive space exploration experience built with modern web technologies.',
+    icon: '🪐',
+    category: 'websites',
+    technologies: ['Vue.js', 'Tailwind CSS', 'JavaScript', '3D Animation'],
+    liveUrl: 'https://solar-system-leon.netlify.app/',
+    liveIcon: '🌐',
+    liveText: 'Live Demo',
+    codeIcon: '📁',
+    codeText: 'View Code'
+  },
+  {
+    id: 'weeks-of-life',
+    title: 'Weeks of Life',
+    description: 'A life visualization app that displays your life in weeks, helping you visualize time and make the most of every moment. Features an intuitive interface to track milestones, goals, and life events in a unique weekly grid format.',
+    icon: '📅',
+    category: 'websites',
+    technologies: ['Vue.js', 'Tailwind CSS', 'JavaScript', 'Life Tracking'],
+    liveUrl: 'https://weeks-of-life-leon.netlify.app/',
+    liveIcon: '🌐',
+    liveText: 'Live Demo',
+    codeIcon: '📁',
+    codeText: 'View Code'
+  },
+  {
+    id: 'oasify-postman',
+    title: 'Oasify Postman',
+    description: 'An npm package that converts Postman collections to OpenAPI 3.0 specifications with automatic example response injection. Features CLI interface, programmatic API, and customizable metadata for seamless API documentation generation.',
+    icon: '📦',
+    category: 'packages',
+    technologies: ['Node.js', 'JavaScript', 'CLI', 'OpenAPI'],
+    liveUrl: 'https://www.npmjs.com/package/oasify-postman',
+    liveIcon: '📦',
+    liveText: 'NPM Package',
+    codeIcon: '📁',
+    codeText: 'View Code'
+  },
+  {
+    id: 'laravel-entity-generator',
+    title: 'Laravel Entity Generator',
+    description: 'A Laravel command that generates complete CRUD operations in a service-based architecture. Automates the creation of controllers, services, and more, allowing developers to focus on building their application logic instead of boilerplate code.',
+    icon: '⚙️',
+    category: 'packages',
+    technologies: ['Laravel', 'PHP', 'CLI', 'CRUD'],
+    codeUrl: 'https://github.com/leon-99/laravel-entity-generator',
+    liveIcon: '📁',
+    liveText: 'View Code',
+    codeIcon: '📦',
+    codeText: 'Package'
+  },
+     {
+     id: 'coming-soon',
+     title: 'More Projects Coming Soon',
+     description: 'I\'m currently working on exciting new projects that showcase modern web technologies, innovative solutions, and cutting-edge development practices. These projects will demonstrate my expertise in full-stack development, cloud architecture, and user experience design.',
+     icon: '🚀',
+     category: 'websites',
+     technologies: ['Full-Stack', 'Cloud', 'Modern UI/UX', 'Innovation'],
+     contactUrl: '#contact',
+     contactIcon: '💬',
+     contactText: "Let's Connect",
+     liveIcon: '💬',
+     liveText: "Let's Connect",
+     codeIcon: '📁',
+     codeText: 'View Code'
+   }
+])
+
 // Filter state
 const activeFilter = ref('all')
+
+// Computed filtered projects
+const filteredProjects = computed(() => {
+  if (activeFilter.value === 'all') {
+    return projects.value
+  }
+  return projects.value.filter(project => project.category === activeFilter.value)
+})
 
 onMounted(async () => {
   await nextTick()
@@ -255,30 +341,6 @@ const showComingSoon = () => {
 // Function to filter projects
 const filterProjects = (category: string) => {
   activeFilter.value = category
-  const projectCards = document.querySelectorAll('.project-card')
-  
-  projectCards.forEach(card => {
-    const cardCategory = card.getAttribute('data-category')
-    const cardElement = card as HTMLElement
-    
-    if (category === 'all' || cardCategory === category) {
-      cardElement.style.display = 'flex'
-      // Animate card appearance
-      gsap.fromTo(card, {
-        opacity: 0,
-        scale: 0.8,
-        y: 20
-      }, {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        duration: 0.5,
-        ease: 'back.out(1.7)'
-      })
-    } else {
-      cardElement.style.display = 'none'
-    }
-  })
 }
 </script>
 
@@ -461,38 +523,43 @@ const filterProjects = (category: string) => {
 }
 
 .btn-live {
-  background: linear-gradient(135deg, #32CD32, #228B22);
-  color: white;
+  background: rgba(34, 139, 34, 0.1);
+  color: #90EE90;
+  border: 1px solid rgba(34, 139, 34, 0.2);
 }
 
 .btn-live:hover {
+  background: rgba(34, 139, 34, 0.15);
+  border-color: rgba(34, 139, 34, 0.4);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(34, 139, 34, 0.4);
-  background: linear-gradient(135deg, #228B22, #32CD32);
+  box-shadow: 0 10px 30px rgba(34, 139, 34, 0.2);
 }
 
 .btn-code {
   background: rgba(34, 139, 34, 0.1);
   color: #90EE90;
-  border: 1px solid rgba(34, 139, 34, 0.3);
+  border: 1px solid rgba(34, 139, 34, 0.2);
 }
 
 .btn-code:hover {
-  background: rgba(34, 139, 34, 0.2);
-  border-color: rgba(34, 139, 34, 0.5);
+  background: rgba(34, 139, 34, 0.15);
+  border-color: rgba(34, 139, 34, 0.4);
   transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(34, 139, 34, 0.2);
 }
 
 .btn-contact {
-  background: linear-gradient(135deg, #32CD32, #228B22);
-  color: white;
+  background: rgba(34, 139, 34, 0.1);
+  color: #90EE90;
+  border: 1px solid rgba(34, 139, 34, 0.2);
   width: 100%;
 }
 
 .btn-contact:hover {
+  background: rgba(34, 139, 34, 0.15);
+  border-color: rgba(34, 139, 34, 0.4);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(34, 139, 34, 0.4);
-  background: linear-gradient(135deg, #228B22, #32CD32);
+  box-shadow: 0 10px 30px rgba(34, 139, 34, 0.2);
 }
 
 .coming-soon {
