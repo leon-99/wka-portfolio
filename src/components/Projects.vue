@@ -55,7 +55,10 @@ gsap.registerPlugin(ScrollTrigger)
 onMounted(async () => {
   await nextTick()
   
-  // Section title and subtitle animation
+  // Check if device is mobile
+  const isMobile = window.innerWidth <= 768
+  
+  // Section title animation
   gsap.fromTo('.section-title', {
     opacity: 0,
     y: 100,
@@ -66,7 +69,7 @@ onMounted(async () => {
     scale: 1,
     duration: 1.2,
     ease: 'elastic.out(1, 0.8)',
-    scrollTrigger: {
+    scrollTrigger: isMobile ? undefined : {
       trigger: '.projects',
       start: 'top 90%',
       end: 'bottom 10%',
@@ -74,6 +77,7 @@ onMounted(async () => {
     }
   })
   
+  // Subtitle animation
   gsap.fromTo('.section-subtitle', {
     opacity: 0,
     y: 50
@@ -82,12 +86,12 @@ onMounted(async () => {
     y: 0,
     duration: 0.8,
     ease: 'power2.out',
-    scrollTrigger: {
-      trigger: '.projects',
+    delay: 0.3,
+    scrollTrigger: isMobile ? undefined : {
+      trigger: '.section-subtitle',
       start: 'top 85%',
       toggleActions: 'play none none reverse'
-    },
-    delay: 0.3
+    }
   })
   
   // Coming soon card animation
@@ -99,126 +103,133 @@ onMounted(async () => {
     opacity: 1,
     y: 0,
     scale: 1,
-    duration: 1.2,
+    duration: 1,
     ease: 'back.out(1.7)',
-    scrollTrigger: {
+    delay: 0.5,
+    scrollTrigger: isMobile ? undefined : {
       trigger: '.coming-soon-section',
-      start: 'top 85%',
-      end: 'bottom 15%',
+      start: 'top 80%',
       toggleActions: 'play none none reverse'
     }
   })
   
-  // Coming soon icon animation
-  gsap.fromTo('.coming-soon-icon', {
-    opacity: 0,
-    scale: 0,
-    rotation: -180
-  }, {
-    opacity: 1,
-    scale: 1,
-    rotation: 0,
-    duration: 1,
-    ease: 'elastic.out(1, 0.8)',
-    scrollTrigger: {
-      trigger: '.coming-soon-icon',
-      start: 'top 90%',
-      toggleActions: 'play none none reverse'
-    },
-    delay: 0.5
-  })
-  
-  // Feature items animation
+  // Features animation
   gsap.fromTo('.feature-item', {
     opacity: 0,
-    x: -30,
-    scale: 0.8
+    x: -30
   }, {
     opacity: 1,
     x: 0,
-    scale: 1,
     duration: 0.6,
     stagger: 0.1,
-    ease: 'back.out(1.7)',
-    scrollTrigger: {
-      trigger: '.coming-soon-features',
-      start: 'top 90%',
+    ease: 'power2.out',
+    delay: 0.8,
+    scrollTrigger: isMobile ? undefined : {
+      trigger: '.features-list',
+      start: 'top 75%',
       toggleActions: 'play none none reverse'
-    },
-    delay: 0.8
+    }
   })
   
-  // CTA section animation
-  gsap.fromTo('.coming-soon-cta', {
+  // CTA button animation
+  gsap.fromTo('.cta-button', {
     opacity: 0,
-    y: 30
+    scale: 0.8
   }, {
     opacity: 1,
-    y: 0,
+    scale: 1,
     duration: 0.8,
-    ease: 'power2.out',
-    scrollTrigger: {
-      trigger: '.coming-soon-cta',
-      start: 'top 90%',
+    ease: 'back.out(1.7)',
+    delay: 1.2,
+    scrollTrigger: isMobile ? undefined : {
+      trigger: '.cta-button',
+      start: 'top 70%',
       toggleActions: 'play none none reverse'
-    },
-    delay: 1.2
+    }
   })
   
-
+  // Interactive hover effects (desktop only)
+  if (!isMobile) {
+    const comingSoonCard = document.querySelector('.coming-soon-card')
+    if (comingSoonCard) {
+      comingSoonCard.addEventListener('mouseenter', () => {
+        gsap.to(comingSoonCard, {
+          scale: 1.02,
+          y: -5,
+          duration: 0.3,
+          ease: 'back.out(1.7)'
+        })
+      })
+      
+      comingSoonCard.addEventListener('mouseleave', () => {
+        gsap.to(comingSoonCard, {
+          scale: 1,
+          y: 0,
+          duration: 0.3,
+          ease: 'back.out(1.7)'
+        })
+      })
+    }
+    
+    const ctaButton = document.querySelector('.cta-button')
+    if (ctaButton) {
+      ctaButton.addEventListener('mouseenter', () => {
+        gsap.to(ctaButton, {
+          scale: 1.05,
+          duration: 0.2,
+          ease: 'power2.out'
+        })
+      })
+      
+      ctaButton.addEventListener('mouseleave', () => {
+        gsap.to(ctaButton, {
+          scale: 1,
+          duration: 0.2,
+          ease: 'power2.out'
+        })
+      })
+    }
+  }
   
-  // Feature icons hover effects
-  const featureItems = document.querySelectorAll('.feature-item')
-  featureItems.forEach(item => {
-    item.addEventListener('mouseenter', () => {
-      gsap.to(item, {
-        scale: 1.05,
-        y: -5,
-        duration: 0.3,
-        ease: 'back.out(1.7)'
+  // Mobile-specific touch interactions
+  if (isMobile) {
+    const comingSoonCard = document.querySelector('.coming-soon-card')
+    if (comingSoonCard) {
+      comingSoonCard.addEventListener('touchstart', () => {
+        gsap.to(comingSoonCard, {
+          scale: 0.98,
+          duration: 0.1,
+          ease: 'power2.out'
+        })
       })
-    })
+      
+      comingSoonCard.addEventListener('touchend', () => {
+        gsap.to(comingSoonCard, {
+          scale: 1,
+          duration: 0.1,
+          ease: 'power2.out'
+        })
+      })
+    }
     
-    item.addEventListener('mouseleave', () => {
-      gsap.to(item, {
-        scale: 1,
-        y: 0,
-        duration: 0.3,
-        ease: 'back.out(1.7)'
+    const ctaButton = document.querySelector('.cta-button')
+    if (ctaButton) {
+      ctaButton.addEventListener('touchstart', () => {
+        gsap.to(ctaButton, {
+          scale: 0.95,
+          duration: 0.1,
+          ease: 'power2.out'
+        })
       })
-    })
-  })
-  
-  // Contact button hover effects
-  const contactBtn = document.querySelector('.btn-contact')
-  if (contactBtn) {
-    contactBtn.addEventListener('mouseenter', () => {
-      gsap.to(contactBtn, {
-        scale: 1.05,
-        y: -3,
-        duration: 0.3,
-        ease: 'back.out(1.7)'
+      
+      ctaButton.addEventListener('touchend', () => {
+        gsap.to(ctaButton, {
+          scale: 1,
+          duration: 0.1,
+          ease: 'power2.out'
+        })
       })
-    })
-    
-    contactBtn.addEventListener('mouseleave', () => {
-      gsap.to(contactBtn, {
-        scale: 1,
-        y: 0,
-        duration: 0.3,
-        ease: 'back.out(1.7)'
-      })
-    })
-    
-    contactBtn.addEventListener('click', () => {
-      gsap.to(contactBtn, {
-        scale: 0.95,
-        duration: 0.1,
-        ease: 'power2.out',
-        yoyo: true,
-        repeat: 1
-      })
-    })
+    }
   }
 })
 </script>

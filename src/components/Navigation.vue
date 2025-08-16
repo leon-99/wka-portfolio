@@ -6,12 +6,12 @@
       </div>
       
       <ul class="nav-links" :class="{ 'nav-open': isMenuOpen }">
-        <li><a href="#home" @click="closeMenu">Home</a></li>
-        <li><a href="#about" @click="closeMenu">About</a></li>
-        <li><a href="#skills" @click="closeMenu">Skills</a></li>
-        <li><a href="#projects" @click="closeMenu">Projects</a></li>
-        <li><a href="#experience" @click="closeMenu">Experience</a></li>
-        <li><a href="#contact" @click="closeMenu">Contact</a></li>
+        <li><a href="#home" @click="handleNavClick">Home</a></li>
+        <li><a href="#about" @click="handleNavClick">About</a></li>
+        <li><a href="#skills" @click="handleNavClick">Skills</a></li>
+        <li><a href="#projects" @click="handleNavClick">Projects</a></li>
+        <li><a href="#experience" @click="handleNavClick">Experience</a></li>
+        <li><a href="#contact" @click="handleNavClick">Contact</a></li>
       </ul>
       
       <button class="nav-toggle" @click="toggleMenu" :class="{ active: isMenuOpen }">
@@ -39,6 +39,73 @@ const handleScroll = () => {
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value
+  
+  // Animate menu toggle
+  if (isMenuOpen.value) {
+    // Opening animation
+    gsap.fromTo('.nav-links', {
+      opacity: 0,
+      y: -20
+    }, {
+      opacity: 1,
+      y: 0,
+      duration: 0.4,
+      ease: 'back.out(1.7)'
+    })
+    
+    // Stagger mobile menu items
+    gsap.fromTo('.nav-links li', {
+      x: -50,
+      opacity: 0
+    }, {
+      x: 0,
+      opacity: 1,
+      duration: 0.4,
+      stagger: 0.1,
+      ease: 'back.out(1.7)',
+      delay: 0.1
+    })
+  } else {
+    // Closing animation
+    gsap.to('.nav-links', {
+      opacity: 0,
+      y: -20,
+      duration: 0.3,
+      ease: 'power2.in'
+    })
+  }
+}
+
+const handleNavClick = (event: Event) => {
+  // Prevent default anchor behavior
+  event.preventDefault()
+  
+  const target = event.target as HTMLAnchorElement
+  const href = target.getAttribute('href')
+  
+  if (href && href.startsWith('#')) {
+    const targetElement = document.querySelector(href)
+    if (targetElement) {
+      // Smooth scroll to target
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
+      
+      // Close menu after a short delay to allow smooth scroll
+      setTimeout(() => {
+        isMenuOpen.value = false
+        
+        // Animate menu closing
+        gsap.to('.nav-links', {
+          opacity: 0,
+          y: -20,
+          duration: 0.3,
+          ease: 'power2.in'
+        })
+      }, 300)
+    }
+  }
 }
 
 const closeMenu = () => {
@@ -86,83 +153,45 @@ onMounted(async () => {
     delay: 0.2
   })
   
-  // Enhanced link hover effects
-  const navLinks = document.querySelectorAll('.nav-links a')
-  navLinks.forEach(link => {
-    link.addEventListener('mouseenter', () => {
-      gsap.to(link, {
-        scale: 1.1,
-        color: '#90EE90',
-        duration: 0.3,
-        ease: 'back.out(1.7)'
-      })
-      
-      // Animate the underline
-      gsap.to(link.querySelector('::after') || link, {
-        width: '100%',
-        duration: 0.3,
-        ease: 'power2.out'
-      })
-    })
-    
-    link.addEventListener('mouseleave', () => {
-      gsap.to(link, {
-        scale: 1,
-        color: '#e8f5e8',
-        duration: 0.3,
-        ease: 'back.out(1.7)'
-      })
-    })
-    
-    // Click animation
-    link.addEventListener('click', () => {
-      gsap.to(link, {
-        scale: 0.95,
-        duration: 0.1,
-        ease: 'power2.out',
-        yoyo: true,
-        repeat: 1
-      })
-    })
-  })
-  
-  // Mobile menu toggle animation
-  const navToggle = document.querySelector('.nav-toggle')
-  if (navToggle) {
-    navToggle.addEventListener('click', () => {
-      if (isMenuOpen.value) {
-        // Closing animation
-        gsap.to('.nav-links', {
-          opacity: 0,
-          y: -20,
+  // Enhanced link hover effects (desktop only)
+  if (window.innerWidth > 768) {
+    const navLinks = document.querySelectorAll('.nav-links a')
+    navLinks.forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        gsap.to(link, {
+          scale: 1.1,
+          color: '#90EE90',
           duration: 0.3,
-          ease: 'power2.in'
-        })
-      } else {
-        // Opening animation
-        gsap.fromTo('.nav-links', {
-          opacity: 0,
-          y: -20
-        }, {
-          opacity: 1,
-          y: 0,
-          duration: 0.4,
           ease: 'back.out(1.7)'
         })
         
-        // Stagger mobile menu items
-        gsap.fromTo('.nav-links li', {
-          x: -50,
-          opacity: 0
-        }, {
-          x: 0,
-          opacity: 1,
-          duration: 0.4,
-          stagger: 0.1,
-          ease: 'back.out(1.7)',
-          delay: 0.1
+        // Animate the underline
+        gsap.to(link.querySelector('::after') || link, {
+          width: '100%',
+          duration: 0.3,
+          ease: 'power2.out'
         })
-      }
+      })
+      
+      link.addEventListener('mouseleave', () => {
+        gsap.to(link, {
+          scale: 1,
+          color: '#e8f5e8',
+          duration: 0.3,
+          ease: 'back.out(1.7)'
+        })
+      })
+      
+      // Click animation
+      link.addEventListener('click', () => {
+        gsap.to(link, {
+          scale: 0.95,
+          duration: 0.1,
+          ease: 'power2.out',
+          yoyo: true,
+          repeat: 1
+        })
+      })
     })
   }
 })

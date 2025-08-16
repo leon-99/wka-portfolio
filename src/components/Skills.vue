@@ -101,6 +101,9 @@ const skillCategories = ref([
 onMounted(async () => {
   await nextTick()
   
+  // Check if device is mobile
+  const isMobile = window.innerWidth <= 768
+  
   // Section title animation
   gsap.fromTo('.section-title', {
     opacity: 0,
@@ -112,7 +115,7 @@ onMounted(async () => {
     scale: 1,
     duration: 1.2,
     ease: 'elastic.out(1, 0.8)',
-    scrollTrigger: {
+    scrollTrigger: isMobile ? undefined : {
       trigger: '.skills',
       start: 'top 90%',
       end: 'bottom 10%',
@@ -130,7 +133,7 @@ onMounted(async () => {
     duration: 0.8,
     stagger: 0.2,
     ease: 'power2.out',
-    scrollTrigger: {
+    scrollTrigger: isMobile ? undefined : {
       trigger: '.skills-categories',
       start: 'top 85%',
       toggleActions: 'play none none reverse'
@@ -149,67 +152,93 @@ onMounted(async () => {
     duration: 0.6,
     stagger: 0.05,
     ease: 'back.out(1.7)',
-    scrollTrigger: {
+    scrollTrigger: isMobile ? undefined : {
       trigger: '.skills-grid',
       start: 'top 85%',
       toggleActions: 'play none none reverse'
     }
   })
   
-  // Featured skills highlight animation
-  gsap.fromTo('.skill-item.featured', {
-    boxShadow: '0 0 0 rgba(144, 238, 144, 0)'
-  }, {
-    boxShadow: '0 0 20px rgba(144, 238, 144, 0.3)',
-    duration: 2,
-    ease: 'sine.inOut',
-    yoyo: true,
-    repeat: -1,
-    scrollTrigger: {
-      trigger: '.skill-item.featured',
-      start: 'top 90%',
-      toggleActions: 'play none none reverse'
-    }
-  })
+  // Featured skills highlight animation (desktop only)
+  if (!isMobile) {
+    gsap.fromTo('.skill-item.featured', {
+      boxShadow: '0 0 0 rgba(144, 238, 144, 0)'
+    }, {
+      boxShadow: '0 0 20px rgba(144, 238, 144, 0.3)',
+      duration: 2,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+      scrollTrigger: {
+        trigger: '.skill-item.featured',
+        start: 'top 90%',
+        toggleActions: 'play none none reverse'
+      }
+    })
+  }
   
-  // Interactive hover effects for skill items
-  const skillItems = document.querySelectorAll('.skill-item')
-  skillItems.forEach(item => {
-    item.addEventListener('mouseenter', () => {
-      gsap.to(item, {
-        scale: 1.1,
-        y: -5,
-        duration: 0.3,
-        ease: 'back.out(1.7)'
+  // Interactive hover effects for skill items (desktop only)
+  if (!isMobile) {
+    const skillItems = document.querySelectorAll('.skill-item')
+    skillItems.forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        gsap.to(item, {
+          scale: 1.1,
+          y: -5,
+          duration: 0.3,
+          ease: 'back.out(1.7)'
+        })
+        
+        // Animate skill icon
+        const icon = item.querySelector('.skill-icon')
+        gsap.to(icon, {
+          scale: 1.2,
+          rotation: 15,
+          duration: 0.3,
+          ease: 'back.out(1.7)'
+        })
       })
       
-      // Animate skill icon
-      const icon = item.querySelector('.skill-icon')
-      gsap.to(icon, {
-        scale: 1.2,
-        rotation: 15,
-        duration: 0.3,
-        ease: 'back.out(1.7)'
+      item.addEventListener('mouseleave', () => {
+        gsap.to(item, {
+          scale: 1,
+          y: 0,
+          duration: 0.3,
+          ease: 'back.out(1.7)'
+        })
+        
+        const icon = item.querySelector('.skill-icon')
+        gsap.to(icon, {
+          scale: 1,
+          rotation: 0,
+          duration: 0.3,
+          ease: 'back.out(1.7)'
+        })
       })
     })
-    
-    item.addEventListener('mouseleave', () => {
-      gsap.to(item, {
-        scale: 1,
-        y: 0,
-        duration: 0.3,
-        ease: 'back.out(1.7)'
+  }
+  
+  // Mobile-specific touch interactions
+  if (isMobile) {
+    const skillItems = document.querySelectorAll('.skill-item')
+    skillItems.forEach(item => {
+      item.addEventListener('touchstart', () => {
+        gsap.to(item, {
+          scale: 0.95,
+          duration: 0.1,
+          ease: 'power2.out'
+        })
       })
       
-      const icon = item.querySelector('.skill-icon')
-      gsap.to(icon, {
-        scale: 1,
-        rotation: 0,
-        duration: 0.3,
-        ease: 'back.out(1.7)'
+      item.addEventListener('touchend', () => {
+        gsap.to(item, {
+          scale: 1,
+          duration: 0.1,
+          ease: 'power2.out'
+        })
       })
     })
-  })
+  }
 })
 </script>
 

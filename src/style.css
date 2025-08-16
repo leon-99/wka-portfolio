@@ -10,8 +10,9 @@
 
 html {
   font-family: 'Inter', sans-serif;
-  scroll-behavior: auto; /* Disable CSS smooth scroll */
+  scroll-behavior: smooth; /* Enable smooth scrolling */
   scroll-snap-type: none; /* Disable scroll snap */
+  -webkit-overflow-scrolling: touch; /* Enable momentum scrolling on iOS */
 }
 
 body {
@@ -20,7 +21,65 @@ body {
   color: #e8f5e8;
   overflow-x: hidden;
   position: relative;
-  scroll-behavior: auto; /* Ensure no CSS smooth scroll conflicts */
+  scroll-behavior: smooth; /* Ensure smooth scrolling */
+  -webkit-overflow-scrolling: touch; /* Enable momentum scrolling on iOS */
+}
+
+/* Mobile-specific scroll improvements */
+@media (max-width: 768px) {
+  html {
+    scroll-behavior: auto; /* Disable smooth scroll on mobile for better performance */
+  }
+  
+  body {
+    scroll-behavior: auto;
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  /* Prevent horizontal scroll on mobile */
+  * {
+    max-width: 100%;
+  }
+  
+  /* Improve touch scrolling */
+  .container, .section-padding {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+  }
+  
+  /* Mobile device specific styles */
+  body.mobile-device {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  /* Disable GSAP animations on mobile for better performance */
+  body.mobile-device .gsap-marker-start,
+  body.mobile-device .gsap-marker-end,
+  body.mobile-device .gsap-marker-scroller-start,
+  body.mobile-device .gsap-marker-scroller-end {
+    display: none !important;
+  }
+  
+  /* Improve mobile touch targets */
+  button, a, .skill-item, .coming-soon-card {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent zoom on input focus */
+  input, textarea, select {
+    font-size: 16px;
+  }
+  
+  /* Improve mobile scrolling performance */
+  .section-padding {
+    will-change: auto;
+    transform: translateZ(0);
+  }
 }
 
 body::before {
@@ -51,6 +110,17 @@ body::before {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(34, 139, 34, 0.7);
+}
+
+/* Mobile scrollbar */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 4px; /* Thinner scrollbar on mobile */
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(34, 139, 34, 0.3);
+  }
 }
 
 /* Glass morphism utility classes */

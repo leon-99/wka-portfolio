@@ -5,7 +5,8 @@
 </template>
 
 <script setup lang="ts">
-// App component with minimal setup
+// Import mobile scroll handler
+import './utils/mobileScrollHandler'
 </script>
 
 <style scoped>
