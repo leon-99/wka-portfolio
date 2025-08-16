@@ -3,43 +3,98 @@
     <div class="container">
       <h2 class="section-title text-gradient">Featured Projects</h2>
       <p class="section-subtitle">
-        Exciting projects are in development. Stay tuned for amazing full-stack solutions coming soon!
+        Explore my latest projects showcasing modern web technologies and innovative solutions.
       </p>
       
-      <div class="coming-soon-section">
-        <div class="coming-soon-card glass-card">
-          <div class="coming-soon-icon">
-            <span>🚀</span>
+      <div class="projects-grid">
+        <!-- Weather App Project -->
+        <div class="project-card glass-card" data-project="weather">
+          <div class="project-image">
+            <div class="project-icon">🌤️</div>
           </div>
-          <h3 class="coming-soon-title">Projects Coming Soon</h3>
-          <p class="coming-soon-description">
-            I'm currently working on some exciting projects that showcase modern web technologies, 
-            innovative solutions, and cutting-edge development practices. These projects will demonstrate 
-            my expertise in full-stack development, cloud architecture, and user experience design.
-          </p>
-          <div class="coming-soon-features">
-            <div class="feature-item">
-              <span class="feature-icon">⚡</span>
-              <span class="feature-text">Modern Tech Stack</span>
+          <div class="project-content">
+            <h3 class="project-title">Weather Info App</h3>
+            <p class="project-description">
+              A modern weather application built with Vue.js and Tailwind CSS, featuring real-time weather data, 
+              location-based forecasts, and a responsive design. Includes current conditions, hourly forecasts, 
+              and 7-day predictions with beautiful weather icons and intuitive user interface.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">Vue.js</span>
+              <span class="tech-tag">Tailwind CSS</span>
+              <span class="tech-tag">JavaScript</span>
+              <span class="tech-tag">Weather API</span>
             </div>
-            <div class="feature-item">
-              <span class="feature-icon">🎨</span>
-              <span class="feature-text">Beautiful UI/UX</span>
+            <div class="project-links">
+              <a href="https://weather-info-leon.netlify.app/" target="_blank" rel="noopener noreferrer" class="btn-live">
+                <span>🌐</span>
+                Live Demo
+              </a>
+              <a href="#" class="btn-code" @click="showComingSoon">
+                <span>📁</span>
+                View Code
+              </a>
             </div>
-            <div class="feature-item">
-              <span class="feature-icon">🔒</span>
-              <span class="feature-text">Security First</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon">📱</span>
-              <span class="feature-text">Responsive Design</span>
-            </div>
-          </div>
-          <div class="coming-soon-cta">
-            <p>Interested in collaborating or have a project in mind?</p>
-            <a href="#contact" class="btn-contact">Let's Connect</a>
           </div>
         </div>
+
+                 <!-- Oasify Postman Project -->
+         <div class="project-card glass-card" data-project="oasify-postman">
+           <div class="project-image">
+             <div class="project-icon">📦</div>
+           </div>
+           <div class="project-content">
+             <h3 class="project-title">Oasify Postman</h3>
+             <p class="project-description">
+               An npm package that converts Postman collections to OpenAPI 3.0 specifications with automatic 
+               example response injection. Features CLI interface, programmatic API, and customizable metadata 
+               for seamless API documentation generation.
+             </p>
+             <div class="project-tech">
+               <span class="tech-tag">Node.js</span>
+               <span class="tech-tag">JavaScript</span>
+               <span class="tech-tag">CLI</span>
+               <span class="tech-tag">OpenAPI</span>
+             </div>
+             <div class="project-links">
+               <a href="https://www.npmjs.com/package/oasify-postman" target="_blank" rel="noopener noreferrer" class="btn-live">
+                 <span>📦</span>
+                 NPM Package
+               </a>
+               <a href="#" class="btn-code" @click="showComingSoon">
+                 <span>📁</span>
+                 View Code
+               </a>
+             </div>
+           </div>
+         </div>
+
+         <!-- Coming Soon Project -->
+         <div class="project-card glass-card coming-soon" data-project="coming-soon">
+           <div class="project-image">
+             <div class="project-icon">🚀</div>
+           </div>
+           <div class="project-content">
+             <h3 class="project-title">More Projects Coming Soon</h3>
+             <p class="project-description">
+               I'm currently working on exciting new projects that showcase modern web technologies, 
+               innovative solutions, and cutting-edge development practices. These projects will demonstrate 
+               my expertise in full-stack development, cloud architecture, and user experience design.
+             </p>
+             <div class="project-tech">
+               <span class="tech-tag">Full-Stack</span>
+               <span class="tech-tag">Cloud</span>
+               <span class="tech-tag">Modern UI/UX</span>
+               <span class="tech-tag">Innovation</span>
+             </div>
+             <div class="project-links">
+               <a href="#contact" class="btn-contact">
+                 <span>💬</span>
+                 Let's Connect
+               </a>
+             </div>
+           </div>
+         </div>
       </div>
     </div>
   </section>
@@ -94,8 +149,8 @@ onMounted(async () => {
     }
   })
   
-  // Coming soon card animation
-  gsap.fromTo('.coming-soon-card', {
+  // Project cards animation
+  gsap.fromTo('.project-card', {
     opacity: 0,
     y: 100,
     scale: 0.8
@@ -106,54 +161,20 @@ onMounted(async () => {
     duration: 1,
     ease: 'back.out(1.7)',
     delay: 0.5,
+    stagger: 0.2,
     scrollTrigger: isMobile ? undefined : {
-      trigger: '.coming-soon-section',
+      trigger: '.projects-grid',
       start: 'top 80%',
-      toggleActions: 'play none none reverse'
-    }
-  })
-  
-  // Features animation
-  gsap.fromTo('.feature-item', {
-    opacity: 0,
-    x: -30
-  }, {
-    opacity: 1,
-    x: 0,
-    duration: 0.6,
-    stagger: 0.1,
-    ease: 'power2.out',
-    delay: 0.8,
-    scrollTrigger: isMobile ? undefined : {
-      trigger: '.features-list',
-      start: 'top 75%',
-      toggleActions: 'play none none reverse'
-    }
-  })
-  
-  // CTA button animation
-  gsap.fromTo('.cta-button', {
-    opacity: 0,
-    scale: 0.8
-  }, {
-    opacity: 1,
-    scale: 1,
-    duration: 0.8,
-    ease: 'back.out(1.7)',
-    delay: 1.2,
-    scrollTrigger: isMobile ? undefined : {
-      trigger: '.cta-button',
-      start: 'top 70%',
       toggleActions: 'play none none reverse'
     }
   })
   
   // Interactive hover effects (desktop only)
   if (!isMobile) {
-    const comingSoonCard = document.querySelector('.coming-soon-card')
-    if (comingSoonCard) {
-      comingSoonCard.addEventListener('mouseenter', () => {
-        gsap.to(comingSoonCard, {
+    const projectCards = document.querySelectorAll('.project-card')
+    projectCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
           scale: 1.02,
           y: -5,
           duration: 0.3,
@@ -161,77 +182,44 @@ onMounted(async () => {
         })
       })
       
-      comingSoonCard.addEventListener('mouseleave', () => {
-        gsap.to(comingSoonCard, {
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
           scale: 1,
           y: 0,
           duration: 0.3,
           ease: 'back.out(1.7)'
         })
       })
-    }
-    
-    const ctaButton = document.querySelector('.cta-button')
-    if (ctaButton) {
-      ctaButton.addEventListener('mouseenter', () => {
-        gsap.to(ctaButton, {
-          scale: 1.05,
-          duration: 0.2,
-          ease: 'power2.out'
-        })
-      })
-      
-      ctaButton.addEventListener('mouseleave', () => {
-        gsap.to(ctaButton, {
-          scale: 1,
-          duration: 0.2,
-          ease: 'power2.out'
-        })
-      })
-    }
+    })
   }
   
   // Mobile-specific touch interactions
   if (isMobile) {
-    const comingSoonCard = document.querySelector('.coming-soon-card')
-    if (comingSoonCard) {
-      comingSoonCard.addEventListener('touchstart', () => {
-        gsap.to(comingSoonCard, {
+    const projectCards = document.querySelectorAll('.project-card')
+    projectCards.forEach(card => {
+      card.addEventListener('touchstart', () => {
+        gsap.to(card, {
           scale: 0.98,
           duration: 0.1,
           ease: 'power2.out'
         })
       })
       
-      comingSoonCard.addEventListener('touchend', () => {
-        gsap.to(comingSoonCard, {
+      card.addEventListener('touchend', () => {
+        gsap.to(card, {
           scale: 1,
           duration: 0.1,
           ease: 'power2.out'
         })
       })
-    }
-    
-    const ctaButton = document.querySelector('.cta-button')
-    if (ctaButton) {
-      ctaButton.addEventListener('touchstart', () => {
-        gsap.to(ctaButton, {
-          scale: 0.95,
-          duration: 0.1,
-          ease: 'power2.out'
-        })
-      })
-      
-      ctaButton.addEventListener('touchend', () => {
-        gsap.to(ctaButton, {
-          scale: 1,
-          duration: 0.1,
-          ease: 'power2.out'
-        })
-      })
-    }
+    })
   }
 })
+
+// Function to show coming soon message for code links
+const showComingSoon = () => {
+  alert('Code repository coming soon! This project is currently being prepared for open source.')
+}
 </script>
 
 <style scoped>
@@ -257,25 +245,26 @@ onMounted(async () => {
   margin-right: auto;
 }
 
-.coming-soon-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 800px;
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-.coming-soon-card {
+.project-card {
   position: relative;
-  padding: 3rem;
-  text-align: center;
+  padding: 2rem;
   overflow: hidden;
   transition: all 0.3s ease;
   cursor: pointer;
   border: 2px solid rgba(144, 238, 144, 0.3);
+  display: flex;
+  flex-direction: column;
 }
 
-.coming-soon-card::before {
+.project-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -287,7 +276,7 @@ onMounted(async () => {
   z-index: 1;
 }
 
-.coming-soon-card:hover {
+.project-card:hover {
   transform: translateY(-10px);
   box-shadow: 
     0 25px 50px rgba(0, 0, 0, 0.4),
@@ -295,89 +284,111 @@ onMounted(async () => {
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.coming-soon-icon {
-  font-size: 5rem;
+.project-image {
+  text-align: center;
   margin-bottom: 1.5rem;
+}
+
+.project-icon {
+  font-size: 4rem;
   opacity: 0.9;
 }
 
-.coming-soon-title {
+.project-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-title {
   color: #90EE90;
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   letter-spacing: -0.02em;
 }
 
-.coming-soon-description {
+.project-description {
   color: rgba(232, 245, 232, 0.8);
-  line-height: 1.7;
-  margin-bottom: 2.5rem;
-  font-size: 1.1rem;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  flex: 1;
 }
 
-.coming-soon-features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
-}
-
-.feature-item {
+.project-tech {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  background: rgba(34, 139, 34, 0.1);
-  border-radius: 12px;
-  border: 1px solid rgba(34, 139, 34, 0.2);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tech-tag {
+  background: rgba(34, 139, 34, 0.2);
+  color: #90EE90;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid rgba(34, 139, 34, 0.3);
   transition: all 0.3s ease;
 }
 
-.feature-item:hover {
-  background: rgba(34, 139, 34, 0.15);
-  border-color: rgba(34, 139, 34, 0.4);
-  transform: translateY(-3px);
+.tech-tag:hover {
+  background: rgba(34, 139, 34, 0.3);
+  border-color: rgba(34, 139, 34, 0.5);
+  transform: translateY(-2px);
 }
 
-.feature-icon {
-  font-size: 2rem;
-  opacity: 0.9;
+.project-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
 }
 
-.feature-text {
-  color: #90EE90;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.coming-soon-cta {
-  padding-top: 2rem;
-  border-top: 1px solid rgba(34, 139, 34, 0.2);
-}
-
-.coming-soon-cta p {
-  color: rgba(232, 245, 232, 0.7);
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
-}
-
-.btn-contact {
-  display: inline-block;
-  padding: 1rem 2rem;
-  background: linear-gradient(135deg, #32CD32, #228B22);
-  color: white;
+.btn-live, .btn-code, .btn-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
   text-decoration: none;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: all 0.3s ease;
   border: none;
   cursor: pointer;
+  flex: 1;
+  justify-content: center;
+}
+
+.btn-live {
+  background: linear-gradient(135deg, #32CD32, #228B22);
+  color: white;
+}
+
+.btn-live:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(34, 139, 34, 0.4);
+  background: linear-gradient(135deg, #228B22, #32CD32);
+}
+
+.btn-code {
+  background: rgba(34, 139, 34, 0.1);
+  color: #90EE90;
+  border: 1px solid rgba(34, 139, 34, 0.3);
+}
+
+.btn-code:hover {
+  background: rgba(34, 139, 34, 0.2);
+  border-color: rgba(34, 139, 34, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-contact {
+  background: linear-gradient(135deg, #32CD32, #228B22);
+  color: white;
+  width: 100%;
 }
 
 .btn-contact:hover {
@@ -386,31 +397,43 @@ onMounted(async () => {
   background: linear-gradient(135deg, #228B22, #32CD32);
 }
 
+.coming-soon {
+  opacity: 0.8;
+}
+
+.coming-soon:hover {
+  opacity: 1;
+}
+
 @media (max-width: 768px) {
   .section-title {
     font-size: 2.5rem;
   }
   
-  .coming-soon-card {
-    padding: 2rem;
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
     margin: 0 1rem;
   }
   
-  .coming-soon-title {
-    font-size: 1.75rem;
+  .project-card {
+    padding: 1.5rem;
   }
   
-  .coming-soon-description {
-    font-size: 1rem;
+  .project-title {
+    font-size: 1.5rem;
   }
   
-  .coming-soon-features {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .project-description {
+    font-size: 0.95rem;
   }
   
-  .feature-item {
-    padding: 0.75rem;
+  .project-links {
+    flex-direction: column;
+  }
+  
+  .btn-live, .btn-code, .btn-contact {
+    width: 100%;
   }
 }
 </style>
