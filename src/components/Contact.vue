@@ -132,39 +132,6 @@
           </form>
         </div>
       </div>
-      
-      <div class="contact-footer">
-        <div class="footer-content">
-          <div class="footer-brand">
-            <span class="text-gradient">Win Khant Aung</span>
-            <p>Full Stack Developer</p>
-          </div>
-          
-          <div class="footer-links">
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#skills">Skills</a>
-            <a href="#projects">Projects</a>
-            <a href="#experience">Experience</a>
-          </div>
-          
-          <div class="footer-social">
-            <a href="https://github.com/leon-99" target="_blank" rel="noopener" title="GitHub">
-              <span>💻</span>
-            </a>
-            <a href="https://linkedin.com/in/win-khant-aung-ba1271181" target="_blank" rel="noopener" title="LinkedIn">
-              <span>🔗</span>
-            </a>
-            <a href="mailto:contact.winkhantaung@gmail.com" title="Email">
-              <span>📧</span>
-            </a>
-          </div>
-        </div>
-        
-        <div class="footer-bottom">
-          <p>&copy; 2024 Win Khant Aung. Built with Vue.js & Three.js</p>
-        </div>
-      </div>
     </div>
   </section>
 </template>
@@ -360,21 +327,7 @@ onMounted(async () => {
     }
   })
   
-  // Footer animation
-  gsap.fromTo('.contact-footer', {
-    opacity: 0,
-    y: 50
-  }, {
-    opacity: 1,
-    y: 0,
-    duration: 1,
-    ease: 'power2.out',
-    scrollTrigger: {
-      trigger: '.contact-footer',
-      start: 'top 90%',
-      toggleActions: 'play none none reverse'
-    }
-  })
+
   
   // Interactive form field effects
   const formInputs = document.querySelectorAll('.form-group input, .form-group textarea')
@@ -489,29 +442,7 @@ onMounted(async () => {
     repeat: -1
   })
   
-  // Footer social icons animation
-  const socialIcons = document.querySelectorAll('.footer-social a')
-  socialIcons.forEach((icon, index) => {
-    icon.addEventListener('mouseenter', () => {
-      gsap.to(icon, {
-        scale: 1.2,
-        y: -5,
-        rotation: 15,
-        duration: 0.3,
-        ease: 'back.out(1.7)'
-      })
-    })
-    
-    icon.addEventListener('mouseleave', () => {
-      gsap.to(icon, {
-        scale: 1,
-        y: 0,
-        rotation: 0,
-        duration: 0.3,
-        ease: 'back.out(1.7)'
-      })
-    })
-  })
+
   
   // Floating animation for contact card
   gsap.to('.contact-card', {

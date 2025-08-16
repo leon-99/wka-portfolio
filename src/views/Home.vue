@@ -7,6 +7,7 @@
     <Skills />
     <Projects />
     <Contact />
+    <Footer />
     <ThreeCursor />
   </div>
 </template>
@@ -22,6 +23,7 @@ import Skills from '@/components/Skills.vue'
 import Projects from '@/components/Projects.vue'
 import Experience from '@/components/Experience.vue'
 import Contact from '@/components/Contact.vue'
+import Footer from '@/components/Footer.vue'
 import ThreeCursor from '@/components/ThreeCursor.vue'
 import { usePageTransitions } from '@/composables/usePageTransitions'
 
