@@ -19,7 +19,7 @@
                 :class="{ 'featured': skill.featured }"
               >
                 <div class="skill-icon">
-                  <span v-html="skill.icon"></span>
+                  <Icon :icon="skill.icon" :class="skill.iconClass" />
                 </div>
                 <span class="skill-name">{{ skill.name }}</span>
               </div>
@@ -33,6 +33,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue'
+import { Icon } from '@iconify/vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -42,61 +43,61 @@ const skillCategories = ref([
   {
     title: 'Backend Development',
     skills: [
-      { name: 'Node.js', icon: '🟢', featured: true },
-      { name: 'Express.js', icon: '⚡', featured: true },
-      { name: 'PHP', icon: '🐘', featured: false },
-      { name: 'Laravel', icon: '🔥', featured: false },
-      { name: 'RESTful APIs', icon: '🔌', featured: true },
-      { name: 'GraphQL', icon: '📊', featured: false },
-      { name: 'Database Design', icon: '🗄️', featured: true },
-      { name: 'MongoDB', icon: '🍃', featured: false },
-      { name: 'PostgreSQL', icon: '🐘', featured: false },
-      { name: 'Redis', icon: '⚡', featured: false }
+      { name: 'Node.js', icon: 'devicon:nodejs', iconClass: 'devicon', featured: true },
+      { name: 'Express.js', icon: 'devicon:express', iconClass: 'devicon', featured: true },
+      { name: 'PHP', icon: 'devicon:php', iconClass: 'devicon', featured: false },
+      { name: 'Laravel', icon: 'devicon:laravel', iconClass: 'devicon', featured: false },
+      { name: 'RESTful APIs', icon: 'mdi:api', iconClass: 'mdi', featured: true },
+      { name: 'GraphQL', icon: 'mdi:graphql', iconClass: 'mdi', featured: false },
+      { name: 'Database Design', icon: 'mdi:database', iconClass: 'mdi', featured: true },
+      { name: 'MongoDB', icon: 'devicon:mongodb', iconClass: 'devicon', featured: false },
+      { name: 'PostgreSQL', icon: 'devicon:postgresql', iconClass: 'devicon', featured: false },
+      { name: 'Redis', icon: 'devicon:redis', iconClass: 'devicon', featured: false }
     ]
   },
   {
     title: 'Frontend Development',
     skills: [
-      { name: 'Vue.js', icon: '💚', featured: true },
-      { name: 'React.js', icon: '⚛️', featured: true },
-      { name: 'JavaScript', icon: '🟡', featured: true },
-      { name: 'TypeScript', icon: '🔷', featured: true },
-      { name: 'HTML5', icon: '🌐', featured: false },
-      { name: 'CSS3', icon: '🎨', featured: false },
-      { name: 'Tailwind CSS', icon: '🎯', featured: false },
-      { name: 'Sass/SCSS', icon: '💎', featured: false },
-      { name: 'Webpack', icon: '📦', featured: false },
-      { name: 'Vite', icon: '⚡', featured: false }
+      { name: 'Vue.js', icon: 'devicon:vuejs', iconClass: 'devicon', featured: true },
+      { name: 'React.js', icon: 'devicon:react', iconClass: 'devicon', featured: true },
+      { name: 'JavaScript', icon: 'devicon:javascript', iconClass: 'devicon', featured: true },
+      { name: 'TypeScript', icon: 'devicon:typescript', iconClass: 'devicon', featured: true },
+      { name: 'HTML5', icon: 'devicon:html5', iconClass: 'devicon', featured: false },
+      { name: 'CSS3', icon: 'devicon:css3', iconClass: 'devicon', featured: false },
+      { name: 'Tailwind CSS', icon: 'devicon:tailwindcss', iconClass: 'devicon', featured: false },
+      { name: 'Sass/SCSS', icon: 'devicon:sass', iconClass: 'devicon', featured: false },
+      { name: 'Webpack', icon: 'devicon:webpack', iconClass: 'devicon', featured: false },
+      { name: 'Vite', icon: 'devicon:vitejs', iconClass: 'devicon', featured: false }
     ]
   },
   {
     title: 'Cloud & DevOps',
     skills: [
-      { name: 'AWS', icon: '☁️', featured: true },
-      { name: 'Docker', icon: '🐳', featured: true },
-      { name: 'Kubernetes', icon: '☸️', featured: false },
-      { name: 'CI/CD', icon: '🔄', featured: true },
-      { name: 'Git', icon: '📝', featured: true },
-      { name: 'Linux', icon: '🐧', featured: false },
-      { name: 'Nginx', icon: '🌐', featured: false },
-      { name: 'Jenkins', icon: '🤖', featured: false },
-      { name: 'Terraform', icon: '🏗️', featured: false },
-      { name: 'Monitoring', icon: '📊', featured: false }
+      { name: 'AWS', icon: 'devicon:amazonwebservices', iconClass: 'devicon', featured: true },
+      { name: 'Docker', icon: 'devicon:docker', iconClass: 'devicon', featured: true },
+      { name: 'Kubernetes', icon: 'devicon:kubernetes', iconClass: 'devicon', featured: false },
+      { name: 'CI/CD', icon: 'mdi:git', iconClass: 'mdi', featured: true },
+      { name: 'Git', icon: 'devicon:git', iconClass: 'devicon', featured: true },
+      { name: 'Linux', icon: 'devicon:linux', iconClass: 'devicon', featured: false },
+      { name: 'Nginx', icon: 'devicon:nginx', iconClass: 'devicon', featured: false },
+      { name: 'Jenkins', icon: 'devicon:jenkins', iconClass: 'devicon', featured: false },
+      { name: 'Terraform', icon: 'devicon:terraform', iconClass: 'devicon', featured: false },
+      { name: 'Monitoring', icon: 'mdi:monitor-dashboard', iconClass: 'mdi', featured: false }
     ]
   },
   {
     title: 'Tools & Others',
     skills: [
-      { name: 'VS Code', icon: '💻', featured: false },
-      { name: 'Postman', icon: '📮', featured: false },
-      { name: 'Figma', icon: '🎨', featured: false },
-      { name: 'Jira', icon: '📋', featured: false },
-      { name: 'Slack', icon: '💬', featured: false },
-      { name: 'Notion', icon: '📝', featured: false },
-      { name: 'Testing', icon: '🧪', featured: true },
-      { name: 'Agile', icon: '🔄', featured: false },
-      { name: 'Scrum', icon: '🏃', featured: false },
-      { name: 'Problem Solving', icon: '🧩', featured: true }
+      { name: 'VS Code', icon: 'devicon:vscode', iconClass: 'devicon', featured: false },
+      { name: 'Postman', icon: 'devicon:postman', iconClass: 'devicon', featured: false },
+      { name: 'Figma', icon: 'devicon:figma', iconClass: 'devicon', featured: false },
+      { name: 'Jira', icon: 'devicon:jira', iconClass: 'devicon', featured: false },
+      { name: 'Slack', icon: 'devicon:slack', iconClass: 'devicon', featured: false },
+      { name: 'Notion', icon: 'devicon:notion', iconClass: 'devicon', featured: false },
+      { name: 'Testing', icon: 'mdi:test-tube', iconClass: 'mdi', featured: true },
+      { name: 'Agile', icon: 'mdi:refresh', iconClass: 'mdi', featured: false },
+      { name: 'Scrum', icon: 'mdi:run', iconClass: 'mdi', featured: false },
+      { name: 'Problem Solving', icon: 'mdi:puzzle', iconClass: 'mdi', featured: true }
     ]
   }
 ])
@@ -304,9 +305,27 @@ onMounted(async () => {
 }
 
 .skill-icon {
-  font-size: 2.5rem;
-  opacity: 0.9;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.3s ease;
+}
+
+.skill-icon :deep(svg) {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+  color: #90EE90;
+}
+
+.skill-icon.devicon :deep(svg) {
+  color: #90EE90;
+}
+
+.skill-icon.mdi :deep(svg) {
+  color: #90EE90;
 }
 
 .skill-name {
@@ -329,7 +348,8 @@ onMounted(async () => {
   }
   
   .skill-icon {
-    font-size: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
   }
   
   .skill-name {
@@ -362,7 +382,8 @@ onMounted(async () => {
   }
   
   .skill-icon {
-    font-size: 1.75rem;
+    width: 2rem;
+    height: 2rem;
   }
   
   .skill-name {
@@ -382,7 +403,8 @@ onMounted(async () => {
   }
   
   .skill-icon {
-    font-size: 1.5rem;
+    width: 1.75rem;
+    height: 1.75rem;
   }
   
   .skill-name {
