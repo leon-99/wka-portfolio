@@ -75,13 +75,10 @@ const skillCategories = ref([
     skills: [
       { name: 'AWS', icon: 'devicon:amazonwebservices', iconClass: 'devicon', featured: true },
       { name: 'Docker', icon: 'devicon:docker', iconClass: 'devicon', featured: true },
-      { name: 'Kubernetes', icon: 'devicon:kubernetes', iconClass: 'devicon', featured: false },
       { name: 'CI/CD', icon: 'mdi:git', iconClass: 'mdi', featured: true },
       { name: 'Git', icon: 'devicon:git', iconClass: 'devicon', featured: true },
       { name: 'Linux', icon: 'devicon:linux', iconClass: 'devicon', featured: false },
       { name: 'Nginx', icon: 'devicon:nginx', iconClass: 'devicon', featured: false },
-      { name: 'Jenkins', icon: 'devicon:jenkins', iconClass: 'devicon', featured: false },
-      { name: 'Terraform', icon: 'devicon:terraform', iconClass: 'devicon', featured: false },
       { name: 'Monitoring', icon: 'mdi:monitor-dashboard', iconClass: 'mdi', featured: false }
     ]
   },
@@ -89,14 +86,13 @@ const skillCategories = ref([
     title: 'Tools & Others',
     skills: [
       { name: 'VS Code', icon: 'devicon:vscode', iconClass: 'devicon', featured: false },
+      { name: 'Cursor', icon: 'devicon:cursor', iconClass: 'devicon', featured: false },
       { name: 'Postman', icon: 'devicon:postman', iconClass: 'devicon', featured: false },
       { name: 'Figma', icon: 'devicon:figma', iconClass: 'devicon', featured: false },
-      { name: 'Jira', icon: 'devicon:jira', iconClass: 'devicon', featured: false },
+      { name: 'Obsidian', icon: 'devicon:obsidian', iconClass: 'devicon', featured: false },
       { name: 'Slack', icon: 'devicon:slack', iconClass: 'devicon', featured: false },
-      { name: 'Notion', icon: 'devicon:notion', iconClass: 'devicon', featured: false },
-      { name: 'Testing', icon: 'mdi:test-tube', iconClass: 'mdi', featured: true },
-      { name: 'Agile', icon: 'mdi:refresh', iconClass: 'mdi', featured: false },
-      { name: 'Scrum', icon: 'mdi:run', iconClass: 'mdi', featured: false },
+      { name: 'Unit Tests', icon: 'mdi:test-tube', iconClass: 'mdi', featured: true },
+      { name: 'Integration Tests', icon: 'mdi:test-tube', iconClass: 'mdi', featured: true },
       { name: 'Problem Solving', icon: 'mdi:puzzle', iconClass: 'mdi', featured: true }
     ]
   }
@@ -280,6 +276,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
   padding: 1.5rem 1rem;
   background: rgba(34, 139, 34, 0.1);
@@ -287,7 +284,8 @@ onMounted(async () => {
   border-radius: 16px;
   transition: all 0.3s ease;
   cursor: pointer;
-  min-width: 100px;
+  width: 120px;
+  height: 120px;
   text-align: center;
 }
 
@@ -344,7 +342,8 @@ onMounted(async () => {
   
   .skill-item {
     padding: 1rem 0.75rem;
-    min-width: 80px;
+    width: 100px;
+    height: 100px;
   }
   
   .skill-icon {
@@ -378,7 +377,8 @@ onMounted(async () => {
   
   .skill-item {
     padding: 0.75rem 0.5rem;
-    min-width: 70px;
+    width: 80px;
+    height: 80px;
   }
   
   .skill-icon {
@@ -399,7 +399,8 @@ onMounted(async () => {
   
   .skill-item {
     padding: 0.5rem;
-    min-width: 60px;
+    width: 70px;
+    height: 70px;
   }
   
   .skill-icon {
