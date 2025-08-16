@@ -1,14 +1,42 @@
 <template>
   <section id="projects" class="projects section-padding">
     <div class="container">
-      <h2 class="section-title text-gradient">Featured Projects</h2>
-      <p class="section-subtitle">
-        Explore my latest projects showcasing modern web technologies and innovative solutions.
-      </p>
-      
-      <div class="projects-grid">
-        <!-- Weather App Project -->
-        <div class="project-card glass-card" data-project="weather">
+             <h2 class="section-title text-gradient">Featured Projects</h2>
+       <p class="section-subtitle">
+         Explore my latest projects showcasing modern web technologies and innovative solutions.
+       </p>
+       
+       <!-- Filter Buttons -->
+       <div class="filter-container">
+         <button 
+           class="filter-btn active" 
+           @click="filterProjects('all')"
+           :class="{ active: activeFilter === 'all' }"
+         >
+           <span>🌟</span>
+           All Projects
+         </button>
+         <button 
+           class="filter-btn" 
+           @click="filterProjects('websites')"
+           :class="{ active: activeFilter === 'websites' }"
+         >
+           <span>🌐</span>
+           Websites
+         </button>
+         <button 
+           class="filter-btn" 
+           @click="filterProjects('packages')"
+           :class="{ active: activeFilter === 'packages' }"
+         >
+           <span>📦</span>
+           Packages
+         </button>
+       </div>
+       
+       <div class="projects-grid">
+                 <!-- Weather App Project -->
+         <div class="project-card glass-card" data-project="weather" data-category="websites">
           <div class="project-image">
             <div class="project-icon">🌤️</div>
           </div>
@@ -39,7 +67,7 @@
         </div>
 
                  <!-- Oasify Postman Project -->
-         <div class="project-card glass-card" data-project="oasify-postman">
+         <div class="project-card glass-card" data-project="oasify-postman" data-category="packages">
            <div class="project-image">
              <div class="project-icon">📦</div>
            </div>
@@ -101,11 +129,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick } from 'vue'
+import { onMounted, nextTick, ref } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
+
+// Filter state
+const activeFilter = ref('all')
 
 onMounted(async () => {
   await nextTick()
@@ -220,6 +251,35 @@ onMounted(async () => {
 const showComingSoon = () => {
   alert('Code repository coming soon! This project is currently being prepared for open source.')
 }
+
+// Function to filter projects
+const filterProjects = (category: string) => {
+  activeFilter.value = category
+  const projectCards = document.querySelectorAll('.project-card')
+  
+  projectCards.forEach(card => {
+    const cardCategory = card.getAttribute('data-category')
+    const cardElement = card as HTMLElement
+    
+    if (category === 'all' || cardCategory === category) {
+      cardElement.style.display = 'flex'
+      // Animate card appearance
+      gsap.fromTo(card, {
+        opacity: 0,
+        scale: 0.8,
+        y: 20
+      }, {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 0.5,
+        ease: 'back.out(1.7)'
+      })
+    } else {
+      cardElement.style.display = 'none'
+    }
+  })
+}
 </script>
 
 <style scoped>
@@ -239,10 +299,48 @@ const showComingSoon = () => {
   text-align: center;
   color: rgba(232, 245, 232, 0.7);
   font-size: 1.1rem;
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.filter-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(34, 139, 34, 0.1);
+  color: #90EE90;
+  border: 2px solid rgba(34, 139, 34, 0.3);
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.filter-btn:hover {
+  background: rgba(34, 139, 34, 0.2);
+  border-color: rgba(34, 139, 34, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(34, 139, 34, 0.3);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, #32CD32, #228B22);
+  color: white;
+  border-color: #32CD32;
+  box-shadow: 0 8px 25px rgba(34, 139, 34, 0.4);
 }
 
 .projects-grid {
@@ -408,6 +506,16 @@ const showComingSoon = () => {
 @media (max-width: 768px) {
   .section-title {
     font-size: 2.5rem;
+  }
+  
+  .filter-container {
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  
+  .filter-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
   }
   
   .projects-grid {
