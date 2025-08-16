@@ -6,6 +6,7 @@
     <Experience />
     <Skills />
     <Projects />
+    <LinkPreview />
     <Contact />
     <Footer />
     <ThreeCursor />
@@ -25,6 +26,7 @@ import Experience from '@/components/Experience.vue'
 import Contact from '@/components/Contact.vue'
 import Footer from '@/components/Footer.vue'
 import ThreeCursor from '@/components/ThreeCursor.vue'
+import LinkPreview from '@/components/LinkPreview.vue'
 import { usePageTransitions } from '@/composables/usePageTransitions'
 
 gsap.registerPlugin(ScrollToPlugin)
