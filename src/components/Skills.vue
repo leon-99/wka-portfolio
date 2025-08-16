@@ -311,7 +311,7 @@ onMounted(async () => {
 
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1.5rem;
   justify-items: center;
 }
@@ -328,8 +328,8 @@ onMounted(async () => {
   border-radius: 16px;
   transition: all 0.3s ease;
   cursor: pointer;
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   text-align: center;
   overflow: hidden;
   word-wrap: break-word;
@@ -380,7 +380,7 @@ onMounted(async () => {
 .skill-name {
   color: #e8f5e8;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-align: center;
   line-height: 1.2;
   word-wrap: break-word;
@@ -389,22 +389,33 @@ onMounted(async () => {
   max-width: 100%;
   padding: 0 0.25rem;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* Special handling for Code Quality & Metrics category on desktop */
+.skill-category:nth-child(4) .skill-item {
+  width: 150px;
+  height: 150px;
+}
+
+.skill-category:nth-child(4) .skill-name {
+  font-size: 0.8rem;
+  -webkit-line-clamp: 4;
+}
+
 @media (max-width: 1200px) {
   .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 1rem;
   }
   
   .skill-item {
     padding: 1rem 0.75rem;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
   }
   
   .skill-icon {
@@ -414,6 +425,7 @@ onMounted(async () => {
   
   .skill-name {
     font-size: 0.8rem;
+    -webkit-line-clamp: 3;
   }
 }
 
