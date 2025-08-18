@@ -1,42 +1,5 @@
 <template>
-  <div class="link-preview-container">
-    <div class="input-section">
-      <input 
-        v-model="url" 
-        type="url" 
-        placeholder="Paste a URL to generate preview..."
-        class="url-input"
-        @keyup.enter="generatePreview"
-      />
-      <button @click="generatePreview" class="preview-btn" :disabled="isLoading">
-        {{ isLoading ? 'Generating...' : 'Generate Preview' }}
-      </button>
-    </div>
-
-         <div v-if="preview" class="preview-card">
-               <div v-if="preview.image" class="preview-image">
-          <img :src="preview.image" :alt="preview.title" />
-        </div>
-       <div v-else class="preview-image no-image">
-         <div class="no-image-placeholder">
-           <span>📷</span>
-           <p>No preview image available</p>
-         </div>
-       </div>
-      <div class="preview-content">
-        <h3 class="preview-title">{{ preview.title }}</h3>
-        <p class="preview-description">{{ preview.description }}</p>
-        <div class="preview-meta">
-          <span class="preview-url">{{ preview.url }}</span>
-          <span class="preview-site">{{ preview.siteName }}</span>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="error" class="error-message">
-      {{ error }}
-    </div>
-  </div>
+ 
 </template>
 
 <script setup lang="ts">
