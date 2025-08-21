@@ -43,7 +43,10 @@
           :data-category="project.category"
         >
           <div class="project-image">
-            <div class="project-icon">{{ project.icon }}</div>
+            <div class="project-icon">
+              <Icon v-if="project.iconType === 'iconify'" :icon="project.icon" :class="project.iconClass" />
+              <span v-else>{{ project.icon }}</span>
+            </div>
           </div>
           <div class="project-content">
             <h3 class="project-title">{{ project.title }}</h3>
@@ -105,6 +108,7 @@
 
 <script setup lang="ts">
 import { onMounted, nextTick, ref, computed } from 'vue'
+import { Icon } from '@iconify/vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -116,6 +120,8 @@ interface Project {
   title: string
   description: string
   icon: string
+  iconType?: 'emoji' | 'iconify'
+  iconClass?: string
   category: 'websites' | 'packages'
   technologies: string[]
   liveUrl?: string
@@ -136,6 +142,7 @@ const projects = ref<Project[]>([
     title: 'Weather Info App',
     description: 'A modern weather application built with Vue.js and Tailwind CSS, featuring real-time weather data, location-based forecasts, and a responsive design. Includes current conditions, hourly forecasts, and 7-day predictions with beautiful weather icons and intuitive user interface.',
     icon: '🌤️',
+    iconType: 'emoji',
     category: 'websites',
     technologies: ['Vue.js', 'Tailwind CSS', 'JavaScript', 'Weather API'],
     liveUrl: 'https://weather-info-leon.netlify.app/',
@@ -149,6 +156,7 @@ const projects = ref<Project[]>([
     title: 'Solar System Explorer',
     description: 'An interactive solar system visualization app that allows users to explore planets, moons, and celestial bodies. Features 3D-like animations, educational content, and an immersive space exploration experience built with modern web technologies.',
     icon: '🪐',
+    iconType: 'emoji',
     category: 'websites',
     technologies: ['Vue.js', 'Tailwind CSS', 'JavaScript', '3D Animation'],
     liveUrl: 'https://solar-system-leon.netlify.app/',
@@ -162,6 +170,7 @@ const projects = ref<Project[]>([
     title: 'Weeks of Life',
     description: 'A life visualization app that displays your life in weeks, helping you visualize time and make the most of every moment. Features an intuitive interface to track milestones, goals, and life events in a unique weekly grid format.',
     icon: '📅',
+    iconType: 'emoji',
     category: 'websites',
     technologies: ['Vue.js', 'Tailwind CSS', 'JavaScript', 'Life Tracking'],
     liveUrl: 'https://weeks-of-life-leon.netlify.app/',
@@ -174,7 +183,9 @@ const projects = ref<Project[]>([
     id: 'oasify-postman',
     title: 'Oasify Postman',
     description: 'An npm package that converts Postman collections to OpenAPI 3.0 specifications with automatic example response injection. Features CLI interface, programmatic API, and customizable metadata for seamless API documentation generation.',
-    icon: '📦',
+    icon: 'logos:npm',
+    iconType: 'iconify',
+    iconClass: 'logos',
     category: 'packages',
     technologies: ['Node.js', 'JavaScript', 'CLI', 'OpenAPI'],
     liveUrl: 'https://www.npmjs.com/package/oasify-postman',
@@ -187,7 +198,9 @@ const projects = ref<Project[]>([
     id: 'laravel-entity-generator',
     title: 'Laravel Entity Generator',
     description: 'A Laravel command that generates complete CRUD operations in a service-based architecture. Automates the creation of controllers, services, and more, allowing developers to focus on building their application logic instead of boilerplate code.',
-    icon: '⚙️',
+    icon: 'devicon:laravel',
+    iconType: 'iconify',
+    iconClass: 'devicon',
     category: 'packages',
     technologies: ['Laravel', 'PHP', 'CLI', 'CRUD'],
     codeUrl: 'https://github.com/leon-99/laravel-entity-generator',
@@ -196,11 +209,28 @@ const projects = ref<Project[]>([
     codeIcon: '📦',
     codeText: 'Package'
   },
+  {
+    id: 'plato-vue',
+    title: 'Plato Vue',
+    description: 'A globally installable Node.js package that analyzes Vue.js .vue files and JavaScript .js files to generate comprehensive maintainability reports using Plato. Features maintainability index calculation, cyclomatic complexity analysis, and detailed HTML reports.',
+    icon: 'logos:npm',
+    iconType: 'iconify',
+    iconClass: 'logos',
+    category: 'packages',
+    technologies: ['Node.js', 'JavaScript', 'CLI', 'Code Analysis', 'Vue.js'],
+    liveUrl: 'https://www.npmjs.com/package/plato-vue',
+    liveIcon: '📦',
+    liveText: 'NPM Package',
+    codeUrl: 'https://github.com/leon-99/plato-vue',
+    codeIcon: '📁',
+    codeText: 'View Code'
+  },
      {
      id: 'coming-soon',
      title: 'More Projects Coming Soon',
      description: 'I\'m currently working on exciting new projects that showcase modern web technologies, innovative solutions, and cutting-edge development practices. These projects will demonstrate my expertise in full-stack development, cloud architecture, and user experience design.',
      icon: '🚀',
+     iconType: 'emoji',
      category: 'websites',
      technologies: ['Full-Stack', 'Cloud', 'Modern UI/UX', 'Innovation'],
      contactUrl: '#contact',
@@ -407,15 +437,15 @@ const filterProjects = (category: string) => {
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
 .project-card {
   position: relative;
-  padding: 2rem;
+  padding: 1.5rem;
   overflow: hidden;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -446,12 +476,36 @@ const filterProjects = (category: string) => {
 
 .project-image {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .project-icon {
-  font-size: 4rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-icon span {
+  font-size: 3rem;
   opacity: 0.9;
+}
+
+.project-icon :deep(svg) {
+  width: 3rem;
+  height: 3rem;
+  fill: currentColor;
+  color: #90EE90;
+  opacity: 0.9;
+}
+
+.project-icon.logos :deep(svg) {
+  color: #90EE90;
+}
+
+.project-icon.devicon :deep(svg) {
+  color: #90EE90;
 }
 
 .project-content {
@@ -462,33 +516,33 @@ const filterProjects = (category: string) => {
 
 .project-title {
   color: #90EE90;
-  font-size: 1.75rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   letter-spacing: -0.02em;
 }
 
 .project-description {
   color: rgba(232, 245, 232, 0.8);
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
   flex: 1;
 }
 
 .project-tech {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
 }
 
 .tech-tag {
   background: rgba(34, 139, 34, 0.2);
   color: #90EE90;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
   font-weight: 500;
   border: 1px solid rgba(34, 139, 34, 0.3);
   transition: all 0.3s ease;
@@ -502,19 +556,19 @@ const filterProjects = (category: string) => {
 
 .project-links {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-top: auto;
 }
 
 .btn-live, .btn-code, .btn-contact {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: 6px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   transition: all 0.3s ease;
   border: none;
   cursor: pointer;
@@ -586,21 +640,21 @@ const filterProjects = (category: string) => {
   }
   
   .projects-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
     margin: 0 1rem;
   }
   
   .project-card {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
   
   .project-title {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
   
   .project-description {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
   }
   
   .project-links {
@@ -609,6 +663,20 @@ const filterProjects = (category: string) => {
   
   .btn-live, .btn-code, .btn-contact {
     width: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .projects-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
   }
 }
 </style>
