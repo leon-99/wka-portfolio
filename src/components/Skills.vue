@@ -119,141 +119,55 @@ onMounted(async () => {
   // Check if device is mobile
   const isMobile = window.innerWidth <= 768
   
-  // Section title animation
+  // Simple fade-in animation with earlier trigger
   gsap.fromTo('.section-title', {
     opacity: 0,
-    y: 100,
-    scale: 0.8
+    y: 30
   }, {
     opacity: 1,
     y: 0,
-    scale: 1,
-    duration: 1.2,
-    ease: 'elastic.out(1, 0.8)',
+    duration: 0.6,
+    ease: 'power2.out',
     scrollTrigger: isMobile ? undefined : {
       trigger: '.skills',
-      start: 'top 90%',
-      end: 'bottom 10%',
+      start: 'top 95%',
       toggleActions: 'play none none reverse'
     }
   })
   
-  // Category titles animation
+  // Category titles animation with earlier trigger
   gsap.fromTo('.category-title', {
     opacity: 0,
-    x: -50
+    y: 20
   }, {
     opacity: 1,
-    x: 0,
-    duration: 0.8,
-    stagger: 0.2,
+    y: 0,
+    duration: 0.5,
+    stagger: 0.1,
     ease: 'power2.out',
     scrollTrigger: isMobile ? undefined : {
       trigger: '.skills-categories',
-      start: 'top 85%',
+      start: 'top 95%',
       toggleActions: 'play none none reverse'
     }
   })
   
-  // Skills grid animation
+  // Skills grid animation with earlier trigger
   gsap.fromTo('.skill-item', {
     opacity: 0,
-    scale: 0,
-    rotation: -180
+    y: 20
   }, {
     opacity: 1,
-    scale: 1,
-    rotation: 0,
-    duration: 0.6,
+    y: 0,
+    duration: 0.4,
     stagger: 0.05,
-    ease: 'back.out(1.7)',
+    ease: 'power2.out',
     scrollTrigger: isMobile ? undefined : {
       trigger: '.skills-grid',
-      start: 'top 85%',
+      start: 'top 95%',
       toggleActions: 'play none none reverse'
     }
   })
-  
-  // Featured skills highlight animation (desktop only)
-  if (!isMobile) {
-    gsap.fromTo('.skill-item.featured', {
-      boxShadow: '0 0 0 rgba(144, 238, 144, 0)'
-    }, {
-      boxShadow: '0 0 20px rgba(144, 238, 144, 0.3)',
-      duration: 2,
-      ease: 'sine.inOut',
-      yoyo: true,
-      repeat: -1,
-      scrollTrigger: {
-        trigger: '.skill-item.featured',
-        start: 'top 90%',
-        toggleActions: 'play none none reverse'
-      }
-    })
-  }
-  
-  // Interactive hover effects for skill items (desktop only)
-  if (!isMobile) {
-    const skillItems = document.querySelectorAll('.skill-item')
-    skillItems.forEach(item => {
-      item.addEventListener('mouseenter', () => {
-        gsap.to(item, {
-          scale: 1.1,
-          y: -5,
-          duration: 0.3,
-          ease: 'back.out(1.7)'
-        })
-        
-        // Animate skill icon
-        const icon = item.querySelector('.skill-icon')
-        gsap.to(icon, {
-          scale: 1.2,
-          rotation: 15,
-          duration: 0.3,
-          ease: 'back.out(1.7)'
-        })
-      })
-      
-      item.addEventListener('mouseleave', () => {
-        gsap.to(item, {
-          scale: 1,
-          y: 0,
-          duration: 0.3,
-          ease: 'back.out(1.7)'
-        })
-        
-        const icon = item.querySelector('.skill-icon')
-        gsap.to(icon, {
-          scale: 1,
-          rotation: 0,
-          duration: 0.3,
-          ease: 'back.out(1.7)'
-        })
-      })
-    })
-  }
-  
-  // Mobile-specific touch interactions
-  if (isMobile) {
-    const skillItems = document.querySelectorAll('.skill-item')
-    skillItems.forEach(item => {
-      item.addEventListener('touchstart', () => {
-        gsap.to(item, {
-          scale: 0.95,
-          duration: 0.1,
-          ease: 'power2.out'
-        })
-      })
-      
-      item.addEventListener('touchend', () => {
-        gsap.to(item, {
-          scale: 1,
-          duration: 0.1,
-          ease: 'power2.out'
-        })
-      })
-    })
-  }
 })
 </script>
 
@@ -311,51 +225,68 @@ onMounted(async () => {
 
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1.5rem;
-  justify-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  justify-items: stretch;
 }
 
 .skill-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 0.75rem;
-  padding: 1.5rem 1rem;
-  background: rgba(34, 139, 34, 0.1);
-  border: 1px solid rgba(34, 139, 34, 0.2);
-  border-radius: 16px;
+  padding: 0.75rem 1rem;
+  background: rgba(34, 139, 34, 0.08);
+  border: 1px solid rgba(34, 139, 34, 0.15);
+  border-radius: 12px;
   transition: all 0.3s ease;
   cursor: pointer;
-  width: 140px;
-  height: 140px;
-  text-align: center;
+  text-align: left;
   overflow: hidden;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  transform-style: preserve-3d;
+  perspective: 1000px;
 }
 
 .skill-item:hover {
   background: rgba(34, 139, 34, 0.15);
   border-color: rgba(34, 139, 34, 0.4);
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(34, 139, 34, 0.2);
+  box-shadow: 0 4px 15px rgba(34, 139, 34, 0.2);
+}
+
+.skill-item:hover .skill-name {
+  color: #90EE90;
 }
 
 .skill-item.featured {
-  background: rgba(144, 238, 144, 0.15);
-  border-color: rgba(144, 238, 144, 0.4);
-  box-shadow: 0 0 20px rgba(144, 238, 144, 0.2);
+  background: rgba(144, 238, 144, 0.12);
+  border-color: rgba(144, 238, 144, 0.3);
+  box-shadow: 0 0 15px rgba(144, 238, 144, 0.15);
+  position: relative;
+}
+
+.skill-item.featured::before {
+  content: '★';
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  color: #90EE90;
+  font-size: 0.8rem;
+  opacity: 0.8;
 }
 
 .skill-icon {
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.skill-name {
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  line-height: 1.2;
 }
 
 .skill-icon :deep(svg) {
@@ -395,37 +326,28 @@ onMounted(async () => {
   text-overflow: ellipsis;
 }
 
-/* Special handling for Code Quality & Metrics category on desktop */
-.skill-category:nth-child(4) .skill-item {
-  width: 150px;
-  height: 150px;
-}
-
-.skill-category:nth-child(4) .skill-name {
-  font-size: 0.8rem;
-  -webkit-line-clamp: 4;
+/* Enhanced spacing for better readability */
+.skill-category {
+  margin-bottom: 1rem;
 }
 
 @media (max-width: 1200px) {
   .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
   }
   
   .skill-item {
-    padding: 1rem 0.75rem;
-    width: 120px;
-    height: 120px;
+    padding: 0.6rem 0.8rem;
   }
   
   .skill-icon {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 1.8rem;
+    height: 1.8rem;
   }
   
   .skill-name {
-    font-size: 0.8rem;
-    -webkit-line-clamp: 3;
+    font-size: 0.85rem;
   }
 }
 
@@ -453,49 +375,26 @@ onMounted(async () => {
   }
   
   .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
     padding: 0 0.5rem;
-    justify-items: center;
+    justify-items: stretch;
   }
   
   .skill-item {
-    padding: 0.75rem 0.5rem;
-    width: 90px;
-    height: 90px;
-    margin: 0.25rem;
+    padding: 0.6rem 0.8rem;
+    margin: 0;
     overflow: hidden;
   }
   
   .skill-icon {
-    width: 2rem;
-    height: 2rem;
+    width: 1.6rem;
+    height: 1.6rem;
   }
   
   .skill-name {
-    font-size: 0.7rem;
-    line-height: 1.1;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
-    max-width: 100%;
-    padding: 0 0.1rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  /* Special handling for Code Quality & Metrics category */
-  .skill-category:nth-child(4) .skill-item {
-    width: 95px;
-    height: 95px;
-  }
-  
-  .skill-category:nth-child(4) .skill-name {
-    font-size: 0.65rem;
-    -webkit-line-clamp: 3;
+    font-size: 0.8rem;
+    line-height: 1.2;
   }
 }
 
@@ -522,48 +421,25 @@ onMounted(async () => {
   }
   
   .skills-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
     padding: 0 0.25rem;
   }
   
   .skill-item {
-    padding: 0.5rem 0.25rem;
-    width: 80px;
-    height: 80px;
-    margin: 0.25rem;
+    padding: 0.5rem 0.6rem;
+    margin: 0;
     overflow: hidden;
   }
   
   .skill-icon {
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 1.4rem;
+    height: 1.4rem;
   }
   
   .skill-name {
-    font-size: 0.65rem;
-    line-height: 1.1;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
-    max-width: 100%;
-    padding: 0 0.1rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  /* Special handling for Code Quality & Metrics category */
-  .skill-category:nth-child(4) .skill-item {
-    width: 85px;
-    height: 85px;
-  }
-  
-  .skill-category:nth-child(4) .skill-name {
-    font-size: 0.6rem;
-    -webkit-line-clamp: 3;
+    font-size: 0.75rem;
+    line-height: 1.2;
   }
 }
 
@@ -575,29 +451,22 @@ onMounted(async () => {
   .skills-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
-    padding: 0 0.5rem;
+    padding: 0 0.25rem;
   }
   
   .skill-item {
-    width: 90px;
-    height: 90px;
-    margin: 0.25rem;
-    padding: 0.5rem 0.25rem;
+    margin: 0;
+    padding: 0.4rem 0.5rem;
   }
   
   .skill-icon {
-    width: 2rem;
-    height: 2rem;
+    width: 1.3rem;
+    height: 1.3rem;
   }
   
   .skill-name {
     font-size: 0.7rem;
-    line-height: 1.1;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
-    max-width: 100%;
-    padding: 0 0.1rem;
+    line-height: 1.2;
   }
 }
 </style>
