@@ -217,14 +217,14 @@ onMounted(async () => {
   // Section title animation
   gsap.fromTo('.section-title', {
     opacity: 0,
-    y: 100,
-    scale: 0.8
+    y: 50,
+    scale: 0.9
   }, {
     opacity: 1,
     y: 0,
     scale: 1,
-    duration: 1.2,
-    ease: 'elastic.out(1, 0.8)',
+    duration: 0.8,
+    ease: 'power2.out',
     scrollTrigger: isMobile ? undefined : {
       trigger: '.projects',
       start: 'top 90%',
@@ -236,13 +236,13 @@ onMounted(async () => {
   // Subtitle animation
   gsap.fromTo('.section-subtitle', {
     opacity: 0,
-    y: 50
+    y: 30
   }, {
     opacity: 1,
     y: 0,
-    duration: 0.8,
+    duration: 0.6,
     ease: 'power2.out',
-    delay: 0.3,
+    delay: 0.1,
     scrollTrigger: isMobile ? undefined : {
       trigger: '.section-subtitle',
       start: 'top 85%',
@@ -253,16 +253,16 @@ onMounted(async () => {
   // Project cards animation
   gsap.fromTo('.project-card', {
     opacity: 0,
-    y: 100,
-    scale: 0.8
+    y: 50,
+    scale: 0.9
   }, {
     opacity: 1,
     y: 0,
     scale: 1,
-    duration: 1,
-    ease: 'back.out(1.7)',
-    delay: 0.5,
-    stagger: 0.2,
+    duration: 0.6,
+    ease: 'power2.out',
+    delay: 0.2,
+    stagger: 0.1,
     scrollTrigger: isMobile ? undefined : {
       trigger: '.projects-grid',
       start: 'top 80%',
