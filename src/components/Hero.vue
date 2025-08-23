@@ -40,33 +40,33 @@
       </div>
     </div>
     
-         <!-- Floating Skills Tags -->
-     <div class="floating-skills">
-       <div class="skill-tag skill-tag-1" data-skill="Node.js">
-         <span class="skill-text">Node.js</span>
-         <Icon icon="devicon:nodejs" class="skill-icon" />
-       </div>
-       <div class="skill-tag skill-tag-2" data-skill="PHP">
-         <span class="skill-text">PHP</span>
-         <Icon icon="devicon:php" class="skill-icon" />
-       </div>
-       <div class="skill-tag skill-tag-3" data-skill="Laravel">
-         <span class="skill-text">Laravel</span>
-         <Icon icon="devicon:laravel" class="skill-icon" />
-       </div>
-       <div class="skill-tag skill-tag-4" data-skill="Vue.js">
-         <span class="skill-text">Vue.js</span>
-         <Icon icon="devicon:vuejs" class="skill-icon" />
-       </div>
-               <div class="skill-tag skill-tag-5" data-skill="DevOps">
-          <span class="skill-text">DevOps</span>
-          <Icon icon="mdi:server" class="skill-icon" />
-        </div>
-       <div class="skill-tag skill-tag-6" data-skill="Web Animations">
-         <span class="skill-text">Web Animations</span>
-         <Icon icon="mdi:animation" class="skill-icon" />
-       </div>
-     </div>
+    <!-- Floating Skills Tags -->
+    <div class="floating-skills">
+      <div class="skill-tag skill-tag-1" data-skill="Node.js">
+        <span class="skill-text">Node.js</span>
+        <Icon icon="devicon:nodejs" class="skill-icon" />
+      </div>
+      <div class="skill-tag skill-tag-2" data-skill="PHP">
+        <span class="skill-text">PHP</span>
+        <Icon icon="devicon:php" class="skill-icon" />
+      </div>
+      <div class="skill-tag skill-tag-3" data-skill="Laravel">
+        <span class="skill-text">Laravel</span>
+        <Icon icon="devicon:laravel" class="skill-icon" />
+      </div>
+      <div class="skill-tag skill-tag-4" data-skill="Vue.js">
+        <span class="skill-text">Vue.js</span>
+        <Icon icon="devicon:vuejs" class="skill-icon" />
+      </div>
+      <div class="skill-tag skill-tag-5" data-skill="DevOps">
+        <span class="skill-text">DevOps</span>
+        <Icon icon="mdi:server" class="skill-icon" />
+      </div>
+      <div class="skill-tag skill-tag-6" data-skill="Web Animations">
+        <span class="skill-text">Web Animations</span>
+        <Icon icon="mdi:animation" class="skill-icon" />
+      </div>
+    </div>
     
     <div class="scroll-indicator">
       <div class="scroll-arrow"></div>
@@ -256,15 +256,6 @@ onMounted(() => {
     }
   })
   
-  // Continuous title glow effect - removed for cleaner look
-  // gsap.to('.hero-title .text-gradient', {
-  //   textShadow: '0 0 20px rgba(144, 238, 144, 0.8), 0 0 40px rgba(144, 238, 144, 0.4)',
-  //   duration: 2,
-  //   ease: 'sine.inOut',
-  //   yoyo: true,
-  //   repeat: -1
-  // })
-  
   // Button hover effects
   const buttons = document.querySelectorAll('.btn-primary, .btn-secondary')
   buttons.forEach(button => {
@@ -409,30 +400,80 @@ onMounted(() => {
   setTimeout(() => {
     if (!scene.value || !camera.value) return
 
-    // Create interactive floating particles
+    // Create enhanced interactive floating particles
     const particleGeometry = markRaw(new THREE.BufferGeometry())
-    const particleCount = 150
+    const particleCount = 200
     const positions = new Float32Array(particleCount * 3)
     const originalPositions = new Float32Array(particleCount * 3)
     const velocities = new Float32Array(particleCount * 3)
+    const colors = new Float32Array(particleCount * 3)
+    const sizes = new Float32Array(particleCount)
 
-    for (let i = 0; i < particleCount * 3; i++) {
-      const pos = (Math.random() - 0.5) * 20
-      positions[i] = pos
-      originalPositions[i] = pos
-      velocities[i] = (Math.random() - 0.5) * 0.02
+    for (let i = 0; i < particleCount; i++) {
+      const i3 = i * 3
+      const pos = (Math.random() - 0.5) * 25
+      positions[i3] = pos
+      positions[i3 + 1] = pos
+      positions[i3 + 2] = pos
+      originalPositions[i3] = pos
+      originalPositions[i3 + 1] = pos
+      originalPositions[i3 + 2] = pos
+      velocities[i3] = (Math.random() - 0.5) * 0.03
+      velocities[i3 + 1] = (Math.random() - 0.5) * 0.03
+      velocities[i3 + 2] = (Math.random() - 0.5) * 0.03
+      
+      // Create color gradient from green to blue
+      const colorIntensity = Math.random() * 0.5 + 0.5
+      colors[i3] = 0.2 * colorIntensity // Green component
+      colors[i3 + 1] = 0.8 * colorIntensity // Green component
+      colors[i3 + 2] = 0.3 * colorIntensity // Blue component
+      
+      sizes[i] = Math.random() * 0.05 + 0.02
     }
 
     particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+    particleGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1))
+    
     const particleMaterial = markRaw(new THREE.PointsMaterial({ 
-      color: 0x32CD32, 
-      size: 0.03,
+      size: 0.05,
       transparent: true,
       opacity: 0.8,
-      blending: THREE.AdditiveBlending
+      blending: THREE.AdditiveBlending,
+      vertexColors: true,
+      sizeAttenuation: true
     }))
+    
     const particles = markRaw(new THREE.Points(particleGeometry, particleMaterial))
     scene.value.add(particles)
+
+    // Create floating triangle shapes
+    const createFloatingTriangle = (position: [number, number, number], color: number, opacity: number) => {
+      const triangleGeometry = markRaw(new THREE.TetrahedronGeometry(0.4, 0)) // Tetrahedron has triangular faces
+      const triangleMaterial = markRaw(new THREE.MeshBasicMaterial({
+        color: color,
+        transparent: true,
+        opacity: opacity,
+        wireframe: true
+      }))
+      const mesh = markRaw(new THREE.Mesh(triangleGeometry, triangleMaterial))
+      mesh.position.set(...position)
+      mesh.rotation.set(
+        Math.random() * Math.PI,
+        Math.random() * Math.PI,
+        Math.random() * Math.PI
+      )
+      scene.value!.add(mesh)
+      return mesh
+    }
+
+         // Create various triangle shapes
+     const shapes: THREE.Mesh[] = []
+     
+     // Fewer tetrahedrons (triangular pyramids) for cleaner look
+     shapes.push(createFloatingTriangle([8, 3, -5], 0x32CD32, 0.3))
+     shapes.push(createFloatingTriangle([-6, -2, 4], 0x90EE90, 0.25))
+     shapes.push(createFloatingTriangle([4, -4, -3], 0x98FB98, 0.2))
 
     let time = 0
     
@@ -442,56 +483,56 @@ onMounted(() => {
       // Update mouse interaction
       updateRaycaster(normalizedMouse.value)
       
-      // Mouse-interactive particle movement (slowed down)
+      // Enhanced particle movement
       const positionAttribute = particles.geometry.getAttribute('position')
-      const mouseInfluence = normalizedMouse.value.length() * 0.5 // Reduced from 2 to 0.5
+      const mouseInfluence = normalizedMouse.value.length() * 0.8
       
       for (let i = 0; i < particleCount; i++) {
         const i3 = i * 3
         
-        // Organic floating movement
-        const wave = Math.sin(time * 0.5 + i * 0.1) * 0.5
+        // Organic floating movement with more variation
+        const wave = Math.sin(time * 0.5 + i * 0.1) * 0.8
+        const wave2 = Math.cos(time * 0.3 + i * 0.15) * 0.6
         
-        // Mouse attraction/repulsion effect (reduced sensitivity)
-        const mouseX = normalizedMouse.value.x * 3 // Reduced from 10 to 3
-        const mouseY = normalizedMouse.value.y * 3 // Reduced from 10 to 3
+        // Mouse attraction/repulsion effect
+        const mouseX = normalizedMouse.value.x * 4
+        const mouseY = normalizedMouse.value.y * 4
         
-        // Calculate distance from mouse (in screen space)
         const dx = positionAttribute.array[i3] - mouseX
         const dy = positionAttribute.array[i3 + 1] - mouseY
         const distance = Math.sqrt(dx * dx + dy * dy)
         
-        // Apply mouse influence (attraction when close, repulsion when very close)
         let mouseForceX = 0
         let mouseForceY = 0
         
-        if (distance < 5 && mouseInfluence > 0.1) {
-          const force = (5 - distance) / 5
-          if (distance < 2) {
-            // Repulsion when very close (reduced force)
-            mouseForceX = (dx / distance) * force * 0.15 // Reduced from 0.5 to 0.15
-            mouseForceY = (dy / distance) * force * 0.15 // Reduced from 0.5 to 0.15
+        if (distance < 6 && mouseInfluence > 0.1) {
+          const force = (6 - distance) / 6
+          if (distance < 2.5) {
+            mouseForceX = (dx / distance) * force * 0.2
+            mouseForceY = (dy / distance) * force * 0.2
           } else {
-            // Attraction when moderately close (reduced force)
-            mouseForceX = -(dx / distance) * force * 0.08 // Reduced from 0.2 to 0.08
-            mouseForceY = -(dy / distance) * force * 0.08 // Reduced from 0.2 to 0.08
+            mouseForceX = -(dx / distance) * force * 0.1
+            mouseForceY = -(dy / distance) * force * 0.1
           }
         }
         
-        // Enhanced base organic movement (always active)
-        const baseMovementX = Math.sin(time * 0.3 + i * 0.1) * 2.5 + 
-                             Math.cos(time * 0.15 + i * 0.2) * 1.2
-        const baseMovementY = wave * 3.5 + 
-                             Math.sin(time * 0.25 + i * 0.15) * 1.8
-        const baseMovementZ = Math.cos(time * 0.4 + i * 0.05) * 2.0 + 
-                             Math.sin(time * 0.2 + i * 0.08) * 1.0
+        // Enhanced base organic movement
+        const baseMovementX = Math.sin(time * 0.3 + i * 0.1) * 3 + 
+                             Math.cos(time * 0.15 + i * 0.2) * 1.5 +
+                             Math.sin(time * 0.7 + i * 0.05) * 1
+        const baseMovementY = wave * 4 + 
+                             Math.sin(time * 0.25 + i * 0.15) * 2.5 +
+                             wave2 * 2
+        const baseMovementZ = Math.cos(time * 0.4 + i * 0.05) * 2.5 + 
+                             Math.sin(time * 0.2 + i * 0.08) * 1.5 +
+                             Math.cos(time * 0.6 + i * 0.12) * 1
         
         // Continuous velocity-based drift
-        const driftX = velocities[i3] * time * 12
-        const driftY = velocities[i3 + 1] * time * 12  
-        const driftZ = velocities[i3 + 2] * time * 12
+        const driftX = velocities[i3] * time * 15
+        const driftY = velocities[i3 + 1] * time * 15  
+        const driftZ = velocities[i3 + 2] * time * 15
         
-        // Update positions with enhanced organic movement + mouse interaction
+        // Update positions
         positionAttribute.array[i3] = originalPositions[i3] + 
           baseMovementX + 
           driftX + 
@@ -509,23 +550,52 @@ onMounted(() => {
       
       positionAttribute.needsUpdate = true
       
-      // Enhanced particle rotation (base movement + reduced mouse influence)
-      const baseRotationY = 0.003 + Math.sin(time * 0.1) * 0.002
-      const baseRotationX = 0.002 + Math.cos(time * 0.15) * 0.001
+      // Animate geometric shapes
+      shapes.forEach((shape, index) => {
+        const speed = 0.5 + index * 0.1
+        const amplitude = 0.5 + index * 0.2
+        
+        shape.rotation.x += 0.01 * speed
+        shape.rotation.y += 0.015 * speed
+        shape.rotation.z += 0.008 * speed
+        
+        // Floating motion
+        shape.position.y += Math.sin(time * speed + index) * 0.01 * amplitude
+        shape.position.x += Math.cos(time * speed * 0.7 + index) * 0.008 * amplitude
+        shape.position.z += Math.sin(time * speed * 0.5 + index) * 0.006 * amplitude
+        
+        // Scale pulsing
+        const scale = 1 + Math.sin(time * 2 + index) * 0.1
+        shape.scale.setScalar(scale)
+        
+        // Opacity variation
+        if (shape.material instanceof THREE.MeshBasicMaterial) {
+          shape.material.opacity = 0.1 + Math.sin(time * 1.5 + index) * 0.1
+        }
+      })
       
-      particles.rotation.y += baseRotationY + mouseInfluence * 0.003 // Reduced from 0.01 to 0.003
-      particles.rotation.x += baseRotationX + mouseInfluence * 0.002 // Reduced from 0.005 to 0.002
+      // Enhanced particle rotation
+      const baseRotationY = 0.004 + Math.sin(time * 0.1) * 0.003
+      const baseRotationX = 0.003 + Math.cos(time * 0.15) * 0.002
       
-      // Dynamic particle size with base pulsing + reduced mouse interaction
+      particles.rotation.y += baseRotationY + mouseInfluence * 0.005
+      particles.rotation.x += baseRotationX + mouseInfluence * 0.003
+      
+      // Dynamic particle size
       if (particleMaterial.size) {
-        const basePulse = Math.sin(time * 1.5) * 0.008 + 0.035 // Base pulsing size
-        particleMaterial.size = basePulse + mouseInfluence * 0.008 // Reduced from 0.02 to 0.008
+        const basePulse = Math.sin(time * 1.5) * 0.01 + 0.04
+        particleMaterial.size = basePulse + mouseInfluence * 0.01
       }
       
-      // Camera movement with reduced mouse influence
+      // Enhanced camera movement
       if (camera.value) {
-        camera.value.position.x = Math.sin(time * 0.1) * 0.3 + normalizedMouse.value.x * 0.15 // Reduced from 0.5 to 0.15
-        camera.value.position.y = Math.cos(time * 0.15) * 0.2 + normalizedMouse.value.y * 0.1 // Reduced from 0.3 to 0.1
+        const cameraMoveX = Math.sin(time * 0.08) * 0.4 + normalizedMouse.value.x * 0.2
+        const cameraMoveY = Math.cos(time * 0.12) * 0.3 + normalizedMouse.value.y * 0.15
+        const cameraMoveZ = Math.sin(time * 0.1) * 0.2
+        
+        camera.value.position.x = cameraMoveX
+        camera.value.position.y = cameraMoveY
+        camera.value.position.z = 5 + cameraMoveZ
         camera.value.lookAt(0, 0, 0)
       }
     })
@@ -543,6 +613,10 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  background: linear-gradient(135deg, 
+    rgba(0, 20, 0, 0.3) 0%, 
+    rgba(0, 40, 20, 0.2) 50%, 
+    rgba(0, 20, 40, 0.3) 100%);
 }
 
 .hero-canvas {
@@ -552,11 +626,12 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   z-index: 1;
+  filter: blur(0.5px);
 }
 
 .hero-content {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   text-align: center;
   max-width: 800px;
   padding: 0 2rem;
@@ -568,6 +643,10 @@ onMounted(() => {
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
   line-height: 1.1;
+  text-shadow: 
+    0 0 20px rgba(50, 205, 50, 0.5),
+    0 0 40px rgba(50, 205, 50, 0.3),
+    0 0 60px rgba(50, 205, 50, 0.1);
 }
 
 .name-animation-container {
@@ -585,17 +664,24 @@ onMounted(() => {
   display: inline-block;
   font-weight: 700;
   color: #32CD32;
-  text-shadow: 0 0 10px rgba(50, 205, 50, 0.3);
+  text-shadow: 
+    0 0 10px rgba(50, 205, 50, 0.5),
+    0 0 20px rgba(50, 205, 50, 0.3),
+    0 0 30px rgba(50, 205, 50, 0.1);
   transform-style: preserve-3d;
   transition: all 0.3s ease;
   position: relative;
+  filter: drop-shadow(0 0 5px rgba(50, 205, 50, 0.3));
 }
 
 .letter:hover {
   transform: rotateY(15deg) rotateX(5deg) translateZ(10px) scale(1.1);
   color: #90EE90;
-  text-shadow: 0 0 15px rgba(144, 238, 144, 0.6);
-  filter: brightness(1.2);
+  text-shadow: 
+    0 0 15px rgba(144, 238, 144, 0.8),
+    0 0 30px rgba(144, 238, 144, 0.5),
+    0 0 45px rgba(144, 238, 144, 0.3);
+  filter: drop-shadow(0 0 8px rgba(144, 238, 144, 0.5));
 }
 
 .space {
@@ -620,23 +706,24 @@ onMounted(() => {
   right: -20px;
   bottom: -20px;
   background: radial-gradient(ellipse at center, 
-    rgba(232, 245, 232, 0.05) 0%,
-    rgba(232, 245, 232, 0.02) 50%,
+    rgba(232, 245, 232, 0.08) 0%,
+    rgba(232, 245, 232, 0.04) 50%,
     transparent 70%);
   border-radius: 50%;
-  opacity: 0.3;
+  opacity: 0.4;
   z-index: 0;
   animation: pulse-glow 4s ease-in-out infinite;
+  filter: blur(1px);
 }
 
 @keyframes pulse-glow {
   0%, 100% {
     transform: scale(1);
-    opacity: 0.2;
+    opacity: 0.3;
   }
   50% {
     transform: scale(1.05);
-    opacity: 0.4;
+    opacity: 0.6;
   }
 }
 
@@ -645,16 +732,21 @@ onMounted(() => {
   color: #90EE90;
   margin-bottom: 1.5rem;
   font-weight: 400;
+  text-shadow: 
+    0 0 10px rgba(144, 238, 144, 0.4),
+    0 0 20px rgba(144, 238, 144, 0.2);
+  letter-spacing: 0.05em;
 }
 
 .hero-description {
   font-size: 1.1rem;
   line-height: 1.6;
   margin-bottom: 2.5rem;
-  color: rgba(232, 245, 232, 0.8);
+  color: rgba(232, 245, 232, 0.9);
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 .hero-actions {
@@ -664,12 +756,58 @@ onMounted(() => {
   flex-wrap: wrap;
 }
 
+.btn-primary, .btn-secondary {
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  backdrop-filter: blur(10px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #32CD32, #228B22);
+  color: white;
+  box-shadow: 
+    0 4px 15px rgba(50, 205, 50, 0.3),
+    0 0 20px rgba(50, 205, 50, 0.1);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #228B22, #32CD32);
+  box-shadow: 
+    0 6px 20px rgba(50, 205, 50, 0.4),
+    0 0 30px rgba(50, 205, 50, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: rgba(50, 205, 50, 0.1);
+  color: #32CD32;
+  border-color: rgba(50, 205, 50, 0.3);
+  box-shadow: 
+    0 4px 15px rgba(50, 205, 50, 0.1),
+    0 0 20px rgba(50, 205, 50, 0.05);
+}
+
+.btn-secondary:hover {
+  background: rgba(50, 205, 50, 0.2);
+  border-color: rgba(50, 205, 50, 0.5);
+  box-shadow: 
+    0 6px 20px rgba(50, 205, 50, 0.2),
+    0 0 30px rgba(50, 205, 50, 0.1);
+  transform: translateY(-2px);
+}
+
 .scroll-indicator {
   position: absolute;
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2;
+  z-index: 3;
 }
 
 .scroll-arrow {
@@ -678,6 +816,7 @@ onMounted(() => {
   background: linear-gradient(to bottom, transparent, #32CD32);
   position: relative;
   animation: scroll 2s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(50, 205, 50, 0.5);
 }
 
 .scroll-arrow::after {
@@ -691,16 +830,24 @@ onMounted(() => {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   border-top: 8px solid #32CD32;
+  filter: drop-shadow(0 0 5px rgba(50, 205, 50, 0.5));
 }
 
 @keyframes scroll {
-  0%, 100% { opacity: 0; transform: translateY(-10px); }
-  50% { opacity: 1; transform: translateY(0); }
+  0%, 100% { 
+    opacity: 0; 
+    transform: translateY(-10px); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
 }
 
 @media (max-width: 768px) {
   .hero-content {
     padding: 0 1rem;
+    margin: 0 1rem;
   }
   
   .hero-title {
@@ -709,7 +856,6 @@ onMounted(() => {
   
   .letter:hover {
     transform: scale(1.05);
-    /* Simplify hover effects on mobile */
   }
   
   .name-glow-overlay {
@@ -717,7 +863,7 @@ onMounted(() => {
     left: -10px;
     right: -10px;
     bottom: -10px;
-    opacity: 0.2;
+    opacity: 0.3;
   }
   
   .hero-subtitle {
@@ -740,17 +886,15 @@ onMounted(() => {
   }
   
   .floating-skills {
-    display: block; /* Show on mobile */
+    display: block;
   }
   
-  /* Mobile-specific floating skills positioning */
   .skill-tag {
     font-size: 0.8rem;
     padding: 0.6rem 1rem;
     border-radius: 20px;
   }
   
-  /* Show only icons on mobile */
   .skill-text {
     display: none !important;
   }
@@ -791,7 +935,6 @@ onMounted(() => {
   }
 }
 
-/* Extra small mobile devices */
 @media (max-width: 480px) {
   .floating-skills {
     display: block;
@@ -807,7 +950,6 @@ onMounted(() => {
     white-space: normal;
   }
   
-  /* Show only icons on extra small mobile */
   .skill-text {
     display: none !important;
   }
@@ -817,7 +959,6 @@ onMounted(() => {
     font-size: 1rem;
   }
   
-  /* Adjust positioning for very small screens */
   .skill-tag-1 {
     top: 16% !important;
     left: 6% !important;
@@ -856,33 +997,34 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Container has no pointer events */
+  pointer-events: none;
   z-index: 2;
 }
 
 .skill-tag {
   position: absolute;
-  background: rgba(26, 47, 26, 0.9);
-  backdrop-filter: blur(10px);
-  color: #a8d8a8; /* Slightly softer default green */
+  background: rgba(26, 47, 26, 0.95);
+  backdrop-filter: blur(15px);
+  color: #a8d8a8;
   padding: 0.75rem 1.25rem;
   border-radius: 25px;
   font-size: 0.9rem;
   font-weight: 600;
   border: 1px solid rgba(34, 139, 34, 0.4);
-  box-shadow: 0 4px 15px rgba(50, 205, 50, 0.2);
+  box-shadow: 
+    0 4px 15px rgba(50, 205, 50, 0.2),
+    0 0 20px rgba(50, 205, 50, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   white-space: nowrap;
-  /* animation: float 6s ease-in-out infinite; */ /* Disabled - GSAP handles floating */
-  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Only transition colors, let GSAP handle transforms */
-  cursor: default; /* Changed from pointer to default */
+  transition: all 0.3s ease;
+  cursor: default;
   user-select: none;
-  pointer-events: auto; /* Enable pointer events on skill tags */
+  pointer-events: auto;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Desktop styles - show text, hide icons */
 @media (min-width: 769px) {
   .skill-text {
     display: block;
@@ -896,13 +1038,15 @@ onMounted(() => {
 }
 
 .skill-tag:hover {
-  background: rgba(30, 60, 30, 0.95); /* Darker, less bright green */
-  color: #d0e8d0; /* Softer text color */
-  box-shadow: 0 6px 25px rgba(40, 100, 40, 0.3); /* More subtle glow */
-  /* transform: translateY(-5px); */ /* Disabled - GSAP handles transforms */
+  background: rgba(30, 60, 30, 0.98);
+  color: #d0e8d0;
+  box-shadow: 
+    0 6px 25px rgba(40, 100, 40, 0.4),
+    0 0 30px rgba(50, 205, 50, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }
 
-/* Individual positioning and animation delays - Desktop */
 @media (min-width: 769px) {
   .skill-tag-1 {
     top: 20% !important;
@@ -935,7 +1079,6 @@ onMounted(() => {
   }
 }
 
-/* Floating animation */
 @keyframes float {
   0%, 100% {
     transform: translateY(0px) translateX(0px);
@@ -951,7 +1094,6 @@ onMounted(() => {
   }
 }
 
-/* Subtle glow animation */
 .skill-tag::before {
   content: '';
   position: absolute;
@@ -960,7 +1102,7 @@ onMounted(() => {
   right: 0;
   bottom: 0;
   border-radius: 25px;
-  background: linear-gradient(45deg, transparent, rgba(144, 238, 144, 0.1), transparent);
+  background: linear-gradient(45deg, transparent, rgba(144, 238, 144, 0.15), transparent);
   opacity: 0;
   animation: glow 4s ease-in-out infinite;
   pointer-events: none;
@@ -972,6 +1114,49 @@ onMounted(() => {
   }
   50% {
     opacity: 1;
+  }
+}
+
+/* Enhanced visual effects */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(50, 205, 50, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(144, 238, 144, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(50, 205, 50, 0.02) 0%, transparent 50%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(45deg, transparent 30%, rgba(50, 205, 50, 0.01) 50%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+  animation: shimmer 8s ease-in-out infinite;
+}
+
+
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(100%);
   }
 }
 </style>
