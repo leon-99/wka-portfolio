@@ -245,9 +245,9 @@ onMounted(async () => {
     const suffix = text.replace(/\d/g, '')
     
     gsap.fromTo(stat, {
-      textContent: '0' + suffix
+      textContent: '0' + suffix,
     }, {
-      duration: 2,
+      duration: 10,
       textContent: number + suffix,
       ease: 'power2.out',
       snap: { textContent: 1 },

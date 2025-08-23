@@ -3,56 +3,56 @@
     <div class="container">
       <h2 class="section-title text-gradient">Professional Experience</h2>
       
-      <div class="timeline">
-        <div 
-          v-for="(job, index) in experiences" 
-          :key="job.id"
-          class="timeline-item"
-          :class="{ 'timeline-item-left': index % 2 === 0, 'timeline-item-right': index % 2 !== 0 }"
-        >
-          <div class="timeline-marker">
-            <div class="timeline-dot"></div>
-            <div class="timeline-date">{{ job.period }}</div>
-          </div>
-          
-          <div class="timeline-content glass-card">
-            <div class="job-header">
-              <div class="company-info">
-                <h3 class="job-title">{{ job.title }}</h3>
-                <h4 class="company-name">{{ job.company }}</h4>
-                <p class="job-location">{{ job.location }}</p>
-              </div>
-              <div class="job-status" :class="job.current ? 'current' : 'completed'">
-                {{ job.current ? 'Current' : 'Completed' }}
-              </div>
-            </div>
+      <div class="portal-journey">
+        <div class="portal-track" ref="portalTrack">
+          <div 
+            v-for="(job, index) in experiences" 
+            :key="job.id"
+            class="portal-scene"
+            :data-index="index"
+          >
+
             
-            <ul class="job-responsibilities">
-              <li v-for="responsibility in job.responsibilities" :key="responsibility">
-                {{ responsibility }}
-              </li>
-            </ul>
-            
-            <div class="job-technologies">
-              <span class="tech-label">Technologies:</span>
-              <div class="tech-list">
-                <span 
-                  v-for="tech in job.technologies" 
-                  :key="tech"
-                  class="tech-badge"
-                >
-                  {{ tech }}
-                </span>
+            <div class="portal-content glass-card">
+              <div class="job-header">
+                <div class="company-info">
+                  <h3 class="job-title">{{ job.title }}</h3>
+                  <h4 class="company-name">{{ job.company }}</h4>
+                  <p class="job-location">{{ job.location }}</p>
+                  <p class="job-period">{{ job.period }}</p>
+                </div>
+                <div class="job-status" :class="job.current ? 'current' : 'completed'">
+                  {{ job.current ? 'Current' : 'Completed' }}
+                </div>
               </div>
-            </div>
-            
-            <div class="job-achievements" v-if="job.achievements">
-              <h5>Key Achievements:</h5>
-              <ul>
-                <li v-for="achievement in job.achievements" :key="achievement">
-                  {{ achievement }}
+              
+              <ul class="job-responsibilities">
+                <li v-for="responsibility in job.responsibilities" :key="responsibility">
+                  {{ responsibility }}
                 </li>
               </ul>
+              
+              <div class="job-technologies">
+                <span class="tech-label">Technologies:</span>
+                <div class="tech-list">
+                  <span 
+                    v-for="tech in job.technologies" 
+                    :key="tech"
+                    class="tech-badge"
+                  >
+                    {{ tech }}
+                  </span>
+                </div>
+              </div>
+              
+              <div class="job-achievements" v-if="job.achievements">
+                <h5>Key Achievements:</h5>
+                <ul>
+                  <li v-for="achievement in job.achievements" :key="achievement">
+                    {{ achievement }}
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -83,6 +83,8 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
+
+const portalTrack = ref<HTMLElement>()
 
 const experiences = ref([
   {
@@ -192,139 +194,156 @@ onMounted(async () => {
     }
   })
   
-  // Timeline line animation
-  gsap.fromTo('.timeline::before', {
-    scaleY: 0,
-    transformOrigin: 'top'
-  }, {
-    scaleY: 1,
-    duration: 2,
-    ease: 'power2.out',
-    scrollTrigger: {
-      trigger: '.timeline',
-      start: 'top 85%',
-      end: 'bottom 15%',
-      toggleActions: 'play none none reverse'
-    }
-  })
+  // Create horizontal scroll portal journey
+  const portalScenes = document.querySelectorAll('.portal-scene')
+  const totalScenes = portalScenes.length
   
-  // Timeline items animation
-  const timelineItems = document.querySelectorAll('.timeline-item')
-  timelineItems.forEach((item, index) => {
-    const isLeft = index % 2 === 0
-    
-    // Content animation
-    gsap.fromTo(item.querySelector('.timeline-content'), {
-      opacity: 0,
-      x: isLeft ? -100 : 100,
-      rotationY: isLeft ? -15 : 15,
-      scale: 0.8
-    }, {
-      opacity: 1,
-      x: 0,
-      rotationY: 0,
-      scale: 1,
-      duration: 1,
-      ease: 'back.out(1.7)',
+  if (portalTrack.value && totalScenes > 0) {
+    // Set up horizontal scroll animation
+    const horizontalTween = gsap.to(portalScenes, {
+      xPercent: -100 * (totalScenes - 1),
+      ease: 'none',
       scrollTrigger: {
-        trigger: item,
-        start: 'top 85%',
-        end: 'bottom 15%',
-        toggleActions: 'play none none reverse'
+        trigger: '.portal-journey',
+        pin: true,
+        scrub: 1,
+        snap: 1 / (totalScenes - 1),
+        start: 'top top',
+        end: () => `+=${portalTrack.value!.offsetWidth * (totalScenes - 1)}`,
+        onUpdate: (self) => {
+          // Calculate which scene is most visible
+          const progress = self.progress
+          const currentIndex = Math.round(progress * (totalScenes - 1))
+          
+          // Animate content effects for current scene
+          portalScenes.forEach((scene, index) => {
+            const content = scene.querySelector('.portal-content')
+            
+            if (index === currentIndex) {
+              // Active content effects
+              gsap.to(content, { 
+                opacity: 1, 
+                scale: 1, 
+                y: 0,
+                duration: 0.5,
+                ease: 'power2.out'
+              })
+            } else {
+              // Inactive content effects
+              gsap.to(content, { 
+                opacity: 0.7, 
+                scale: 0.96, 
+                y: 10,
+                duration: 0.5,
+                ease: 'power2.out'
+              })
+            }
+          })
+        }
       }
     })
     
-    // Timeline dot animation
-    gsap.fromTo(item.querySelector('.timeline-dot'), {
-      scale: 0,
-      rotation: -180
-    }, {
-      scale: 1,
-      rotation: 0,
-      duration: 0.8,
-      ease: 'back.out(1.7)',
-      scrollTrigger: {
-        trigger: item,
-        start: 'top 90%',
-        toggleActions: 'play none none reverse'
+    // Individual scene animations
+    portalScenes.forEach((scene) => {
+      const content = scene.querySelector('.portal-content')
+      const glow = scene.querySelector('.portal-glow')
+      const particles = scene.querySelector('.portal-particles')
+      
+      // Portal glow entrance animation
+      gsap.fromTo(glow, {
+        scale: 0,
+        opacity: 0
+      }, {
+        scale: 1,
+        opacity: 0.3,
+        duration: 1.5,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: scene,
+          start: 'left 80%',
+          toggleActions: 'play none none reverse',
+          containerAnimation: horizontalTween
+        }
+      })
+      
+      // Portal particles entrance animation
+      gsap.fromTo(particles, {
+        scale: 0,
+        opacity: 0,
+        rotation: -180
+      }, {
+        scale: 1,
+        opacity: 0.5,
+        rotation: 0,
+        duration: 1.2,
+        ease: 'back.out(1.7)',
+        scrollTrigger: {
+          trigger: scene,
+          start: 'left 75%',
+          toggleActions: 'play none none reverse',
+          containerAnimation: horizontalTween
+        }
+      })
+      
+      // Content entrance animation
+      gsap.fromTo(content, {
+        opacity: 0,
+        y: 100,
+        scale: 0.9
+      }, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1.2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: scene,
+          start: 'left 70%',
+          toggleActions: 'play none none reverse',
+          containerAnimation: horizontalTween
+        }
+      })
+      
+      // Animate content elements
+      if (content) {
+        gsap.fromTo(content.querySelectorAll('.job-responsibilities li'), {
+          opacity: 0,
+          x: -50
+        }, {
+          opacity: 1,
+          x: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: scene,
+            start: 'left 50%',
+            toggleActions: 'play none none reverse',
+            containerAnimation: horizontalTween
+          }
+        })
+        
+        gsap.fromTo(content.querySelectorAll('.tech-badge'), {
+          opacity: 0,
+          scale: 0,
+          rotation: -180
+        }, {
+          opacity: 1,
+          scale: 1,
+          rotation: 0,
+          duration: 0.4,
+          stagger: 0.05,
+          ease: 'back.out(1.7)',
+          scrollTrigger: {
+            trigger: scene,
+            start: 'left 40%',
+            toggleActions: 'play none none reverse',
+            containerAnimation: horizontalTween
+          }
+        })
       }
     })
-    
-    // Timeline date animation
-    gsap.fromTo(item.querySelector('.timeline-date'), {
-      opacity: 0,
-      y: -20,
-      scale: 0.5
-    }, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 0.6,
-      ease: 'back.out(1.7)',
-      scrollTrigger: {
-        trigger: item,
-        start: 'top 85%',
-        toggleActions: 'play none none reverse'
-      },
-      delay: 0.2
-    })
-  })
-  
-  // Job responsibilities animation
-  gsap.fromTo('.job-responsibilities li', {
-    opacity: 0,
-    x: -30
-  }, {
-    opacity: 1,
-    x: 0,
-    duration: 0.6,
-    stagger: 0.1,
-    ease: 'power2.out',
-    scrollTrigger: {
-      trigger: '.job-responsibilities',
-      start: 'top 90%',
-      end: 'bottom 10%',
-      toggleActions: 'play none none reverse'
-    }
-  })
-  
-  // Tech badges animation
-  gsap.fromTo('.tech-badge', {
-    opacity: 0,
-    scale: 0,
-    rotation: -180
-  }, {
-    opacity: 1,
-    scale: 1,
-    rotation: 0,
-    duration: 0.5,
-    stagger: 0.05,
-    ease: 'back.out(1.7)',
-    scrollTrigger: {
-      trigger: '.tech-list',
-      start: 'top 95%',
-      toggleActions: 'play none none reverse'
-    }
-  })
-  
-  // Achievements animation
-  gsap.fromTo('.job-achievements li', {
-    opacity: 0,
-    x: -30,
-    scale: 0.8
-  }, {
-    opacity: 1,
-    x: 0,
-    scale: 1,
-    duration: 0.6,
-    stagger: 0.1,
-    ease: 'back.out(1.7)',
-    scrollTrigger: {
-      trigger: '.job-achievements',
-      start: 'top 95%',
-      toggleActions: 'play none none reverse'
-    }
-  })
+  }
   
   // Education section animation
   gsap.fromTo('.education-title', {
@@ -363,57 +382,6 @@ onMounted(async () => {
       start: 'top 85%',
       toggleActions: 'play none none reverse'
     }
-  })
-  
-  // Interactive hover effects
-  const timelineContents = document.querySelectorAll('.timeline-content')
-  timelineContents.forEach(content => {
-    content.addEventListener('mouseenter', () => {
-      gsap.to(content, {
-        scale: 1.02,
-        rotationY: 2,
-        z: 20,
-        duration: 0.4,
-        ease: 'power2.out'
-      })
-      
-      // Animate job status
-      const status = content.querySelector('.job-status')
-      gsap.to(status, {
-        scale: 1.1,
-        rotation: 3,
-        duration: 0.3,
-        ease: 'back.out(1.7)'
-      })
-    })
-    
-    content.addEventListener('mouseleave', () => {
-      gsap.to(content, {
-        scale: 1,
-        rotationY: 0,
-        z: 0,
-        duration: 0.4,
-        ease: 'power2.out'
-      })
-      
-      const status = content.querySelector('.job-status')
-      gsap.to(status, {
-        scale: 1,
-        rotation: 0,
-        duration: 0.3,
-        ease: 'back.out(1.7)'
-      })
-    })
-  })
-  
-  // Continuous timeline dot pulsing
-  gsap.to('.timeline-dot', {
-    boxShadow: '0 0 30px rgba(50, 205, 50, 0.8)',
-    duration: 2,
-    ease: 'sine.inOut',
-    yoyo: true,
-    repeat: -1,
-    stagger: 0.5
   })
   
   // Education card hover effects
@@ -482,107 +450,38 @@ onMounted(async () => {
   letter-spacing: -0.02em;
 }
 
-.timeline {
+.portal-journey {
+  height: 100vh;
+  overflow: hidden;
   position: relative;
-  max-width: 1000px;
+}
+
+.portal-track {
+  display: flex;
+  width: 300vw; /* Adjust based on number of experiences */
+  height: 100%;
+}
+
+.portal-scene {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.portal-content {
+  width: 80%;
+  max-width: 800px;
+  padding: 3rem;
   margin: 0 auto;
-  padding: 2rem 0;
-}
-
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(to bottom, transparent, #32CD32, transparent);
-  transform: translateX(-50%);
-}
-
-.timeline-item {
-  position: relative;
-  margin-bottom: 4rem;
-  width: 50%;
-}
-
-.timeline-item-left {
-  left: 0;
-  padding-right: 3rem;
-}
-
-.timeline-item-right {
-  left: 50%;
-  padding-left: 3rem;
-}
-
-.timeline-marker {
-  position: absolute;
-  top: 2rem;
-}
-
-.timeline-item-left .timeline-marker {
-  right: -1rem;
-}
-
-.timeline-item-right .timeline-marker {
-  left: -1rem;
-}
-
-.timeline-dot {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #32CD32, #228B22);
-  border: 4px solid rgba(10, 26, 10, 0.8);
-  box-shadow: 0 0 20px rgba(50, 205, 50, 0.5);
-  position: relative;
-  z-index: 2;
-}
-
-.timeline-date {
-  position: absolute;
-  top: -2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(26, 47, 26, 0.9);
-  color: #90EE90;
-  padding: 0.5rem 1rem;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(50, 205, 50, 0.3);
   border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  white-space: nowrap;
-  border: 1px solid rgba(34, 139, 34, 0.3);
-  z-index: 10;
-}
-
-.timeline-content {
-  padding: 2rem;
-  position: relative;
-}
-
-.timeline-item-left .timeline-content::before {
-  content: '';
-  position: absolute;
-  top: 2rem;
-  right: -10px;
-  width: 0;
-  height: 0;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-left: 10px solid rgba(26, 47, 26, 0.15);
-}
-
-.timeline-item-right .timeline-content::before {
-  content: '';
-  position: absolute;
-  top: 2rem;
-  left: -10px;
-  width: 0;
-  height: 0;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-right: 10px solid rgba(26, 47, 26, 0.15);
+  background: rgba(10, 26, 10, 0.85);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .job-header {
@@ -609,6 +508,14 @@ onMounted(async () => {
 .job-location {
   color: rgba(232, 245, 232, 0.7);
   font-size: 0.9rem;
+}
+
+.job-period {
+  color: #90EE90;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  text-shadow: 0 0 10px rgba(144, 238, 144, 0.5);
 }
 
 .job-status {
@@ -774,27 +681,13 @@ onMounted(async () => {
     font-size: 2.5rem;
   }
   
-  .timeline::before {
-    left: 2rem;
+  .portal-scene {
+    padding: 2rem 1rem;
   }
   
-  .timeline-item {
-    width: 100%;
-    left: 0 !important;
-    padding-left: 4rem !important;
-    padding-right: 0 !important;
-  }
-  
-  .timeline-marker {
-    left: 1rem !important;
-    right: auto !important;
-  }
-  
-  .timeline-content::before {
-    left: -10px !important;
-    right: auto !important;
-    border-right: 10px solid rgba(26, 47, 26, 0.15) !important;
-    border-left: none !important;
+  .portal-content {
+    width: 95%;
+    padding: 2rem;
   }
   
   .job-header {
@@ -809,6 +702,17 @@ onMounted(async () => {
   .education-card {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .portal-content {
+    width: 98%;
+    padding: 1.5rem;
+  }
+  
+  .job-period {
+    font-size: 0.8rem;
   }
 }
 </style>
