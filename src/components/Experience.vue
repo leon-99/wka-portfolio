@@ -364,44 +364,7 @@ onMounted(async () => {
         }
       })
       
-      // Animate content elements
-      if (content) {
-        gsap.fromTo(content.querySelectorAll('.job-responsibilities li'), {
-          opacity: 0,
-          x: -50
-        }, {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power2.out',
-                  scrollTrigger: {
-          trigger: scene,
-          start: 'left 60%',
-          toggleActions: 'play none none reverse',
-          containerAnimation: horizontalTween
-        }
-        })
-        
-        gsap.fromTo(content.querySelectorAll('.tech-badge'), {
-          opacity: 0,
-          scale: 0,
-          rotation: -180
-        }, {
-          opacity: 1,
-          scale: 1,
-          rotation: 0,
-          duration: 0.4,
-          stagger: 0.05,
-          ease: 'back.out(1.7)',
-                  scrollTrigger: {
-          trigger: scene,
-          start: 'left 50%',
-          toggleActions: 'play none none reverse',
-          containerAnimation: horizontalTween
-        }
-        })
-      }
+      
     })
   }
   
