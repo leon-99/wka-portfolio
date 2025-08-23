@@ -11,6 +11,7 @@
         <li><a href="#skills" @click="handleNavClick">Skills</a></li>
         <li><a href="#projects" @click="handleNavClick">Projects</a></li>
         <li><a href="#experience" @click="handleNavClick">Experience</a></li>
+        <li><a href="#mentorship" @click="handleNavClick">Mentorship</a></li>
         <li><a href="#contact" @click="handleNavClick">Contact</a></li>
       </ul>
       

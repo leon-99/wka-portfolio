@@ -6,6 +6,7 @@
     <Experience />
     <Skills />
     <Projects />
+    <Mentorship />
     <LinkPreview />
     <Contact />
     <Footer />
@@ -23,6 +24,7 @@ import About from '@/components/About.vue'
 import Skills from '@/components/Skills.vue'
 import Projects from '@/components/Projects.vue'
 import Experience from '@/components/Experience.vue'
+import Mentorship from '@/components/Mentorship.vue'
 import Contact from '@/components/Contact.vue'
 import Footer from '@/components/Footer.vue'
 import ThreeCursor from '@/components/ThreeCursor.vue'
