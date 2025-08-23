@@ -1,63 +1,75 @@
 <template>
   <section id="experience" class="experience section-padding">
-    <div class="container">
-      <h2 class="section-title text-gradient">Professional Experience</h2>
-      
-      <div class="portal-journey">
-        <div class="portal-track" ref="portalTrack">
+   
+    
+    <div class="experience-journey">
+      <div class="experience-track" ref="experienceTrack">
           <div 
             v-for="(job, index) in experiences" 
             :key="job.id"
-            class="portal-scene"
+            class="experience-panel"
             :data-index="index"
           >
-
-            
-            <div class="portal-content glass-card">
-              <div class="job-header">
-                <div class="company-info">
-                  <h3 class="job-title">{{ job.title }}</h3>
-                  <h4 class="company-name">{{ job.company }}</h4>
-                  <p class="job-location">{{ job.location }}</p>
-                  <p class="job-period">{{ job.period }}</p>
-                </div>
-                <div class="job-status" :class="job.current ? 'current' : 'completed'">
-                  {{ job.current ? 'Current' : 'Completed' }}
+            <div class="experience-content">
+              <div class="section-header">
+                <h2 class="section-title-inline text-gradient">Professional Experience</h2>
+                <div class="experience-counter">
+                  <span>{{ index + 1 }}</span> / <span>{{ experiences.length }}</span>
                 </div>
               </div>
               
-              <ul class="job-responsibilities">
-                <li v-for="responsibility in job.responsibilities" :key="responsibility">
-                  {{ responsibility }}
-                </li>
-              </ul>
-              
-              <div class="job-technologies">
-                <span class="tech-label">Technologies:</span>
-                <div class="tech-list">
-                  <span 
-                    v-for="tech in job.technologies" 
-                    :key="tech"
-                    class="tech-badge"
-                  >
-                    {{ tech }}
-                  </span>
+              <div class="job-main">
+                <div class="job-header">
+                  <div class="company-info">
+                    <h3 class="job-title">{{ job.title }}</h3>
+                    <h4 class="company-name">{{ job.company }}</h4>
+                    <p class="job-location">{{ job.location }}</p>
+                    <p class="job-period">{{ job.period }}</p>
+                  </div>
+                  <div class="job-status" :class="job.current ? 'current' : 'completed'">
+                    {{ job.current ? 'Current' : 'Completed' }}
+                  </div>
                 </div>
-              </div>
-              
-              <div class="job-achievements" v-if="job.achievements">
-                <h5>Key Achievements:</h5>
-                <ul>
-                  <li v-for="achievement in job.achievements" :key="achievement">
-                    {{ achievement }}
-                  </li>
-                </ul>
+                
+                <div class="job-details">
+                  <div class="job-section">
+                    <h5 class="section-subtitle">Responsibilities</h5>
+                    <ul class="job-responsibilities">
+                      <li v-for="responsibility in job.responsibilities" :key="responsibility">
+                        {{ responsibility }}
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div class="job-section">
+                    <h5 class="section-subtitle">Technologies</h5>
+                    <div class="tech-list">
+                      <span 
+                        v-for="tech in job.technologies" 
+                        :key="tech"
+                        class="tech-badge"
+                      >
+                        {{ tech }}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div class="job-section" v-if="job.achievements">
+                    <h5 class="section-subtitle">Key Achievements</h5>
+                    <ul class="job-achievements">
+                      <li v-for="achievement in job.achievements" :key="achievement">
+                        {{ achievement }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
+    
+    <div class="container">
       <div class="education-section">
         <h3 class="education-title text-gradient">Education & Certifications</h3>
         <div class="education-grid">
@@ -84,7 +96,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const portalTrack = ref<HTMLElement>()
+const experienceTrack = ref<HTMLElement>()
 
 const experiences = ref([
   {
@@ -194,22 +206,29 @@ onMounted(async () => {
     }
   })
   
-  // Create horizontal scroll portal journey
-  const portalScenes = document.querySelectorAll('.portal-scene')
-  const totalScenes = portalScenes.length
+  // Create horizontal scroll experience journey
+  const experiencePanels = document.querySelectorAll('.experience-panel')
+  const totalPanels = experiencePanels.length
   
-  if (portalTrack.value && totalScenes > 0) {
-    // Set initial position to show first card centered
-    gsap.set(portalScenes, { xPercent: 0 })
-    
-    // Make first card immediately visible and centered
-    gsap.set(portalScenes[0], { opacity: 1, scale: 1 })
-    const firstContent = portalScenes[0]?.querySelector('.portal-content')
+  if (experienceTrack.value && totalPanels > 0) {
+    // Initialize first panel as visible immediately
+    const firstContent = experiencePanels[0]?.querySelector('.experience-content')
     if (firstContent) {
-      // Set first card content visible immediately
       gsap.set(firstContent, { opacity: 1, scale: 1, y: 0 })
-      
-      // Animate first card content when section comes into view
+    }
+    
+    // Initialize other panels as hidden
+    experiencePanels.forEach((panel, index) => {
+      if (index > 0) {
+        const content = panel.querySelector('.experience-content')
+        if (content) {
+          gsap.set(content, { opacity: 0, scale: 0.9, y: 50 })
+        }
+      }
+    })
+    
+    // Animate first panel when section comes into view
+    if (firstContent) {
       gsap.fromTo(firstContent, {
         opacity: 0,
         y: 50,
@@ -221,68 +240,42 @@ onMounted(async () => {
         duration: 1,
         ease: 'power2.out',
         scrollTrigger: {
-          trigger: '.portal-journey',
-          start: 'top 90%',
+          trigger: '.experience-journey',
+          start: 'top 80%',
           toggleActions: 'play none none reverse'
         }
       })
     }
     
-    // Initialize other cards as ready but not active
-    portalScenes.forEach((scene, index) => {
-      if (index > 0) {
-        gsap.set(scene, { opacity: 1 })
-        const content = scene.querySelector('.portal-content')
-        if (content) {
-          gsap.set(content, { opacity: 0.7, scale: 0.96, y: 10 })
-        }
-      }
-    })
-    
-    // Set up horizontal scroll animation that keeps cards centered
-    const horizontalTween = gsap.to(portalScenes, {
-      x: () => -(window.innerWidth * totalScenes * 0.8),
+    // Set up horizontal scroll animation
+    const horizontalTween = gsap.to(experiencePanels, {
+      x: () => -(window.innerWidth * (totalPanels - 1)),
       ease: 'none',
       scrollTrigger: {
-        trigger: '.portal-journey',
+        trigger: '.experience-journey',
         pin: true,
         scrub: 1.2,
-        snap: false, // Disable snapping to prevent right-side pulling
         start: 'top top',
-        end: () => `+=${window.innerHeight * (totalScenes + 2)}`, // Extra scroll time for third card
-        onStart: () => {
-          // Ensure first card is fully visible when animation starts
-          const firstContent = portalScenes[0]?.querySelector('.portal-content')
-          if (firstContent) {
-            gsap.to(firstContent, { 
-              opacity: 1, 
-              scale: 1, 
-              y: 0,
-              duration: 0.3,
-              ease: 'power2.out'
-            })
-          }
-        },
+        end: () => `+=${window.innerHeight * (totalPanels + 1)}`,
         onUpdate: (self) => {
-          // Calculate which scene is most visible with smoother transitions
+          // Calculate which panel is most visible
           const progress = self.progress
           let currentIndex = 0
           
-          // Equal time distribution for all cards
+          // Equal time distribution for all panels
           if (progress < 0.33) {
-            currentIndex = 0 // First card - 33% of scroll time
+            currentIndex = 0
           } else if (progress < 0.67) {
-            currentIndex = 1 // Second card - 34% of scroll time  
+            currentIndex = 1
           } else {
-            currentIndex = 2 // Third card - 33% of scroll time
+            currentIndex = 2
           }
           
-          // Animate content effects for current scene
-          portalScenes.forEach((scene, index) => {
-            const content = scene.querySelector('.portal-content')
+          // Update panel visibility
+          experiencePanels.forEach((panel, index) => {
+            const content = panel.querySelector('.experience-content')
             
             if (index === currentIndex) {
-              // Active content effects - keep perfectly centered
               gsap.to(content, { 
                 opacity: 1, 
                 scale: 1, 
@@ -290,9 +283,8 @@ onMounted(async () => {
                 ease: 'power2.out'
               })
             } else {
-              // Inactive content effects
               gsap.to(content, { 
-                opacity: 0.6, 
+                opacity: 0.7, 
                 scale: 0.95, 
                 duration: 0.3,
                 ease: 'power2.out'
@@ -303,68 +295,29 @@ onMounted(async () => {
       }
     })
     
-    // Individual scene animations
-    portalScenes.forEach((scene) => {
-      const content = scene.querySelector('.portal-content')
-      const glow = scene.querySelector('.portal-glow')
-      const particles = scene.querySelector('.portal-particles')
-      
-      // Portal glow entrance animation
-      gsap.fromTo(glow, {
-        scale: 0,
-        opacity: 0
-      }, {
-        scale: 1,
-        opacity: 0.3,
-        duration: 1.5,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: scene,
-          start: 'left 80%',
-          toggleActions: 'play none none reverse',
-          containerAnimation: horizontalTween
-        }
-      })
-      
-      // Portal particles entrance animation
-      gsap.fromTo(particles, {
-        scale: 0,
-        opacity: 0,
-        rotation: -180
-      }, {
-        scale: 1,
-        opacity: 0.5,
-        rotation: 0,
-        duration: 1.2,
-        ease: 'back.out(1.7)',
-        scrollTrigger: {
-          trigger: scene,
-          start: 'left 75%',
-          toggleActions: 'play none none reverse',
-          containerAnimation: horizontalTween
-        }
-      })
-      
-      // Content entrance animation
-      gsap.fromTo(content, {
-        opacity: 0,
-        y: 100,
-        scale: 0.9
-      }, {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 1.2,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: scene,
-          start: 'left 80%',
-          toggleActions: 'play none none reverse',
-          containerAnimation: horizontalTween
-        }
-      })
-      
-      
+    // Individual panel entrance animations for panels 2 and 3
+    experiencePanels.forEach((panel, index) => {
+      if (index > 0) {
+        const content = panel.querySelector('.experience-content')
+        
+        gsap.fromTo(content, {
+          opacity: 0,
+          y: 50,
+          scale: 0.9
+        }, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: panel,
+            start: 'left 80%',
+            toggleActions: 'play none none reverse',
+            containerAnimation: horizontalTween
+          }
+        })
+      }
     })
   }
   
@@ -473,19 +426,21 @@ onMounted(async () => {
   letter-spacing: -0.02em;
 }
 
-.portal-journey {
+.experience-journey {
   height: 100vh;
   overflow: hidden;
   position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
 }
 
-.portal-track {
+.experience-track {
   display: flex;
-  width: calc(100vw * 3); /* Exact width for 3 experiences */
+  width: calc(100vw * 3);
   height: 100%;
 }
 
-.portal-scene {
+.experience-panel {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -493,30 +448,80 @@ onMounted(async () => {
   justify-content: center;
   position: relative;
   flex-shrink: 0;
-  overflow: hidden;
+  padding: 6rem 2rem 2rem 2rem;
 }
 
-.portal-content {
-  width: 85%;
-  max-width: 850px;
-  padding: 2.5rem;
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(50, 205, 50, 0.3);
-  border-radius: 20px;
-  background: rgba(10, 26, 10, 0.85);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  position: absolute;
-  top: 50%;
-  left: 50vw;
-  transform: translate(-50%, -50%);
-  z-index: 10;
+.experience-content {
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.section-title-inline {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.experience-counter {
+  font-size: 1.2rem;
+  color: #90EE90;
+  font-weight: 600;
+  background: rgba(34, 139, 34, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 15px;
+  border: 1px solid rgba(34, 139, 34, 0.3);
+}
+
+.job-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .job-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.job-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.job-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.job-section:last-child {
+  grid-column: 1 / -1;
+}
+
+.section-subtitle {
+  color: #90EE90;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .job-title {
@@ -709,23 +714,29 @@ onMounted(async () => {
     font-size: 2.5rem;
   }
   
-  .portal-scene {
-    padding: 2rem 1rem;
+  .section-title-inline {
+    font-size: 2rem;
   }
   
-  .portal-content {
-    width: 95%;
-    max-width: none;
-    padding: 2rem;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  .experience-panel {
+    padding: 1rem;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+    margin-bottom: 2rem;
   }
   
   .job-header {
     flex-direction: column;
     gap: 1rem;
+  }
+  
+  .job-details {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
   
   .education-grid {
@@ -739,14 +750,12 @@ onMounted(async () => {
 }
 
 @media (max-width: 480px) {
-  .portal-content {
-    width: 98%;
-    max-width: none;
-    padding: 1.5rem;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  .section-title-inline {
+    font-size: 1.8rem;
+  }
+  
+  .experience-counter {
+    font-size: 1rem;
   }
   
   .job-period {
