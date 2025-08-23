@@ -239,19 +239,15 @@ onMounted(async () => {
       }
     })
     
-    // Set up horizontal scroll animation with more scroll distance for first card
+    // Set up horizontal scroll animation that keeps cards centered
     const horizontalTween = gsap.to(portalScenes, {
-      xPercent: -100 * (totalScenes - 1),
+      x: () => -(window.innerWidth * (totalScenes - 1)),
       ease: 'none',
       scrollTrigger: {
         trigger: '.portal-journey',
         pin: true,
-        scrub: 0.8,
-        snap: {
-          snapTo: [0, 0.5, 1], // Specific snap points for 3 cards
-          duration: { min: 0.3, max: 0.8 },
-          delay: 0.2
-        },
+        scrub: 1.2,
+        snap: false, // Disable snapping to prevent right-side pulling
         start: 'top top',
         end: () => `+=${window.innerHeight * (totalScenes + 1)}`, // Extra scroll time
         onStart: () => {
@@ -268,17 +264,17 @@ onMounted(async () => {
           }
         },
         onUpdate: (self) => {
-          // Calculate which scene is most visible with adjusted timing
+          // Calculate which scene is most visible with smoother transitions
           const progress = self.progress
           let currentIndex = 0
           
-          // Give more time to each card, especially the first one
-          if (progress < 0.4) {
-            currentIndex = 0 // First card gets 40% of scroll time
-          } else if (progress < 0.7) {
-            currentIndex = 1 // Second card gets 30% of scroll time
+          // Smoother transitions between cards
+          if (progress < 0.33) {
+            currentIndex = 0 // First card
+          } else if (progress < 0.66) {
+            currentIndex = 1 // Second card
           } else {
-            currentIndex = 2 // Third card gets 30% of scroll time
+            currentIndex = 2 // Third card
           }
           
           // Animate content effects for current scene
@@ -286,21 +282,19 @@ onMounted(async () => {
             const content = scene.querySelector('.portal-content')
             
             if (index === currentIndex) {
-              // Active content effects
+              // Active content effects - keep perfectly centered
               gsap.to(content, { 
                 opacity: 1, 
                 scale: 1, 
-                y: 0,
-                duration: 0.5,
+                duration: 0.3,
                 ease: 'power2.out'
               })
             } else {
               // Inactive content effects
               gsap.to(content, { 
-                opacity: 0.7, 
-                scale: 0.96, 
-                y: 10,
-                duration: 0.5,
+                opacity: 0.6, 
+                scale: 0.95, 
+                duration: 0.3,
                 ease: 'power2.out'
               })
             }
@@ -536,18 +530,23 @@ onMounted(async () => {
   justify-content: center;
   position: relative;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .portal-content {
-  width: 80%;
-  max-width: 800px;
-  padding: 3rem;
-  margin: 0 auto;
+  width: 85%;
+  max-width: 850px;
+  padding: 2.5rem;
   backdrop-filter: blur(15px);
   border: 1px solid rgba(50, 205, 50, 0.3);
   border-radius: 20px;
   background: rgba(10, 26, 10, 0.85);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 50%;
+  left: 50vw;
+  transform: translate(-50%, -50%);
+  z-index: 10;
 }
 
 .job-header {
@@ -753,7 +752,12 @@ onMounted(async () => {
   
   .portal-content {
     width: 95%;
+    max-width: none;
     padding: 2rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   
   .job-header {
@@ -774,7 +778,12 @@ onMounted(async () => {
 @media (max-width: 480px) {
   .portal-content {
     width: 98%;
+    max-width: none;
     padding: 1.5rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   
   .job-period {
