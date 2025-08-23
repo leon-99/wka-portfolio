@@ -360,6 +360,7 @@ onMounted(() => {
 
 .job-responsibilities {
   margin: 0;
+  text-align: left;
 }
 
 .responsibility-item {
@@ -368,6 +369,7 @@ onMounted(() => {
   margin-bottom: 0.75rem;
   color: rgba(232, 245, 232, 0.9);
   line-height: 1.6;
+  text-align: left;
 }
 
 .responsibility-item::before {
@@ -413,12 +415,14 @@ onMounted(() => {
 .job-achievements {
   padding-top: 1rem;
   border-top: 1px solid rgba(34, 139, 34, 0.2);
+  text-align: left;
 }
 
 .job-achievements h5 {
   color: #90EE90;
   margin-bottom: 0.75rem;
   font-weight: 600;
+  text-align: left;
 }
 
 .achievement-item {
@@ -428,6 +432,7 @@ onMounted(() => {
   color: rgba(232, 245, 232, 0.8);
   font-size: 0.9rem;
   line-height: 1.5;
+  text-align: left;
 }
 
 .achievement-item::before {
