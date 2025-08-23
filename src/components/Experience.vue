@@ -46,10 +46,11 @@
                     <div class="tech-list">
                       <span 
                         v-for="tech in job.technologies" 
-                        :key="tech"
+                        :key="tech.name"
                         class="tech-badge"
                       >
-                        {{ tech }}
+                        <Icon :icon="tech.icon" class="tech-icon" />
+                        {{ tech.name }}
                       </span>
                     </div>
                   </div>
@@ -91,6 +92,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue'
+import { Icon } from '@iconify/vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -114,7 +116,16 @@ const experiences = ref([
       'Deploying and managing applications on AWS with focus on scalability',
       'Writing clean, maintainable code following best practices'
     ],
-    technologies: ['Node.js', 'Express.js', 'Vue.js', 'React.js', 'Laravel', 'AWS', 'MySQL', 'PostgreSQL'],
+    technologies: [
+      { name: 'Node.js', icon: 'devicon:nodejs' },
+      { name: 'Express.js', icon: 'devicon:express' },
+      { name: 'Vue.js', icon: 'devicon:vuejs' },
+      { name: 'React.js', icon: 'devicon:react' },
+      { name: 'Laravel', icon: 'devicon:laravel' },
+      { name: 'AWS', icon: 'logos:aws' },
+      { name: 'MySQL', icon: 'devicon:mysql' },
+      { name: 'PostgreSQL', icon: 'devicon:postgresql' }
+    ],
     achievements: [
       'Improved application performance by 40% through code optimization',
       'Successfully migrated 5 legacy projects to modern architecture',
@@ -136,7 +147,16 @@ const experiences = ref([
       'Interacted with clients to clarify requirements and implement features',
       'Mentored junior developers and conducted code reviews'
     ],
-    technologies: ['Laravel', 'Vue.js', 'PHP', 'JavaScript', 'MySQL', 'Git', 'Docker', 'Linux'],
+    technologies: [
+      { name: 'Laravel', icon: 'devicon:laravel' },
+      { name: 'Vue.js', icon: 'devicon:vuejs' },
+      { name: 'PHP', icon: 'devicon:php' },
+      { name: 'JavaScript', icon: 'devicon:javascript' },
+      { name: 'MySQL', icon: 'devicon:mysql' },
+      { name: 'Git', icon: 'devicon:git' },
+      { name: 'Docker', icon: 'devicon:docker' },
+      { name: 'Linux', icon: 'devicon:linux' }
+    ],
     achievements: [
       'Delivered 15+ successful projects for international clients',
       'Reduced bug reports by 60% through improved testing practices',
@@ -158,7 +178,16 @@ const experiences = ref([
       'Created interactive user interfaces with modern JavaScript',
       'Optimized websites for mobile devices and various screen sizes'
     ],
-    technologies: ['HTML5', 'CSS3', 'JavaScript', 'jQuery', 'Bootstrap', 'SASS', 'Git', 'Webpack'],
+    technologies: [
+      { name: 'HTML5', icon: 'devicon:html5' },
+      { name: 'CSS3', icon: 'devicon:css3' },
+      { name: 'JavaScript', icon: 'devicon:javascript' },
+      { name: 'jQuery', icon: 'devicon:jquery' },
+      { name: 'Bootstrap', icon: 'devicon:bootstrap' },
+      { name: 'SASS', icon: 'devicon:sass' },
+      { name: 'Git', icon: 'devicon:git' },
+      { name: 'Webpack', icon: 'devicon:webpack' }
+    ],
     achievements: [
       'Improved website loading speed by 50% through optimization',
       'Successfully delivered 20+ responsive websites',
@@ -612,10 +641,27 @@ onMounted(async () => {
 .tech-badge {
   background: rgba(34, 139, 34, 0.2);
   color: #90EE90;
-  padding: 0.25rem 0.75rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 15px;
   font-size: 0.8rem;
   border: 1px solid rgba(34, 139, 34, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.tech-badge:hover {
+  background: rgba(34, 139, 34, 0.3);
+  border-color: rgba(34, 139, 34, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(34, 139, 34, 0.2);
+}
+
+.tech-icon {
+  width: 1rem;
+  height: 1rem;
+  color: #90EE90;
 }
 
 .job-achievements {
