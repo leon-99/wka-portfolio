@@ -249,7 +249,7 @@ onMounted(async () => {
         scrub: 1.2,
         snap: false, // Disable snapping to prevent right-side pulling
         start: 'top top',
-        end: () => `+=${window.innerHeight * (totalScenes + 1)}`, // Extra scroll time
+        end: () => `+=${window.innerHeight * (totalScenes + 3)}`, // Much more time for reading
         onStart: () => {
           // Ensure first card is fully visible when animation starts
           const firstContent = portalScenes[0]?.querySelector('.portal-content')
@@ -268,13 +268,13 @@ onMounted(async () => {
           const progress = self.progress
           let currentIndex = 0
           
-          // Smoother transitions between cards
-          if (progress < 0.33) {
-            currentIndex = 0 // First card
-          } else if (progress < 0.66) {
-            currentIndex = 1 // Second card
+          // Better time distribution for all cards
+          if (progress < 0.35) {
+            currentIndex = 0 // First card - 35% of scroll time
+          } else if (progress < 0.7) {
+            currentIndex = 1 // Second card - 35% of scroll time  
           } else {
-            currentIndex = 2 // Third card
+            currentIndex = 2 // Third card - 30% of scroll time
           }
           
           // Animate content effects for current scene
