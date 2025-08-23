@@ -5,43 +5,26 @@
       <p class="section-subtitle">
         Explore my latest projects showcasing modern web technologies and innovative solutions.
       </p>
-      
+
       <!-- Filter Buttons -->
       <div class="filter-container">
-        <button 
-          class="filter-btn" 
-          @click="filterProjects('all')"
-          :class="{ active: activeFilter === 'all' }"
-        >
+        <button class="filter-btn" @click="filterProjects('all')" :class="{ active: activeFilter === 'all' }">
           <span>🌟</span>
           All Projects
         </button>
-        <button 
-          class="filter-btn" 
-          @click="filterProjects('websites')"
-          :class="{ active: activeFilter === 'websites' }"
-        >
+        <button class="filter-btn" @click="filterProjects('websites')" :class="{ active: activeFilter === 'websites' }">
           <span>🌐</span>
           Websites
         </button>
-        <button 
-          class="filter-btn" 
-          @click="filterProjects('packages')"
-          :class="{ active: activeFilter === 'packages' }"
-        >
+        <button class="filter-btn" @click="filterProjects('packages')" :class="{ active: activeFilter === 'packages' }">
           <span>📦</span>
           Packages
         </button>
       </div>
-      
+
       <div class="projects-grid">
-        <div 
-          v-for="project in filteredProjects" 
-          :key="project.id"
-          class="project-card glass-card" 
-          :data-project="project.id"
-          :data-category="project.category"
-        >
+        <div v-for="project in filteredProjects" :key="project.id" class="project-card glass-card"
+          :data-project="project.id" :data-category="project.category">
           <!-- Project Header -->
           <div class="project-header">
             <div class="project-icon">
@@ -61,50 +44,29 @@
 
           <!-- Project Technologies -->
           <div class="project-tech">
-            <span 
-              v-for="tech in project.technologies" 
-              :key="tech"
-              class="tech-tag"
-            >
+            <span v-for="tech in project.technologies" :key="tech" class="tech-tag">
               {{ tech }}
             </span>
           </div>
 
           <!-- Project Actions -->
           <div class="project-actions">
-            <a 
-              v-if="project.liveUrl"
-              :href="project.liveUrl" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              class="action-btn live-btn"
-            >
+            <a v-if="project.liveUrl" :href="project.liveUrl" target="_blank" rel="noopener noreferrer"
+              class="action-btn live-btn">
               <span>{{ project.liveIcon }}</span>
               {{ project.liveText }}
             </a>
-            <a 
-              v-if="project.codeUrl"
-              :href="project.codeUrl" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              class="action-btn code-btn"
-            >
+            <a v-if="project.codeUrl" :href="project.codeUrl" target="_blank" rel="noopener noreferrer"
+              class="action-btn code-btn">
               <span>{{ project.codeIcon }}</span>
               {{ project.codeText }}
             </a>
-            <a 
-              v-if="project.contactUrl"
-              :href="project.contactUrl" 
-              class="action-btn contact-btn"
-            >
+            <a v-if="project.contactUrl" :href="project.contactUrl" class="action-btn contact-btn">
               <span>{{ project.contactIcon }}</span>
               {{ project.contactText }}
             </a>
-            <button 
-              v-if="!project.liveUrl && !project.codeUrl && !project.contactUrl"
-              @click="showComingSoon"
-              class="action-btn code-btn"
-            >
+            <button v-if="!project.liveUrl && !project.codeUrl && !project.contactUrl" @click="showComingSoon"
+              class="action-btn code-btn">
               <span>{{ project.codeIcon }}</span>
               {{ project.codeText }}
             </button>
@@ -147,6 +109,51 @@ interface Project {
 // Projects data
 const projects = ref<Project[]>([
   {
+    id: 'oasify-postman',
+    title: 'Oasify Postman',
+    description: 'NPM package that converts Postman collections to OpenAPI 3.0 with CLI interface and automatic examples.',
+    icon: 'logos:npm',
+    iconType: 'iconify',
+    iconClass: 'logos',
+    category: 'packages',
+    technologies: ['Node.js', 'JavaScript', 'CLI', 'OpenAPI'],
+    liveUrl: 'https://www.npmjs.com/package/oasify-postman',
+    liveIcon: '📦',
+    liveText: 'NPM Package',
+    codeIcon: '📁',
+    codeText: 'View Code',
+  },
+  {
+    id: 'plato-vue',
+    title: 'Plato Vue',
+    description: 'Node.js package for analyzing Vue.js files and generating maintainability reports with CLI interface.',
+    icon: 'logos:npm',
+    iconType: 'iconify',
+    iconClass: 'logos',
+    category: 'packages',
+    technologies: ['Node.js', 'JavaScript', 'CLI', 'Code Analysis', 'Vue.js'],
+    liveUrl: 'https://www.npmjs.com/package/plato-vue',
+    liveIcon: '📦',
+    liveText: 'NPM Package',
+    codeIcon: '📁',
+    codeText: 'View Code',
+  },
+  {
+    id: 'laravel-entity-generator',
+    title: 'Laravel Entity Generator',
+    description: 'Laravel command that generates complete CRUD operations in service-based architecture.',
+    icon: 'devicon:laravel',
+    iconType: 'iconify',
+    iconClass: 'devicon',
+    category: 'packages',
+    technologies: ['Laravel', 'PHP', 'CLI', 'CRUD'],
+    codeUrl: 'https://github.com/leon-99/laravel-entity-generator',
+    liveIcon: '📁',
+    liveText: 'View Code',
+    codeIcon: '📦',
+    codeText: 'Package',
+  },
+  {
     id: 'weather-app',
     title: 'Weather Info App',
     description: 'Modern weather app with real-time data, forecasts, and responsive design built with Vue.js and Tailwind CSS.',
@@ -187,51 +194,6 @@ const projects = ref<Project[]>([
     liveText: 'Live Demo',
     codeIcon: '📁',
     codeText: 'View Code',
-  },
-  {
-    id: 'oasify-postman',
-    title: 'Oasify Postman',
-    description: 'NPM package that converts Postman collections to OpenAPI 3.0 with CLI interface and automatic examples.',
-    icon: 'logos:npm',
-    iconType: 'iconify',
-    iconClass: 'logos',
-    category: 'packages',
-    technologies: ['Node.js', 'JavaScript', 'CLI', 'OpenAPI'],
-    liveUrl: 'https://www.npmjs.com/package/oasify-postman',
-    liveIcon: '📦',
-    liveText: 'NPM Package',
-    codeIcon: '📁',
-    codeText: 'View Code',
-  },
-  {
-    id: 'laravel-entity-generator',
-    title: 'Laravel Entity Generator',
-    description: 'Laravel command that generates complete CRUD operations in service-based architecture.',
-    icon: 'devicon:laravel',
-    iconType: 'iconify',
-    iconClass: 'devicon',
-    category: 'packages',
-    technologies: ['Laravel', 'PHP', 'CLI', 'CRUD'],
-    codeUrl: 'https://github.com/leon-99/laravel-entity-generator',
-    liveIcon: '📁',
-    liveText: 'View Code',
-    codeIcon: '📦',
-    codeText: 'Package',
-  },
-  {
-    id: 'plato-vue',
-    title: 'Plato Vue',
-    description: 'Node.js package for analyzing Vue.js files and generating maintainability reports with CLI interface.',
-    icon: 'logos:npm',
-    iconType: 'iconify',
-    iconClass: 'logos',
-    category: 'packages',
-    technologies: ['Node.js', 'JavaScript', 'CLI', 'Code Analysis', 'Vue.js'],
-    liveUrl: 'https://www.npmjs.com/package/plato-vue',
-    liveIcon: '📦',
-    liveText: 'NPM Package',
-    codeIcon: '📁',
-    codeText: 'View Code',
   }
 ])
 
@@ -248,10 +210,10 @@ const filteredProjects = computed(() => {
 
 onMounted(async () => {
   await nextTick()
-  
+
   // Check if device is mobile
   const isMobile = window.innerWidth <= 768
-  
+
   // Section title animation
   gsap.fromTo('.section-title', {
     opacity: 0,
@@ -270,7 +232,7 @@ onMounted(async () => {
       toggleActions: 'play none none reverse'
     }
   })
-  
+
   // Subtitle animation
   gsap.fromTo('.section-subtitle', {
     opacity: 0,
@@ -287,7 +249,7 @@ onMounted(async () => {
       toggleActions: 'play none none reverse'
     }
   })
-  
+
   // Project cards animation
   gsap.fromTo('.project-card', {
     opacity: 0,
@@ -307,7 +269,7 @@ onMounted(async () => {
       toggleActions: 'play none none reverse'
     }
   })
-  
+
   // Interactive hover effects (desktop only)
   if (!isMobile) {
     const projectCards = document.querySelectorAll('.project-card')
@@ -320,7 +282,7 @@ onMounted(async () => {
           ease: 'back.out(1.7)'
         })
       })
-      
+
       card.addEventListener('mouseleave', () => {
         gsap.to(card, {
           scale: 1,
@@ -331,7 +293,7 @@ onMounted(async () => {
       })
     })
   }
-  
+
   // Mobile-specific touch interactions
   if (isMobile) {
     const projectCards = document.querySelectorAll('.project-card')
@@ -343,7 +305,7 @@ onMounted(async () => {
           ease: 'power2.out'
         })
       })
-      
+
       card.addEventListener('touchend', () => {
         gsap.to(card, {
           scale: 1,
@@ -460,7 +422,7 @@ const filterProjects = (category: string) => {
 
 .project-card:hover {
   transform: translateY(-5px);
-  box-shadow: 
+  box-shadow:
     0 20px 40px rgba(0, 0, 0, 0.4),
     0 0 30px rgba(144, 238, 144, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -634,39 +596,39 @@ const filterProjects = (category: string) => {
   .section-title {
     font-size: 2.5rem;
   }
-  
+
   .filter-container {
     gap: 0.75rem;
     margin-bottom: 2rem;
   }
-  
+
   .filter-btn {
     padding: 0.6rem 1.2rem;
     font-size: 0.9rem;
   }
-  
+
   .projects-grid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1rem;
     margin: 0 1rem;
   }
-  
+
   .project-card {
     padding: 1rem;
   }
-  
+
   .project-title {
     font-size: 1.2rem;
   }
-  
+
   .project-description {
     font-size: 0.85rem;
   }
-  
+
   .project-actions {
     flex-direction: column;
   }
-  
+
   .action-btn {
     width: 100%;
   }
