@@ -199,21 +199,87 @@ onMounted(async () => {
   const totalScenes = portalScenes.length
   
   if (portalTrack.value && totalScenes > 0) {
-    // Set up horizontal scroll animation
+    // Set initial position to show first card centered
+    gsap.set(portalScenes, { xPercent: 0 })
+    
+    // Make first card immediately visible and centered
+    gsap.set(portalScenes[0], { opacity: 1, scale: 1 })
+    const firstContent = portalScenes[0]?.querySelector('.portal-content')
+    if (firstContent) {
+      // Set first card content visible immediately
+      gsap.set(firstContent, { opacity: 1, scale: 1, y: 0 })
+      
+      // Animate first card content when section comes into view
+      gsap.fromTo(firstContent, {
+        opacity: 0,
+        y: 50,
+        scale: 0.9
+      }, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '.portal-journey',
+          start: 'top 90%',
+          toggleActions: 'play none none reverse'
+        }
+      })
+    }
+    
+    // Initialize other cards as ready but not active
+    portalScenes.forEach((scene, index) => {
+      if (index > 0) {
+        gsap.set(scene, { opacity: 1 })
+        const content = scene.querySelector('.portal-content')
+        if (content) {
+          gsap.set(content, { opacity: 0.7, scale: 0.96, y: 10 })
+        }
+      }
+    })
+    
+    // Set up horizontal scroll animation with more scroll distance for first card
     const horizontalTween = gsap.to(portalScenes, {
       xPercent: -100 * (totalScenes - 1),
       ease: 'none',
       scrollTrigger: {
         trigger: '.portal-journey',
         pin: true,
-        scrub: 1,
-        snap: 1 / (totalScenes - 1),
+        scrub: 0.8,
+        snap: {
+          snapTo: [0, 0.5, 1], // Specific snap points for 3 cards
+          duration: { min: 0.3, max: 0.8 },
+          delay: 0.2
+        },
         start: 'top top',
-        end: () => `+=${portalTrack.value!.offsetWidth * (totalScenes - 1)}`,
+        end: () => `+=${window.innerHeight * (totalScenes + 1)}`, // Extra scroll time
+        onStart: () => {
+          // Ensure first card is fully visible when animation starts
+          const firstContent = portalScenes[0]?.querySelector('.portal-content')
+          if (firstContent) {
+            gsap.to(firstContent, { 
+              opacity: 1, 
+              scale: 1, 
+              y: 0,
+              duration: 0.3,
+              ease: 'power2.out'
+            })
+          }
+        },
         onUpdate: (self) => {
-          // Calculate which scene is most visible
+          // Calculate which scene is most visible with adjusted timing
           const progress = self.progress
-          const currentIndex = Math.round(progress * (totalScenes - 1))
+          let currentIndex = 0
+          
+          // Give more time to each card, especially the first one
+          if (progress < 0.4) {
+            currentIndex = 0 // First card gets 40% of scroll time
+          } else if (progress < 0.7) {
+            currentIndex = 1 // Second card gets 30% of scroll time
+          } else {
+            currentIndex = 2 // Third card gets 30% of scroll time
+          }
           
           // Animate content effects for current scene
           portalScenes.forEach((scene, index) => {
@@ -298,7 +364,7 @@ onMounted(async () => {
         ease: 'power2.out',
         scrollTrigger: {
           trigger: scene,
-          start: 'left 70%',
+          start: 'left 80%',
           toggleActions: 'play none none reverse',
           containerAnimation: horizontalTween
         }
@@ -315,12 +381,12 @@ onMounted(async () => {
           duration: 0.6,
           stagger: 0.1,
           ease: 'power2.out',
-          scrollTrigger: {
-            trigger: scene,
-            start: 'left 50%',
-            toggleActions: 'play none none reverse',
-            containerAnimation: horizontalTween
-          }
+                  scrollTrigger: {
+          trigger: scene,
+          start: 'left 60%',
+          toggleActions: 'play none none reverse',
+          containerAnimation: horizontalTween
+        }
         })
         
         gsap.fromTo(content.querySelectorAll('.tech-badge'), {
@@ -334,12 +400,12 @@ onMounted(async () => {
           duration: 0.4,
           stagger: 0.05,
           ease: 'back.out(1.7)',
-          scrollTrigger: {
-            trigger: scene,
-            start: 'left 40%',
-            toggleActions: 'play none none reverse',
-            containerAnimation: horizontalTween
-          }
+                  scrollTrigger: {
+          trigger: scene,
+          start: 'left 50%',
+          toggleActions: 'play none none reverse',
+          containerAnimation: horizontalTween
+        }
         })
       }
     })
@@ -458,7 +524,7 @@ onMounted(async () => {
 
 .portal-track {
   display: flex;
-  width: 300vw; /* Adjust based on number of experiences */
+  width: calc(100vw * 3); /* Exact width for 3 experiences */
   height: 100%;
 }
 
