@@ -8,11 +8,11 @@
       
       <!-- Filter Buttons -->
       <div class="filter-container">
-                 <button 
-           class="filter-btn" 
-           @click="filterProjects('all')"
-           :class="{ active: activeFilter === 'all' }"
-         >
+        <button 
+          class="filter-btn" 
+          @click="filterProjects('all')"
+          :class="{ active: activeFilter === 'all' }"
+        >
           <span>🌟</span>
           All Projects
         </button>
@@ -42,63 +42,72 @@
           :data-project="project.id"
           :data-category="project.category"
         >
-          <div class="project-image">
+          <!-- Project Header -->
+          <div class="project-header">
             <div class="project-icon">
               <Icon v-if="project.iconType === 'iconify'" :icon="project.icon" :class="project.iconClass" />
               <span v-else>{{ project.icon }}</span>
             </div>
-          </div>
-          <div class="project-content">
-            <h3 class="project-title">{{ project.title }}</h3>
-            <p class="project-description">{{ project.description }}</p>
-            <div class="project-tech">
-              <span 
-                v-for="tech in project.technologies" 
-                :key="tech"
-                class="tech-tag"
-              >
-                {{ tech }}
-              </span>
+            <div class="project-title-section">
+              <h3 class="project-title">{{ project.title }}</h3>
+              <div class="project-category">{{ project.category }}</div>
             </div>
-                         <div class="project-links">
-               <a 
-                 v-if="project.liveUrl"
-                 :href="project.liveUrl" 
-                 target="_blank" 
-                 rel="noopener noreferrer" 
-                 class="btn-live"
-               >
-                 <span>{{ project.liveIcon }}</span>
-                 {{ project.liveText }}
-               </a>
-               <a 
-                 v-if="project.codeUrl"
-                 :href="project.codeUrl" 
-                 target="_blank" 
-                 rel="noopener noreferrer" 
-                 class="btn-code"
-               >
-                 <span>{{ project.codeIcon }}</span>
-                 {{ project.codeText }}
-               </a>
-               <a 
-                 v-if="project.contactUrl"
-                 :href="project.contactUrl" 
-                 class="btn-contact"
-               >
-                 <span>{{ project.contactIcon }}</span>
-                 {{ project.contactText }}
-               </a>
-               <!-- Show coming soon message for projects without live/code URLs -->
-               <button 
-                 v-if="!project.liveUrl && !project.codeUrl && !project.contactUrl"
-                 @click="showComingSoon"
-                 class="btn-code"
-               >
-                 <span>{{ project.codeIcon }}</span>
-                 {{ project.codeText }}
-               </button>
-             </div>
+          </div>
+
+          <!-- Project Description -->
+          <div class="project-description">
+            {{ project.description }}
+          </div>
+
+          <!-- Project Technologies -->
+          <div class="project-tech">
+            <span 
+              v-for="tech in project.technologies" 
+              :key="tech"
+              class="tech-tag"
+            >
+              {{ tech }}
+            </span>
+          </div>
+
+          <!-- Project Actions -->
+          <div class="project-actions">
+            <a 
+              v-if="project.liveUrl"
+              :href="project.liveUrl" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="action-btn live-btn"
+            >
+              <span>{{ project.liveIcon }}</span>
+              {{ project.liveText }}
+            </a>
+            <a 
+              v-if="project.codeUrl"
+              :href="project.codeUrl" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="action-btn code-btn"
+            >
+              <span>{{ project.codeIcon }}</span>
+              {{ project.codeText }}
+            </a>
+            <a 
+              v-if="project.contactUrl"
+              :href="project.contactUrl" 
+              class="action-btn contact-btn"
+            >
+              <span>{{ project.contactIcon }}</span>
+              {{ project.contactText }}
+            </a>
+            <button 
+              v-if="!project.liveUrl && !project.codeUrl && !project.contactUrl"
+              @click="showComingSoon"
+              class="action-btn code-btn"
+            >
+              <span>{{ project.codeIcon }}</span>
+              {{ project.codeText }}
+            </button>
           </div>
         </div>
       </div>
@@ -140,7 +149,7 @@ const projects = ref<Project[]>([
   {
     id: 'weather-app',
     title: 'Weather Info App',
-    description: 'A modern weather application built with Vue.js and Tailwind CSS, featuring real-time weather data, location-based forecasts, and a responsive design. Includes current conditions, hourly forecasts, and 7-day predictions with beautiful weather icons and intuitive user interface.',
+    description: 'Modern weather app with real-time data, forecasts, and responsive design built with Vue.js and Tailwind CSS.',
     icon: '🌤️',
     iconType: 'emoji',
     category: 'websites',
@@ -149,12 +158,12 @@ const projects = ref<Project[]>([
     liveIcon: '🌐',
     liveText: 'Live Demo',
     codeIcon: '📁',
-    codeText: 'View Code'
+    codeText: 'View Code',
   },
   {
     id: 'solar-system',
     title: 'Solar System Explorer',
-    description: 'An interactive solar system visualization app that allows users to explore planets, moons, and celestial bodies. Features 3D-like animations, educational content, and an immersive space exploration experience built with modern web technologies.',
+    description: 'Interactive solar system visualization with 3D animations and educational content for space exploration.',
     icon: '🪐',
     iconType: 'emoji',
     category: 'websites',
@@ -163,12 +172,12 @@ const projects = ref<Project[]>([
     liveIcon: '🌐',
     liveText: 'Live Demo',
     codeIcon: '📁',
-    codeText: 'View Code'
+    codeText: 'View Code',
   },
   {
     id: 'weeks-of-life',
     title: 'Weeks of Life',
-    description: 'A life visualization app that displays your life in weeks, helping you visualize time and make the most of every moment. Features an intuitive interface to track milestones, goals, and life events in a unique weekly grid format.',
+    description: 'Life visualization app that displays your life in weeks with an intuitive weekly grid interface.',
     icon: '📅',
     iconType: 'emoji',
     category: 'websites',
@@ -177,12 +186,12 @@ const projects = ref<Project[]>([
     liveIcon: '🌐',
     liveText: 'Live Demo',
     codeIcon: '📁',
-    codeText: 'View Code'
+    codeText: 'View Code',
   },
   {
     id: 'oasify-postman',
     title: 'Oasify Postman',
-    description: 'An npm package that converts Postman collections to OpenAPI 3.0 specifications with automatic example response injection. Features CLI interface, programmatic API, and customizable metadata for seamless API documentation generation.',
+    description: 'NPM package that converts Postman collections to OpenAPI 3.0 with CLI interface and automatic examples.',
     icon: 'logos:npm',
     iconType: 'iconify',
     iconClass: 'logos',
@@ -192,12 +201,12 @@ const projects = ref<Project[]>([
     liveIcon: '📦',
     liveText: 'NPM Package',
     codeIcon: '📁',
-    codeText: 'View Code'
+    codeText: 'View Code',
   },
   {
     id: 'laravel-entity-generator',
     title: 'Laravel Entity Generator',
-    description: 'A Laravel command that generates complete CRUD operations in a service-based architecture. Automates the creation of controllers, services, and more, allowing developers to focus on building their application logic instead of boilerplate code.',
+    description: 'Laravel command that generates complete CRUD operations in service-based architecture.',
     icon: 'devicon:laravel',
     iconType: 'iconify',
     iconClass: 'devicon',
@@ -207,12 +216,12 @@ const projects = ref<Project[]>([
     liveIcon: '📁',
     liveText: 'View Code',
     codeIcon: '📦',
-    codeText: 'Package'
+    codeText: 'Package',
   },
   {
     id: 'plato-vue',
     title: 'Plato Vue',
-    description: 'A globally installable Node.js package that analyzes Vue.js .vue files and JavaScript .js files to generate comprehensive maintainability reports using Plato. Features maintainability index calculation, cyclomatic complexity analysis, and detailed HTML reports.',
+    description: 'Node.js package for analyzing Vue.js files and generating maintainability reports with CLI interface.',
     icon: 'logos:npm',
     iconType: 'iconify',
     iconClass: 'logos',
@@ -221,26 +230,9 @@ const projects = ref<Project[]>([
     liveUrl: 'https://www.npmjs.com/package/plato-vue',
     liveIcon: '📦',
     liveText: 'NPM Package',
-    codeUrl: 'https://github.com/leon-99/plato-vue',
     codeIcon: '📁',
-    codeText: 'View Code'
-  },
-     {
-     id: 'coming-soon',
-     title: 'More Projects Coming Soon',
-     description: 'I\'m currently working on exciting new projects that showcase modern web technologies, innovative solutions, and cutting-edge development practices. These projects will demonstrate my expertise in full-stack development, cloud architecture, and user experience design.',
-     icon: '🚀',
-     iconType: 'emoji',
-     category: 'websites',
-     technologies: ['Full-Stack', 'Cloud', 'Modern UI/UX', 'Innovation'],
-     contactUrl: '#contact',
-     contactIcon: '💬',
-     contactText: "Let's Connect",
-     liveIcon: '💬',
-     liveText: "Let's Connect",
-     codeIcon: '📁',
-     codeText: 'View Code'
-   }
+    codeText: 'View Code',
+  }
 ])
 
 // Filter state
@@ -401,7 +393,7 @@ const filterProjects = (category: string) => {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
   flex-wrap: wrap;
 }
 
@@ -437,15 +429,15 @@ const filterProjects = (category: string) => {
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
   max-width: 1400px;
   margin: 0 auto;
 }
 
 .project-card {
   position: relative;
-  padding: 1.5rem;
+  padding: 1.25rem;
   overflow: hidden;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -467,34 +459,37 @@ const filterProjects = (category: string) => {
 }
 
 .project-card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-5px);
   box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.4),
-    0 0 40px rgba(144, 238, 144, 0.4),
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(144, 238, 144, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.project-image {
-  text-align: center;
-  margin-bottom: 1rem;
+.project-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .project-icon {
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .project-icon span {
-  font-size: 3rem;
+  font-size: 2.5rem;
   opacity: 0.9;
 }
 
 .project-icon :deep(svg) {
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   fill: currentColor;
   color: #90EE90;
   opacity: 0.9;
@@ -508,24 +503,33 @@ const filterProjects = (category: string) => {
   color: #90EE90;
 }
 
-.project-content {
-  flex: 1;
+.project-title-section {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-width: 0;
 }
 
 .project-title {
   color: #90EE90;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
   letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.project-category {
+  color: rgba(232, 245, 232, 0.7);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 .project-description {
   color: rgba(232, 245, 232, 0.8);
   line-height: 1.5;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   font-size: 0.9rem;
   flex: 1;
 }
@@ -533,87 +537,89 @@ const filterProjects = (category: string) => {
 .project-tech {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 1rem;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
 }
 
 .tech-tag {
   background: rgba(34, 139, 34, 0.2);
   color: #90EE90;
-  padding: 0.3rem 0.6rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   border: 1px solid rgba(34, 139, 34, 0.3);
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .tech-tag:hover {
   background: rgba(34, 139, 34, 0.3);
   border-color: rgba(34, 139, 34, 0.5);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
-.project-links {
+.project-actions {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
   margin-top: auto;
 }
 
-.btn-live, .btn-code, .btn-contact {
+.action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.6rem 1.2rem;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem;
   text-decoration: none;
   border-radius: 6px;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   transition: all 0.3s ease;
   border: none;
   cursor: pointer;
   flex: 1;
   justify-content: center;
+  white-space: nowrap;
 }
 
-.btn-live {
+.live-btn {
   background: rgba(34, 139, 34, 0.1);
   color: #90EE90;
   border: 1px solid rgba(34, 139, 34, 0.2);
 }
 
-.btn-live:hover {
+.live-btn:hover {
   background: rgba(34, 139, 34, 0.15);
   border-color: rgba(34, 139, 34, 0.4);
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(34, 139, 34, 0.2);
+  box-shadow: 0 8px 25px rgba(34, 139, 34, 0.2);
 }
 
-.btn-code {
+.code-btn {
   background: rgba(34, 139, 34, 0.1);
   color: #90EE90;
   border: 1px solid rgba(34, 139, 34, 0.2);
 }
 
-.btn-code:hover {
+.code-btn:hover {
   background: rgba(34, 139, 34, 0.15);
   border-color: rgba(34, 139, 34, 0.4);
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(34, 139, 34, 0.2);
+  box-shadow: 0 8px 25px rgba(34, 139, 34, 0.2);
 }
 
-.btn-contact {
+.contact-btn {
   background: rgba(34, 139, 34, 0.1);
   color: #90EE90;
   border: 1px solid rgba(34, 139, 34, 0.2);
   width: 100%;
 }
 
-.btn-contact:hover {
+.contact-btn:hover {
   background: rgba(34, 139, 34, 0.15);
   border-color: rgba(34, 139, 34, 0.4);
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(34, 139, 34, 0.2);
+  box-shadow: 0 8px 25px rgba(34, 139, 34, 0.2);
 }
 
 .coming-soon {
@@ -640,28 +646,28 @@ const filterProjects = (category: string) => {
   }
   
   .projects-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1rem;
     margin: 0 1rem;
   }
   
   .project-card {
-    padding: 1.25rem;
+    padding: 1rem;
   }
   
   .project-title {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
   
   .project-description {
     font-size: 0.85rem;
   }
   
-  .project-links {
+  .project-actions {
     flex-direction: column;
   }
   
-  .btn-live, .btn-code, .btn-contact {
+  .action-btn {
     width: 100%;
   }
 }
@@ -676,7 +682,14 @@ const filterProjects = (category: string) => {
 @media (min-width: 768px) and (max-width: 1199px) {
   .projects-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .projects-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
   }
 }
 </style>
