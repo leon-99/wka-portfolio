@@ -78,6 +78,8 @@
 import { ref, onMounted, markRaw } from 'vue'
 import { useThree } from '@/composables/useThree'
 import { useMouseInteraction, useRaycaster } from '@/composables/useMouseInteraction'
+import { useMorphingText } from '@/composables/useMorphingText'
+import { useFloatingParticles } from '@/composables/useFloatingParticles'
 import * as THREE from 'three'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -89,6 +91,18 @@ const canvasRef = ref<HTMLCanvasElement>()
 const { scene, camera, init, animate } = useThree(canvasRef)
 const { normalizedMouse } = useMouseInteraction()
 const { updateRaycaster } = useRaycaster(camera, scene)
+
+// Initialize composables
+const { 
+  setupMorphingText, 
+  startMorphingEffect, 
+  animateLetters, 
+  addInteractiveEffects, 
+  addMagneticEffect, 
+  setLetterColor 
+} = useMorphingText()
+
+const floatingParticles = ref<any>(null)
 
 onMounted(() => {
   const cleanup = init()
@@ -114,62 +128,23 @@ onMounted(() => {
   
   // Set initial states for name animation
   gsap.set(nameContainer, { opacity: 1 })
-  gsap.set(letters, {
-    opacity: 0,
-    scale: 0,
-    rotationY: 180,
-    rotationX: 90,
-    z: -200,
-    transformOrigin: 'center center',
-  })
   
-  // Create morphing text effect
-  const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*'
-  letters.forEach((letter, index) => {
-    const originalChar = letter.getAttribute('data-char')
-    let morphCount = 0
-    
-    const morphInterval = setInterval(() => {
-      if (morphCount < 8) {
-        letter.textContent = randomChars[Math.floor(Math.random() * randomChars.length)]
-        morphCount++
-      } else {
-        letter.textContent = originalChar
-        clearInterval(morphInterval)
-      }
-    }, 50 + index * 20)
-  })
+  // Setup morphing text using composable
+  setupMorphingText(letters)
   
   // Start all animations simultaneously
-  // Name animation
-  tl.to(letters, {
-    opacity: 1,
-    scale: 1,
-    rotationY: 0,
-    rotationX: 0,
-    z: 0,
-    duration: 1.5,
-    stagger: {
-      each: 0.1,
-      from: 'random'
-    },
-    ease: 'elastic.out(1, 0.6)',
-    onComplete: () => {
-      // Add continuous floating and rotation
-      gsap.to(letters, {
-        rotationY: '+=5',
-        rotationX: '+=2',
-        duration: 2,
-        stagger: 0.1,
-        yoyo: true,
-        repeat: -1,
-        ease: 'sine.inOut'
-      })
-    }
-  })
+  // Name animation using composable
+  animateLetters()
+  
+  // Start morphing effect after a short delay
+  setTimeout(() => {
+    startMorphingEffect()
+  }, 200)
+  
+
   
   // All other elements start at the same time as name animation
-  .to('.hero-subtitle', {
+  tl.to('.hero-subtitle', {
     opacity: 1,
     y: 0,
     scale: 1,
@@ -201,44 +176,17 @@ onMounted(() => {
     ease: 'back.out(1.7)'
   }, 0.1)  // Start almost immediately
   
-  // Set green color
-  .set(letters, {
+  // Set green color using composable
+  setLetterColor('#32CD32', '0 0 10px rgba(50, 205, 50, 0.3)')
+  
+  // Magnetic pull effect using composable
+  addMagneticEffect()
+  
+  // Ensure letters are properly styled
+  gsap.set(letters, {
     color: '#32CD32',
     textShadow: '0 0 10px rgba(50, 205, 50, 0.3)'
-  }, 0)
-  
-  // Magnetic pull effect - happens during the main animation
-  .to(letters, {
-    y: -20,
-    duration: 0.6,
-    stagger: 0.05,
-    ease: 'back.out(2)',
-    yoyo: true,
-    repeat: 1
-  }, 0.8)
-  
-  // Glitch effect - brief and during main animation
-  .to(letters, {
-    x: () => Math.random() * 10 - 5,
-    duration: 0.1,
-    stagger: 0.02,
-    repeat: 3,
-    yoyo: true,
-    ease: 'power2.inOut'
-  }, 1.0)
-  
-  // Reset position
-  .to(letters, {
-    x: 0,
-    scale: 1.05,
-    duration: 0.4,
-    ease: 'back.out(1.7)'
-  }, 1.2)
-  .to(letters, {
-    scale: 1,
-    duration: 0.3,
-    ease: 'power2.out'
-  }, 1.4)
+  })
   
   // Floating skill tags animation
   const isMobile = window.innerWidth <= 768
@@ -287,40 +235,10 @@ onMounted(() => {
     repeat: -1
   })
   
-  // Interactive name letters on mouse move
+  // Interactive name letters on mouse move using composable
   nameContainer = document.querySelector('.name-animation-container')
   if (nameContainer) {
-    nameContainer.addEventListener('mousemove', (e) => {
-      const rect = nameContainer.getBoundingClientRect()
-      const centerX = rect.left + rect.width / 2
-      const centerY = rect.top + rect.height / 2
-      
-      const deltaX = ((e as MouseEvent).clientX - centerX) / rect.width
-      const deltaY = ((e as MouseEvent).clientY - centerY) / rect.height
-      
-      letters.forEach((letter, index) => {
-        const delay = index * 0.02
-        gsap.to(letter, {
-          rotationY: deltaX * 15,
-          rotationX: -deltaY * 10,
-          z: Math.abs(deltaX + deltaY) * 20,
-          duration: 0.6,
-          delay: delay,
-          ease: 'power2.out'
-        })
-      })
-    })
-    
-    nameContainer.addEventListener('mouseleave', () => {
-      gsap.to(letters, {
-        rotationY: 0,
-        rotationX: 0,
-        z: 0,
-        duration: 0.8,
-        stagger: 0.02,
-        ease: 'elastic.out(1, 0.5)'
-      })
-    })
+    addInteractiveEffects(nameContainer as HTMLElement)
   }
   
   // Magnetic cursor effect for skill badges
@@ -400,204 +318,20 @@ onMounted(() => {
   setTimeout(() => {
     if (!scene.value || !camera.value) return
 
-    // Create enhanced interactive floating particles
-    const particleGeometry = markRaw(new THREE.BufferGeometry())
-    const particleCount = 200
-    const positions = new Float32Array(particleCount * 3)
-    const originalPositions = new Float32Array(particleCount * 3)
-    const velocities = new Float32Array(particleCount * 3)
-    const colors = new Float32Array(particleCount * 3)
-    const sizes = new Float32Array(particleCount)
-
-    for (let i = 0; i < particleCount; i++) {
-      const i3 = i * 3
-      const pos = (Math.random() - 0.5) * 25
-      positions[i3] = pos
-      positions[i3 + 1] = pos
-      positions[i3 + 2] = pos
-      originalPositions[i3] = pos
-      originalPositions[i3 + 1] = pos
-      originalPositions[i3 + 2] = pos
-      velocities[i3] = (Math.random() - 0.5) * 0.03
-      velocities[i3 + 1] = (Math.random() - 0.5) * 0.03
-      velocities[i3 + 2] = (Math.random() - 0.5) * 0.03
-      
-      // Create color gradient from green to blue
-      const colorIntensity = Math.random() * 0.5 + 0.5
-      colors[i3] = 0.2 * colorIntensity // Green component
-      colors[i3 + 1] = 0.8 * colorIntensity // Green component
-      colors[i3 + 2] = 0.3 * colorIntensity // Blue component
-      
-      sizes[i] = Math.random() * 0.05 + 0.02
-    }
-
-    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-    particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
-    particleGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1))
+    // Initialize floating particles using composable
+    floatingParticles.value = useFloatingParticles(scene.value, camera.value, {
+      particleCount: 200,
+      colors: { r: 0.2, g: 0.8, b: 0.3 }
+    })
     
-    const particleMaterial = markRaw(new THREE.PointsMaterial({ 
-      size: 0.05,
-      transparent: true,
-      opacity: 0.8,
-      blending: THREE.AdditiveBlending,
-      vertexColors: true,
-      sizeAttenuation: true
-    }))
+    // Start the floating particles
+    floatingParticles.value.start()
+
+
     
-    const particles = markRaw(new THREE.Points(particleGeometry, particleMaterial))
-    scene.value.add(particles)
-
-    // Create floating triangle shapes
-    const createFloatingTriangle = (position: [number, number, number], color: number, opacity: number) => {
-      const triangleGeometry = markRaw(new THREE.TetrahedronGeometry(0.4, 0)) // Tetrahedron has triangular faces
-      const triangleMaterial = markRaw(new THREE.MeshBasicMaterial({
-        color: color,
-        transparent: true,
-        opacity: opacity,
-        wireframe: true
-      }))
-      const mesh = markRaw(new THREE.Mesh(triangleGeometry, triangleMaterial))
-      mesh.position.set(...position)
-      mesh.rotation.set(
-        Math.random() * Math.PI,
-        Math.random() * Math.PI,
-        Math.random() * Math.PI
-      )
-      scene.value!.add(mesh)
-      return mesh
-    }
-
-         // Create various triangle shapes
-     const shapes: THREE.Mesh[] = []
-     
-     // Fewer tetrahedrons (triangular pyramids) for cleaner look
-     shapes.push(createFloatingTriangle([8, 3, -5], 0x32CD32, 0.3))
-     shapes.push(createFloatingTriangle([-6, -2, 4], 0x90EE90, 0.25))
-     shapes.push(createFloatingTriangle([4, -4, -3], 0x98FB98, 0.2))
-
-    let time = 0
-    
+    // Update mouse interaction in the main animation loop
     animate(() => {
-      time += 0.016
-      
-      // Update mouse interaction
       updateRaycaster(normalizedMouse.value)
-      
-      // Enhanced particle movement
-      const positionAttribute = particles.geometry.getAttribute('position')
-      const mouseInfluence = normalizedMouse.value.length() * 0.8
-      
-      for (let i = 0; i < particleCount; i++) {
-        const i3 = i * 3
-        
-        // Organic floating movement with more variation
-        const wave = Math.sin(time * 0.5 + i * 0.1) * 0.8
-        const wave2 = Math.cos(time * 0.3 + i * 0.15) * 0.6
-        
-        // Mouse attraction/repulsion effect
-        const mouseX = normalizedMouse.value.x * 4
-        const mouseY = normalizedMouse.value.y * 4
-        
-        const dx = positionAttribute.array[i3] - mouseX
-        const dy = positionAttribute.array[i3 + 1] - mouseY
-        const distance = Math.sqrt(dx * dx + dy * dy)
-        
-        let mouseForceX = 0
-        let mouseForceY = 0
-        
-        if (distance < 6 && mouseInfluence > 0.1) {
-          const force = (6 - distance) / 6
-          if (distance < 2.5) {
-            mouseForceX = (dx / distance) * force * 0.2
-            mouseForceY = (dy / distance) * force * 0.2
-          } else {
-            mouseForceX = -(dx / distance) * force * 0.1
-            mouseForceY = -(dy / distance) * force * 0.1
-          }
-        }
-        
-        // Enhanced base organic movement
-        const baseMovementX = Math.sin(time * 0.3 + i * 0.1) * 3 + 
-                             Math.cos(time * 0.15 + i * 0.2) * 1.5 +
-                             Math.sin(time * 0.7 + i * 0.05) * 1
-        const baseMovementY = wave * 4 + 
-                             Math.sin(time * 0.25 + i * 0.15) * 2.5 +
-                             wave2 * 2
-        const baseMovementZ = Math.cos(time * 0.4 + i * 0.05) * 2.5 + 
-                             Math.sin(time * 0.2 + i * 0.08) * 1.5 +
-                             Math.cos(time * 0.6 + i * 0.12) * 1
-        
-        // Continuous velocity-based drift
-        const driftX = velocities[i3] * time * 15
-        const driftY = velocities[i3 + 1] * time * 15  
-        const driftZ = velocities[i3 + 2] * time * 15
-        
-        // Update positions
-        positionAttribute.array[i3] = originalPositions[i3] + 
-          baseMovementX + 
-          driftX + 
-          mouseForceX
-        
-        positionAttribute.array[i3 + 1] = originalPositions[i3 + 1] + 
-          baseMovementY + 
-          driftY + 
-          mouseForceY
-        
-        positionAttribute.array[i3 + 2] = originalPositions[i3 + 2] + 
-          baseMovementZ + 
-          driftZ
-      }
-      
-      positionAttribute.needsUpdate = true
-      
-      // Animate geometric shapes
-      shapes.forEach((shape, index) => {
-        const speed = 0.5 + index * 0.1
-        const amplitude = 0.5 + index * 0.2
-        
-        shape.rotation.x += 0.01 * speed
-        shape.rotation.y += 0.015 * speed
-        shape.rotation.z += 0.008 * speed
-        
-        // Floating motion
-        shape.position.y += Math.sin(time * speed + index) * 0.01 * amplitude
-        shape.position.x += Math.cos(time * speed * 0.7 + index) * 0.008 * amplitude
-        shape.position.z += Math.sin(time * speed * 0.5 + index) * 0.006 * amplitude
-        
-        // Scale pulsing
-        const scale = 1 + Math.sin(time * 2 + index) * 0.1
-        shape.scale.setScalar(scale)
-        
-        // Opacity variation
-        if (shape.material instanceof THREE.MeshBasicMaterial) {
-          shape.material.opacity = 0.1 + Math.sin(time * 1.5 + index) * 0.1
-        }
-      })
-      
-      // Enhanced particle rotation
-      const baseRotationY = 0.004 + Math.sin(time * 0.1) * 0.003
-      const baseRotationX = 0.003 + Math.cos(time * 0.15) * 0.002
-      
-      particles.rotation.y += baseRotationY + mouseInfluence * 0.005
-      particles.rotation.x += baseRotationX + mouseInfluence * 0.003
-      
-      // Dynamic particle size
-      if (particleMaterial.size) {
-        const basePulse = Math.sin(time * 1.5) * 0.01 + 0.04
-        particleMaterial.size = basePulse + mouseInfluence * 0.01
-      }
-      
-      // Enhanced camera movement
-      if (camera.value) {
-        const cameraMoveX = Math.sin(time * 0.08) * 0.4 + normalizedMouse.value.x * 0.2
-        const cameraMoveY = Math.cos(time * 0.12) * 0.3 + normalizedMouse.value.y * 0.15
-        const cameraMoveZ = Math.sin(time * 0.1) * 0.2
-        
-        camera.value.position.x = cameraMoveX
-        camera.value.position.y = cameraMoveY
-        camera.value.position.z = 5 + cameraMoveZ
-        camera.value.lookAt(0, 0, 0)
-      }
     })
   }, 100)
   
