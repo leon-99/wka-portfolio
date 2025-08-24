@@ -75,12 +75,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, markRaw } from 'vue'
+import { ref, onMounted, onUnmounted} from 'vue'
 import { useThree } from '@/composables/useThree'
 import { useMouseInteraction, useRaycaster } from '@/composables/useMouseInteraction'
 import { useMorphingText } from '@/composables/useMorphingText'
 import { useFloatingParticles } from '@/composables/useFloatingParticles'
-import * as THREE from 'three'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Icon } from '@iconify/vue'
@@ -104,9 +103,13 @@ const {
 
 const floatingParticles = ref<any>(null)
 
-onMounted(() => {
-  const cleanup = init()
-  
+// Animation Functions
+
+/**
+ * Initialize main entrance animations for hero elements
+ * Sets up initial states and runs the main animation timeline
+ */
+const initializeMainAnimations = () => {
   // GSAP Creative Name Animation
   const tl = gsap.timeline()
   
@@ -140,8 +143,6 @@ onMounted(() => {
   setTimeout(() => {
     startMorphingEffect()
   }, 200)
-  
-
   
   // All other elements start at the same time as name animation
   tl.to('.hero-subtitle', {
@@ -188,23 +189,18 @@ onMounted(() => {
     textShadow: '0 0 10px rgba(50, 205, 50, 0.3)'
   })
   
-  // Floating skill tags animation
-  const isMobile = window.innerWidth <= 768
-  
-  gsap.to('.skill-tag', {
-    y: isMobile ? '-=8' : '-=15', // Reduced movement on mobile
-    rotation: isMobile ? 1 : 2, // Reduced rotation on mobile
-    duration: isMobile ? 4 : 3, // Slower animation on mobile for better performance
-    ease: 'sine.inOut',
-    yoyo: true,
-    repeat: -1,
-    stagger: {
-      each: isMobile ? 0.8 : 0.5, // Slower stagger on mobile
-      from: 'random'
-    }
-  })
-  
-  // Button hover effects
+  // Interactive name letters on mouse move using composable
+  nameContainer = document.querySelector('.name-animation-container')
+  if (nameContainer) {
+    addInteractiveEffects(nameContainer as HTMLElement)
+  }
+}
+
+/**
+ * Setup hover effects for primary and secondary buttons
+ * Adds scale and movement animations on mouse enter/leave
+ */
+const setupButtonHoverEffects = () => {
   const buttons = document.querySelectorAll('.btn-primary, .btn-secondary')
   buttons.forEach(button => {
     button.addEventListener('mouseenter', () => {
@@ -225,8 +221,13 @@ onMounted(() => {
       })
     })
   })
-  
-  // Scroll indicator animation
+}
+
+/**
+ * Setup continuous scroll indicator animation
+ * Creates a pulsing arrow animation at the bottom
+ */
+const setupScrollIndicator = () => {
   gsap.to('.scroll-arrow', {
     y: 10,
     duration: 1.5,
@@ -234,15 +235,36 @@ onMounted(() => {
     yoyo: true,
     repeat: -1
   })
+}
+
+/**
+ * Setup floating animation for skill tags
+ * Creates continuous floating movement with mobile optimization
+ */
+const setupFloatingSkills = () => {
+  const isMobile = window.innerWidth <= 768
   
-  // Interactive name letters on mouse move using composable
-  nameContainer = document.querySelector('.name-animation-container')
-  if (nameContainer) {
-    addInteractiveEffects(nameContainer as HTMLElement)
-  }
-  
-  // Magnetic cursor effect for skill badges
+  gsap.to('.skill-tag', {
+    y: isMobile ? '-=8' : '-=15', // Reduced movement on mobile
+    rotation: isMobile ? 1 : 2, // Reduced rotation on mobile
+    duration: isMobile ? 4 : 3, // Slower animation on mobile for better performance
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1,
+    stagger: {
+      each: isMobile ? 0.8 : 0.5, // Slower stagger on mobile
+      from: 'random'
+    }
+  })
+}
+
+/**
+ * Setup interactive effects for skill tags
+ * Adds magnetic pull effects and touch interactions
+ */
+const setupSkillTagInteractions = () => {
   const skillTags = document.querySelectorAll('.skill-tag')
+  const isMobile = window.innerWidth <= 768
   
   skillTags.forEach(tag => {
     let isHovered = false
@@ -314,7 +336,13 @@ onMounted(() => {
       })
     }
   })
-  
+}
+
+/**
+ * Setup 3D floating particles background
+ * Initializes Three.js particles using the composable
+ */
+const setupFloatingParticles = () => {
   setTimeout(() => {
     if (!scene.value || !camera.value) return
 
@@ -326,16 +354,53 @@ onMounted(() => {
     
     // Start the floating particles
     floatingParticles.value.start()
-
-
     
     // Update mouse interaction in the main animation loop
     animate(() => {
       updateRaycaster(normalizedMouse.value)
     })
   }, 100)
+}
+
+/**
+ * Cleanup all animations and event listeners
+ * Called when component is unmounted to prevent memory leaks
+ */
+const cleanupAnimations = () => {
+  // Cleanup floating particles
+  if (floatingParticles.value) {
+    floatingParticles.value.cleanup()
+  }
+  
+  // Cleanup morphing text
+  // Note: The cleanup function is called automatically in onUnmounted
+  
+  // Kill all GSAP animations
+  gsap.killTweensOf('.hero-subtitle')
+  gsap.killTweensOf('.hero-description')
+  gsap.killTweensOf('.hero-actions')
+  gsap.killTweensOf('.skill-tag')
+  gsap.killTweensOf('.scroll-arrow')
+  gsap.killTweensOf('.btn-primary')
+  gsap.killTweensOf('.btn-secondary')
+}
+
+onMounted(() => {
+  const cleanup = init()
+  
+  // Initialize all animations in sequence
+  initializeMainAnimations()      // Main entrance animations
+  setupButtonHoverEffects()      // Button interactions
+  setupScrollIndicator()          // Scroll arrow animation
+  setupFloatingSkills()          // Skill tag floating
+  setupSkillTagInteractions()    // Skill tag magnetic effects
+  setupFloatingParticles()       // 3D background particles
   
   return cleanup
+})
+
+onUnmounted(() => {
+  cleanupAnimations()
 })
 </script>
 
@@ -609,14 +674,24 @@ onMounted(() => {
   }
   
   .hero-actions {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
   }
   
   .hero-actions .btn-primary,
   .hero-actions .btn-secondary {
-    width: 200px;
+    width: auto;
+    min-width: 140px;
     text-align: center;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
   }
   
   .floating-skills {
@@ -670,6 +745,27 @@ onMounted(() => {
 }
 
 @media (max-width: 480px) {
+  .hero-actions {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.4rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .hero-actions .btn-primary,
+  .hero-actions .btn-secondary {
+    width: auto;
+    min-width: 120px;
+    text-align: center;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+  }
+  
   .floating-skills {
     display: block;
   }
