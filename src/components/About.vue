@@ -40,65 +40,16 @@
         </div>
         
         <div class="about-visual">
-          <div class="visual-card glass-card float">
-            <div class="code-preview">
-              <div class="code-header">
-                <div class="code-dots">
-                  <span class="dot red"></span>
-                  <span class="dot yellow"></span>
-                  <span class="dot green"></span>
-                </div>
-                <span class="code-title">developer.js</span>
-              </div>
-              <div class="code-content">
-                <div class="code-line">
-                  <span class="code-keyword">const </span>
-                  <span class="code-variable">developer</span>
-                  <span class="code-operator"> = </span>
-                  <span class="code-punctuation">{</span>
-                </div>
-                <div class="code-line code-indent">
-                  <span class="code-property">name: </span>
-                  <span class="code-string">'Win Khant Aung'</span>,
-                </div>
-                <div class="code-line code-indent">
-                  <span class="code-property">role: </span>
-                  <span class="code-string">'Full Stack Developer'</span>,
-                </div>
-                <div class="code-line code-indent">
-                  <span class="code-property">location: </span>
-                  <span class="code-string">'Dubai, UAE'</span>,
-                </div>
-                <div class="code-line code-indent">
-                  <span class="code-property">languages: </span>
-                  <span class="code-punctuation">[</span>
-                </div>
-                <div class="code-line code-indent-2">
-                  <span class="code-string">'JavaScript'</span>,
-                  <span class="code-string">'TypeScript'</span>,
-                </div>
-                <div class="code-line code-indent-2">
-                  <span class="code-string">'PHP'</span>,
-                  <span class="code-string">'HTML'</span>,
-                  <span class="code-string">'CSS'</span>
-                </div>
-                <div class="code-line code-indent">
-                  <span class="code-punctuation">]</span>,
-                </div>
-                <div class="code-line code-indent">
-                  <span class="code-property">passionate: </span>
-                  <span class="code-boolean">true</span>
-                </div>
-                <div class="code-line code-indent">
-                  <span class="code-property">coffee: </span>
-                  <span class="code-boolean">true</span>
-                </div>
-                <div class="code-line">
-                  <span class="code-punctuation">}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ProfileCard
+            name="Win Khant Aung"
+            title="Full Stack Developer"
+            handle="winkhantaung"
+            status="Available for opportunities"
+            contact-text="Get in touch"
+            :show-user-info="true"
+            :enable-tilt="true"
+            @contact-click="handleContactClick"
+          />
         </div>
       </div>
     </div>
@@ -109,8 +60,17 @@
 import { onMounted, nextTick } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import ProfileCard from './ProfileCard/ProfileCard.vue'
 
 gsap.registerPlugin(ScrollTrigger)
+
+const handleContactClick = () => {
+  // Scroll to contact section or handle contact action
+  const contactSection = document.getElementById('contact')
+  if (contactSection) {
+    contactSection.scrollIntoView({ behavior: 'smooth' })
+  }
+}
 
 onMounted(async () => {
   await nextTick()
@@ -174,49 +134,6 @@ onMounted(async () => {
     }
   })
   
-  // Animate code lines
-  gsap.fromTo('.code-line', {
-    opacity: 0,
-    x: -30
-  }, {
-    opacity: 1,
-    x: 0,
-    duration: 0.6,
-    stagger: 0.1,
-    ease: 'power2.out',
-    scrollTrigger: {
-      trigger: '.code-preview',
-      start: 'top 80%',
-      end: 'bottom 20%',
-      toggleActions: 'play none none reverse'
-    }
-  })
-  
-  // Typing effect for code (preserve HTML structure)
-  const codeLines = document.querySelectorAll('.code-line')
-  codeLines.forEach((line, index) => {
-    const originalHTML = line.innerHTML
-    const tempDiv = document.createElement('div')
-    tempDiv.innerHTML = originalHTML
-    const text = tempDiv.textContent || ''
-    
-    // Hide the line initially
-    gsap.set(line, { opacity: 0 })
-    
-    // Simple fade in animation instead of typing to preserve colors
-    gsap.to(line, {
-      opacity: 1,
-      duration: 0.6,
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: '.code-preview',
-        start: 'top 85%',
-        toggleActions: 'play none none reverse'
-      },
-      delay: index * 0.1
-    })
-  })
-  
   // Stats animation
   gsap.fromTo('.stat-item', {
     opacity: 0,
@@ -259,16 +176,6 @@ onMounted(async () => {
     })
   })
   
-  // Floating animation for visual card
-  gsap.to('.visual-card', {
-    y: -10,
-    rotation: 1,
-    duration: 3,
-    ease: 'sine.inOut',
-    yoyo: true,
-    repeat: -1
-  })
-  
   // Interactive hover effects
   const aboutText = document.querySelector('.about-text')
   if (aboutText) {
@@ -290,16 +197,6 @@ onMounted(async () => {
       })
     })
   }
-  
-  // Code dots animation
-  gsap.to('.dot', {
-    scale: 1.2,
-    duration: 1,
-    ease: 'sine.inOut',
-    yoyo: true,
-    repeat: -1,
-    stagger: 0.3
-  })
 })
 </script>
 
@@ -370,74 +267,8 @@ onMounted(async () => {
 .about-visual {
   display: flex;
   justify-content: center;
-}
-
-.visual-card {
-  padding: 0;
-  overflow: hidden;
-  max-width: 400px;
-  width: 100%;
-}
-
-.code-preview {
-  font-family: 'Fira Code', 'Monaco', 'Cascadia Code', monospace;
-  font-size: 0.9rem;
-}
-
-.code-header {
-  background: rgba(26, 47, 26, 0.3);
-  padding: 1rem 1.5rem;
-  display: flex;
   align-items: center;
-  gap: 1rem;
-  border-bottom: 1px solid rgba(34, 139, 34, 0.2);
 }
-
-.code-dots {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.dot.red { background: #ff5f56; }
-.dot.yellow { background: #ffbd2e; }
-.dot.green { background: #27ca3f; }
-
-.code-title {
-  color: rgba(232, 245, 232, 0.7);
-  font-size: 0.85rem;
-}
-
-.code-content {
-  padding: 1.5rem;
-  background: rgba(10, 26, 10, 0.2);
-}
-
-.code-line {
-  margin-bottom: 0.5rem;
-  line-height: 1.5;
-}
-
-.code-indent {
-  padding-left: 1rem;
-}
-
-.code-indent-2 {
-  padding-left: 2rem;
-}
-
-.code-keyword { color: #ff79c6; }
-.code-variable { color: #8be9fd; }
-.code-operator { color: #ff79c6; }
-.code-punctuation { color: #f8f8f2; }
-.code-property { color: #50fa7b; }
-.code-string { color: #f1fa8c; }
-.code-boolean { color: #bd93f9; }
 
 @media (max-width: 768px) {
   .section-title {
@@ -464,14 +295,6 @@ onMounted(async () => {
   
   .stat-label {
     font-size: 0.75rem;
-  }
-  
-  .code-preview {
-    font-size: 0.8rem;
-  }
-  
-  .code-content {
-    padding: 1rem;
   }
 }
 </style>
