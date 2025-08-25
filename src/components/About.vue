@@ -48,6 +48,8 @@
             contact-text="Get in touch"
             :show-user-info="true"
             :enable-tilt="true"
+            :avatar-url="profileImage"
+            :mini-avatar-url="profileImage"
             @contact-click="handleContactClick"
           />
         </div>
@@ -56,11 +58,12 @@
   </section>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { onMounted, nextTick } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import ProfileCard from './ProfileCard/ProfileCard.vue'
+import profileImage from '../assets/images/image.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
 

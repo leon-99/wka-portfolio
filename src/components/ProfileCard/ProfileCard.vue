@@ -505,18 +505,18 @@ onUnmounted(() => {
     ),
     repeating-linear-gradient(
       var(--angle),
-      #0e152e 0%,
-      hsl(180, 10%, 60%) 3.8%,
-      hsl(180, 29%, 66%) 4.5%,
-      hsl(180, 10%, 60%) 5.2%,
-      #0e152e 10%,
-      #0e152e 12%
+      #0a1a0a 0%,
+      hsl(120, 10%, 60%) 3.8%,
+      hsl(120, 29%, 66%) 4.5%,
+      hsl(120, 10%, 60%) 5.2%,
+      #0a1a0a 10%,
+      #0a1a0a 12%
     ),
     radial-gradient(
       farthest-corner circle at var(--pointer-x) var(--pointer-y),
-      hsla(0, 0%, 0%, 0.1) 12%,
-      hsla(0, 0%, 0%, 0.15) 20%,
-      hsla(0, 0%, 0%, 0.25) 120%
+      hsla(120, 0%, 0%, 0.1) 12%,
+      hsla(120, 0%, 0%, 0.15) 20%,
+      hsla(120, 0%, 0%, 0.25) 120%
     );
   background-position:
     0 var(--background-y),
@@ -599,18 +599,18 @@ onUnmounted(() => {
     ),
     repeating-linear-gradient(
       -45deg,
-      #0e152e 0%,
-      hsl(180, 10%, 60%) 3.8%,
-      hsl(180, 29%, 66%) 4.5%,
-      hsl(180, 10%, 60%) 5.2%,
-      #0e152e 10%,
-      #0e152e 12%
+      #0a1a0a 0%,
+      hsl(120, 10%, 60%) 3.8%,
+      hsl(120, 29%, 66%) 4.5%,
+      hsl(120, 10%, 60%) 5.2%,
+      #0a1a0a 10%,
+      #0a1a0a 12%
     ),
     radial-gradient(
       farthest-corner circle at var(--pointer-x) var(--pointer-y),
-      hsla(0, 0%, 0%, 0.1) 12%,
-      hsla(0, 0%, 0%, 0.15) 20%,
-      hsla(0, 0%, 0%, 0.25) 120%
+      hsla(120, 0%, 0%, 0.1) 12%,
+      hsla(120, 0%, 0%, 0.15) 20%,
+      hsla(120, 0%, 0%, 0.25) 120%
     );
   background-position:
     0 var(--background-y),
@@ -644,11 +644,15 @@ onUnmounted(() => {
 
 .pc-avatar-content .avatar {
   width: 100%;
+  height: 100%;
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%) scale(1);
-  bottom: 2px;
+  left: 0;
+  top: 0;
+  transform: none;
+  bottom: auto;
   opacity: calc(1.75 - var(--pointer-from-center));
+  object-fit: cover;
+  object-position: center;
 }
 
 .pc-avatar-content::before {
