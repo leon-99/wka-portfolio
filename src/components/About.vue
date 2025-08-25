@@ -226,8 +226,8 @@ onMounted(async () => {
     opacity: 1,
     y: 0,
     scale: 1,
-    duration: 0.8,
-    stagger: 0.2,
+    duration: 0.4,
+    stagger: 0.1,
     ease: 'back.out(1.7)',
     scrollTrigger: {
       trigger: '.about-stats',
@@ -247,7 +247,7 @@ onMounted(async () => {
     gsap.fromTo(stat, {
       textContent: '0' + suffix,
     }, {
-      duration: 10,
+      duration: 2,
       textContent: number + suffix,
       ease: 'power2.out',
       snap: { textContent: 1 },
