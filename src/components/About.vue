@@ -25,15 +25,15 @@
           
           <div class="about-stats">
             <div class="stat-item">
-              <span class="stat-number text-gradient">6+</span>
+              <span class="stat-number text-gradient">0+</span>
               <span class="stat-label">Years Experience</span>
             </div>
             <div class="stat-item">
-              <span class="stat-number text-gradient">30+</span>
+              <span class="stat-number text-gradient">0+</span>
               <span class="stat-label">Projects Completed</span>
             </div>
             <div class="stat-item">
-              <span class="stat-number text-gradient">100%</span>
+              <span class="stat-number text-gradient">0%</span>
               <span class="stat-label">Client Satisfaction</span>
             </div>
           </div>
@@ -41,6 +41,7 @@
         
         <div class="about-visual">
           <ProfileCard
+            v-if="shouldShowCard"
             name="Win Khant Aung"
             title="Full Stack Developer"
             handle="winkhantaung"
@@ -59,13 +60,29 @@
 </template>
 
 <script setup>
-import { onMounted, nextTick } from 'vue'
+import { onMounted, nextTick, ref, onUnmounted, computed } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import ProfileCard from './ProfileCard/ProfileCard.vue'
 import profileImage from '../assets/images/image.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
+
+const isMobile = ref(false)
+const windowWidth = ref(window.innerWidth)
+
+const checkMobile = () => {
+  windowWidth.value = window.innerWidth
+  isMobile.value = windowWidth.value <= 768
+  console.log(`Window width: ${windowWidth.value}px, isMobile: ${isMobile.value}`)
+}
+
+// Computed property for mobile detection
+const shouldShowCard = computed(() => {
+  const result = windowWidth.value > 768
+  console.log(`Computed shouldShowCard: width=${windowWidth.value}, result=${result}`)
+  return result
+})
 
 const handleContactClick = () => {
   // Scroll to contact section or handle contact action
@@ -78,128 +95,158 @@ const handleContactClick = () => {
 onMounted(async () => {
   await nextTick()
   
-  // Section title animation
-  gsap.fromTo('.section-title', {
-    opacity: 0,
-    y: 100,
-    scale: 0.8
-  }, {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    duration: 1,
-    ease: 'back.out(1.7)',
-    scrollTrigger: {
-      trigger: '.about',
-      start: 'top 90%',
-      end: 'bottom 10%',
-      toggleActions: 'play none none reverse'
-    }
-  })
+  // Check mobile immediately
+  checkMobile()
+  console.log('Initial mobile check:', isMobile.value)
+  console.log('Initial shouldShowCard:', shouldShowCard.value)
   
-  // About content animation
-  gsap.fromTo('.about-text', {
-    opacity: 0,
-    x: -100,
-    rotationY: -15
-  }, {
-    opacity: 1,
-    x: 0,
-    rotationY: 0,
-    duration: 1.2,
-    ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.about-content',
-      start: 'top 85%',
-      end: 'bottom 15%',
-      toggleActions: 'play none none reverse'
-    }
-  })
+  // Add resize listener
+  window.addEventListener('resize', checkMobile)
   
-  // Visual card animation
-  gsap.fromTo('.about-visual', {
-    opacity: 0,
-    x: 100,
-    rotationY: 15,
-    scale: 0.8
-  }, {
-    opacity: 1,
-    x: 0,
-    rotationY: 0,
-    scale: 1,
-    duration: 1.2,
-    ease: 'power3.out',
-    scrollTrigger: {
-      trigger: '.about-content',
-      start: 'top 85%',
-      end: 'bottom 15%',
-      toggleActions: 'play none none reverse'
-    }
-  })
-  
-  // Stats animation
-  gsap.fromTo('.stat-item', {
-    opacity: 0,
-    y: 50,
-    scale: 0.5
-  }, {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    duration: 0.4,
-    stagger: 0.1,
-    ease: 'back.out(1.7)',
-    scrollTrigger: {
-      trigger: '.about-stats',
-      start: 'top 85%',
-      end: 'bottom 15%',
-      toggleActions: 'play none none reverse'
-    }
-  })
-  
-  // Animate stat numbers with counting effect
-  const statNumbers = document.querySelectorAll('.stat-number')
-  statNumbers.forEach(stat => {
-    const text = stat.textContent || '0'
-    const number = parseInt(text.replace(/\D/g, ''))
-    const suffix = text.replace(/\d/g, '')
-    
-    gsap.fromTo(stat, {
-      textContent: '0' + suffix,
+  // Add a small delay to ensure ProfileCard is fully rendered
+  setTimeout(() => {
+    // Section title animation
+    gsap.fromTo('.section-title', {
+      opacity: 0,
+      y: 100,
+      scale: 0.8
     }, {
-      duration: 2,
-      textContent: number + suffix,
-      ease: 'power2.out',
-      snap: { textContent: 1 },
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 1,
+      ease: 'back.out(1.7)',
       scrollTrigger: {
-        trigger: '.about-stats',
-        start: 'top 80%',
+        trigger: '.about',
+        start: 'top 90%',
+        end: 'bottom 10%',
         toggleActions: 'play none none reverse'
       }
     })
-  })
-  
-  // Interactive hover effects
-  const aboutText = document.querySelector('.about-text')
-  if (aboutText) {
-    aboutText.addEventListener('mouseenter', () => {
-      gsap.to('.about-text', {
-        scale: 1.02,
-        rotationY: 2,
-        duration: 0.4,
-        ease: 'power2.out'
-      })
+    
+    // About content animation
+    gsap.fromTo('.about-text', {
+      opacity: 0,
+      x: -100,
+      rotationY: -15
+    }, {
+      opacity: 1,
+      x: 0,
+      rotationY: 0,
+      duration: 1.2,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.about-content',
+        start: 'top 85%',
+        end: 'bottom 15%',
+        toggleActions: 'play none none reverse'
+      }
     })
     
-    aboutText.addEventListener('mouseleave', () => {
-      gsap.to('.about-text', {
-        scale: 1,
-        rotationY: 0,
-        duration: 0.4,
-        ease: 'power2.out'
-      })
+    // Visual card animation
+    gsap.fromTo('.about-visual', {
+      opacity: 0,
+      x: 100,
+      rotationY: 15,
+      scale: 0.8
+    }, {
+      opacity: 1,
+      x: 0,
+      rotationY: 0,
+      scale: 1,
+      duration: 1.2,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.about-content',
+        start: 'top 85%',
+        end: 'bottom 15%',
+        toggleActions: 'play none none reverse'
+      }
     })
-  }
+    
+    // Stats animation
+    gsap.fromTo('.stat-item', {
+      opacity: 0,
+      y: 50,
+      scale: 0.5
+    }, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.4,
+      stagger: 0.1,
+      ease: 'back.out(1.7)',
+      scrollTrigger: {
+        trigger: '.about-stats',
+        start: 'top 85%',
+        end: 'bottom 15%',
+        toggleActions: 'play none none reverse'
+      }
+    })
+    
+    // Animate stat numbers with counting effect
+    const aboutStats = document.querySelector('.about-stats')
+    if (aboutStats) {
+      const statNumbers = aboutStats.querySelectorAll('.stat-number')
+      console.log('Found stat numbers in About component:', statNumbers.length) // Debug log
+      
+      // Define the target values
+      const targetValues = [6, 30, 100]
+      const suffixes = ['+', '+', '%']
+      
+      statNumbers.forEach((stat, index) => {
+        const targetNumber = targetValues[index]
+        const suffix = suffixes[index]
+        
+        console.log(`About Stat ${index}: target=${targetNumber}, suffix="${suffix}"`) // Debug log
+        
+        // Create a manual counting animation
+        gsap.to({}, {
+          duration: 2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.about-stats',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          },
+          onUpdate: function() {
+            const progress = this.progress()
+            const currentNumber = Math.floor(progress * targetNumber)
+            stat.textContent = currentNumber + suffix
+          },
+          onComplete: function() {
+            stat.textContent = targetNumber + suffix
+          }
+        })
+      })
+    }
+    
+    // Interactive hover effects
+    const aboutText = document.querySelector('.about-text')
+    if (aboutText) {
+      aboutText.addEventListener('mouseenter', () => {
+        gsap.to('.about-text', {
+          scale: 1.02,
+          rotationY: 2,
+          duration: 0.4,
+          ease: 'power2.out'
+        })
+      })
+      
+      aboutText.addEventListener('mouseleave', () => {
+        gsap.to('.about-text', {
+          scale: 1,
+          rotationY: 0,
+          duration: 0.4,
+          ease: 'power2.out'
+        })
+      })
+    }
+  }, 100) // Small delay to ensure ProfileCard is rendered
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
 })
 </script>
 
@@ -298,6 +345,47 @@ onMounted(async () => {
   
   .stat-label {
     font-size: 0.75rem;
+  }
+  
+  .about-visual {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+  }
+  
+  /* More specific selector */
+  .about .about-visual {
+    display: none !important;
+  }
+  
+  /* Hide ProfileCard component specifically */
+  .about .about-visual .pc-card-wrapper {
+    display: none !important;
+  }
+  
+  /* Hide the entire ProfileCard component */
+  .pc-card-wrapper {
+    display: none !important;
+  }
+  
+  /* Hide any ProfileCard related elements */
+  [class*="pc-"] {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-visual {
+    display: none !important;
+  }
+  
+  .about-content {
+    grid-template-columns: 1fr;
   }
 }
 </style>

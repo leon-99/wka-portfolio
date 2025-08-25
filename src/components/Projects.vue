@@ -109,6 +109,21 @@ interface Project {
 // Projects data
 const projects = ref<Project[]>([
   {
+    id: 'postmock',
+    title: 'PostMock',
+    description: 'Instant Mock API Server Generator - Create mock servers from Postman collections or OpenAPI specs in seconds.',
+    icon: 'logos:npm',
+    iconType: 'iconify',
+    iconClass: 'logos',
+    category: 'packages',
+    technologies: ['Node.js', 'JavaScript', 'CLI', 'Mock API', 'Postman', 'OpenAPI', 'Express'],
+    liveUrl: 'https://www.npmjs.com/package/postmock',
+    liveIcon: '📦',
+    liveText: 'NPM Package',
+    codeIcon: '📁',
+    codeText: 'View Code',
+  },
+  {
     id: 'oasify-postman',
     title: 'Oasify Postman',
     description: 'NPM package that converts Postman collections to OpenAPI 3.0 with CLI interface and automatic examples.',

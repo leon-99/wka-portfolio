@@ -291,14 +291,14 @@ onMounted(() => {
 
 .job-title {
   color: #90EE90;
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
 
 .company-name {
   color: #e8f5e8;
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   font-weight: 500;
   margin-bottom: 0.25rem;
 }
@@ -466,6 +466,10 @@ onMounted(() => {
   }
   
   .job-title {
+    font-size: 1.5rem;
+  }
+  
+  .company-name {
     font-size: 1.2rem;
   }
   
@@ -489,11 +493,11 @@ onMounted(() => {
   }
   
   .job-title {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
   
   .company-name {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
   
   .job-period {
