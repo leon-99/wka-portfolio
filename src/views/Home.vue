@@ -4,8 +4,8 @@
     <Hero />
     <About />
     <Experience />
-    <Skills />
     <Projects />
+    <Skills />
     <Mentorship />
     <LinkPreview />
     <Contact />

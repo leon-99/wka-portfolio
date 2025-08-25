@@ -8,9 +8,9 @@
       <ul class="nav-links" :class="{ 'nav-open': isMenuOpen }">
         <li><a href="#home" @click="handleNavClick">Home</a></li>
         <li><a href="#about" @click="handleNavClick">About</a></li>
-        <li><a href="#skills" @click="handleNavClick">Skills</a></li>
-        <li><a href="#projects" @click="handleNavClick">Projects</a></li>
         <li><a href="#experience" @click="handleNavClick">Experience</a></li>
+        <li><a href="#projects" @click="handleNavClick">Projects</a></li>
+        <li><a href="#skills" @click="handleNavClick">Skills</a></li>
         <li><a href="#mentorship" @click="handleNavClick">Mentorship</a></li>
         <li><a href="#contact" @click="handleNavClick">Contact</a></li>
       </ul>

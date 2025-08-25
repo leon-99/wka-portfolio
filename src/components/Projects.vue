@@ -8,9 +8,9 @@
 
       <!-- Filter Buttons -->
       <div class="filter-container">
-        <button class="filter-btn" @click="filterProjects('all')" :class="{ active: activeFilter === 'all' }">
+        <button class="filter-btn" @click="filterProjects('featured')" :class="{ active: activeFilter === 'featured' }">
           <span>🌟</span>
-          All Projects
+          Featured
         </button>
         <button class="filter-btn" @click="filterProjects('websites')" :class="{ active: activeFilter === 'websites' }">
           <span>🌐</span>
@@ -22,54 +22,56 @@
         </button>
       </div>
 
-      <div class="projects-grid">
-        <div v-for="project in filteredProjects" :key="project.id" class="project-card glass-card"
-          :data-project="project.id" :data-category="project.category">
-          <!-- Project Header -->
-          <div class="project-header">
-            <div class="project-icon">
-              <Icon v-if="project.iconType === 'iconify'" :icon="project.icon" :class="project.iconClass" />
-              <span v-else>{{ project.icon }}</span>
+      <div class="projects-scroll-container">
+        <div class="projects-grid">
+          <div v-for="project in filteredProjects" :key="project.id" class="project-card glass-card"
+            :data-project="project.id" :data-category="project.category">
+            <!-- Project Header -->
+            <div class="project-header">
+              <div class="project-icon">
+                <Icon v-if="project.iconType === 'iconify'" :icon="project.icon" :class="project.iconClass" />
+                <span v-else>{{ project.icon }}</span>
+              </div>
+              <div class="project-title-section">
+                <h3 class="project-title">{{ project.title }}</h3>
+                <div class="project-category">{{ project.category }}</div>
+              </div>
             </div>
-            <div class="project-title-section">
-              <h3 class="project-title">{{ project.title }}</h3>
-              <div class="project-category">{{ project.category }}</div>
+
+            <!-- Project Description -->
+            <div class="project-description">
+              {{ project.description }}
             </div>
-          </div>
 
-          <!-- Project Description -->
-          <div class="project-description">
-            {{ project.description }}
-          </div>
+            <!-- Project Technologies -->
+            <div class="project-tech">
+              <span v-for="tech in project.technologies" :key="tech" class="tech-tag">
+                {{ tech }}
+              </span>
+            </div>
 
-          <!-- Project Technologies -->
-          <div class="project-tech">
-            <span v-for="tech in project.technologies" :key="tech" class="tech-tag">
-              {{ tech }}
-            </span>
-          </div>
-
-          <!-- Project Actions -->
-          <div class="project-actions">
-            <a v-if="project.liveUrl" :href="project.liveUrl" target="_blank" rel="noopener noreferrer"
-              class="action-btn live-btn">
-              <span>{{ project.liveIcon }}</span>
-              {{ project.liveText }}
-            </a>
-            <a v-if="project.codeUrl" :href="project.codeUrl" target="_blank" rel="noopener noreferrer"
-              class="action-btn code-btn">
-              <span>{{ project.codeIcon }}</span>
-              {{ project.codeText }}
-            </a>
-            <a v-if="project.contactUrl" :href="project.contactUrl" class="action-btn contact-btn">
-              <span>{{ project.contactIcon }}</span>
-              {{ project.contactText }}
-            </a>
-            <button v-if="!project.liveUrl && !project.codeUrl && !project.contactUrl" @click="showComingSoon"
-              class="action-btn code-btn">
-              <span>{{ project.codeIcon }}</span>
-              {{ project.codeText }}
-            </button>
+            <!-- Project Actions -->
+            <div class="project-actions">
+              <a v-if="project.liveUrl" :href="project.liveUrl" target="_blank" rel="noopener noreferrer"
+                class="action-btn live-btn">
+                <span>{{ project.liveIcon }}</span>
+                {{ project.liveText }}
+              </a>
+              <a v-if="project.codeUrl" :href="project.codeUrl" target="_blank" rel="noopener noreferrer"
+                class="action-btn code-btn">
+                <span>{{ project.codeIcon }}</span>
+                {{ project.codeText }}
+              </a>
+              <a v-if="project.contactUrl" :href="project.contactUrl" class="action-btn contact-btn">
+                <span>{{ project.contactIcon }}</span>
+                {{ project.contactText }}
+              </a>
+              <button v-if="!project.liveUrl && !project.codeUrl && !project.contactUrl" @click="showComingSoon"
+                class="action-btn code-btn">
+                <span>{{ project.codeIcon }}</span>
+                {{ project.codeText }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -94,6 +96,7 @@ interface Project {
   iconType?: 'emoji' | 'iconify'
   iconClass?: string
   category: 'websites' | 'packages'
+  featured: boolean
   technologies: string[]
   liveUrl?: string
   liveIcon: string
@@ -116,6 +119,7 @@ const projects = ref<Project[]>([
     iconType: 'iconify',
     iconClass: 'logos',
     category: 'packages',
+    featured: true,
     technologies: ['Node.js', 'JavaScript', 'CLI', 'Mock API', 'Postman', 'OpenAPI', 'Express'],
     liveUrl: 'https://www.npmjs.com/package/postmock',
     liveIcon: '📦',
@@ -131,6 +135,7 @@ const projects = ref<Project[]>([
     iconType: 'iconify',
     iconClass: 'logos',
     category: 'packages',
+    featured: false,
     technologies: ['Node.js', 'JavaScript', 'CLI', 'OpenAPI'],
     liveUrl: 'https://www.npmjs.com/package/oasify-postman',
     liveIcon: '📦',
@@ -146,6 +151,7 @@ const projects = ref<Project[]>([
     iconType: 'iconify',
     iconClass: 'logos',
     category: 'packages',
+    featured: true,
     technologies: ['Node.js', 'JavaScript', 'CLI', 'Code Analysis', 'Vue.js'],
     liveUrl: 'https://www.npmjs.com/package/plato-vue',
     liveIcon: '📦',
@@ -161,6 +167,7 @@ const projects = ref<Project[]>([
     iconType: 'iconify',
     iconClass: 'devicon',
     category: 'packages',
+    featured: false,
     technologies: ['Laravel', 'PHP', 'CLI', 'CRUD'],
     codeUrl: 'https://github.com/leon-99/laravel-entity-generator',
     liveIcon: '📁',
@@ -175,6 +182,7 @@ const projects = ref<Project[]>([
     icon: '🌤️',
     iconType: 'emoji',
     category: 'websites',
+    featured: false,
     technologies: ['Vue.js', 'Tailwind CSS', 'JavaScript', 'Weather API'],
     liveUrl: 'https://weather-info-leon.netlify.app/',
     liveIcon: '🌐',
@@ -189,6 +197,7 @@ const projects = ref<Project[]>([
     icon: '🪐',
     iconType: 'emoji',
     category: 'websites',
+    featured: true,
     technologies: ['Vue.js', 'Tailwind CSS', 'JavaScript', '3D Animation'],
     liveUrl: 'https://solar-system-leon.netlify.app/',
     liveIcon: '🌐',
@@ -203,6 +212,7 @@ const projects = ref<Project[]>([
     icon: '📅',
     iconType: 'emoji',
     category: 'websites',
+    featured: false,
     technologies: ['Vue.js', 'Tailwind CSS', 'JavaScript', 'Life Tracking'],
     liveUrl: 'https://weeks-of-life-leon.netlify.app/',
     liveIcon: '🌐',
@@ -213,12 +223,12 @@ const projects = ref<Project[]>([
 ])
 
 // Filter state
-const activeFilter = ref('all')
+const activeFilter = ref('featured')
 
 // Computed filtered projects
 const filteredProjects = computed(() => {
-  if (activeFilter.value === 'all') {
-    return projects.value
+  if (activeFilter.value === 'featured') {
+    return projects.value.filter(project => project.featured === true)
   }
   return projects.value.filter(project => project.category === activeFilter.value)
 })
@@ -369,22 +379,22 @@ const filterProjects = (category: string) => {
 .filter-container {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2.5rem;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
   flex-wrap: wrap;
 }
 
 .filter-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
   background: rgba(34, 139, 34, 0.1);
   color: #90EE90;
   border: 2px solid rgba(34, 139, 34, 0.3);
-  border-radius: 25px;
+  border-radius: 20px;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
@@ -398,18 +408,44 @@ const filterProjects = (category: string) => {
 }
 
 .filter-btn.active {
-  background: linear-gradient(135deg, #32CD32, #228B22);
+  background: linear-gradient(135deg, #228B22, #006400);
   color: white;
-  border-color: #32CD32;
+  border-color: #228B22;
   box-shadow: 0 8px 25px rgba(34, 139, 34, 0.4);
+  font-weight: 700;
+}
+
+.projects-scroll-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+  margin: 0 -1rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(144, 238, 144, 0.3) transparent;
+}
+
+.projects-scroll-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.projects-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.projects-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(144, 238, 144, 0.3);
+  border-radius: 4px;
+}
+
+.projects-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(144, 238, 144, 0.5);
 }
 
 .projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  display: flex;
   gap: 1.25rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  min-width: max-content;
+  padding: 0 1rem;
 }
 
 .project-card {
@@ -421,6 +457,9 @@ const filterProjects = (category: string) => {
   border: 2px solid rgba(144, 238, 144, 0.3);
   display: flex;
   flex-direction: column;
+  min-width: 320px;
+  max-width: 380px;
+  flex-shrink: 0;
 }
 
 .project-card::before {
@@ -613,23 +652,28 @@ const filterProjects = (category: string) => {
   }
 
   .filter-container {
-    gap: 0.75rem;
-    margin-bottom: 2rem;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
   }
 
   .filter-btn {
-    padding: 0.6rem 1.2rem;
-    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .projects-scroll-container {
+    margin: 0 -0.5rem;
   }
 
   .projects-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1rem;
-    margin: 0 1rem;
+    padding: 0 0.5rem;
   }
 
   .project-card {
     padding: 1rem;
+    min-width: 280px;
+    max-width: 320px;
   }
 
   .project-title {
@@ -649,24 +693,5 @@ const filterProjects = (category: string) => {
   }
 }
 
-@media (min-width: 1200px) {
-  .projects-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.25rem;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1199px) {
-  .projects-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
-  }
-}
-
-@media (min-width: 1400px) {
-  .projects-grid {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 1rem;
-  }
-}
+/* Horizontal scrolling handles responsive behavior automatically */
 </style>
