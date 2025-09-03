@@ -7,129 +7,84 @@
       </p>
       
       <div class="contact-content">
-        <div class="contact-info">
-          <div class="contact-card glass-card">
-            <h3>Let's Connect</h3>
-            <p>
-              I'm always excited to work on new challenges and collaborate with 
-              talented teams. Whether you have a project in mind or just want to 
-              say hello, feel free to reach out!
-            </p>
-            
-            <div class="contact-methods">
-              <a 
-                href="https://github.com/leon-99" 
-                class="contact-method"
-                target="_blank"
-                rel="noopener"
-              >
-                <div class="method-icon">
-                  <span>💻</span>
-                </div>
-                <div class="method-info">
-                  <h4>GitHub</h4>
-                  <p>Check out my repositories</p>
-                </div>
-              </a>
-              
-              <a 
-                href="https://linkedin.com/in/win-khant-aung-ba1271181" 
-                class="contact-method"
-                target="_blank"
-                rel="noopener"
-              >
-                <div class="method-icon">
-                  <span>🔗</span>
-                </div>
-                <div class="method-info">
-                  <h4>LinkedIn</h4>
-                  <p>Let's connect professionally</p>
-                </div>
-              </a>
-              
-              <a 
-                href="mailto:contact.winkhantaung@gmail.com" 
-                class="contact-method"
-              >
-                <div class="method-icon">
-                  <span>📧</span>
-                </div>
-                <div class="method-info">
-                  <h4>Email</h4>
-                  <p>Drop me a message</p>
-                </div>
-              </a>
-            </div>
-            
-            <div class="availability">
-              <div class="availability-status">
-                <div class="status-indicator available"></div>
-                <span>Available for new opportunities</span>
-              </div>
-              <p class="availability-note">
-                Currently based in Dubai, UAE and open to remote work opportunities worldwide.
-              </p>
-            </div>
-          </div>
+        <!-- Introduction Section -->
+        <div class="contact-intro">
+          <p class="intro-text">
+            I'm always excited to work on new challenges and collaborate with 
+            talented teams. Whether you have a project in mind or just want to 
+            say hello, feel free to reach out!
+          </p>
         </div>
-        
-        <div class="contact-form">
-          <form @submit.prevent="handleSubmit" class="form glass-card">
-            <h3>Send a Message</h3>
-            
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input 
-                type="text" 
-                id="name" 
-                v-model="form.name"
-                required
-                placeholder="Your name"
-              >
+
+        <!-- Contact Methods Grid -->
+        <div class="contact-methods-grid">
+          <a 
+            href="https://github.com/leon-99" 
+            class="contact-method github"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="method-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
             </div>
-            
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input 
-                type="email" 
-                id="email" 
-                v-model="form.email"
-                required
-                placeholder="your.email@example.com"
-              >
+            <div class="method-content">
+              <h4>GitHub</h4>
+              <p>Explore my code repositories and projects</p>
+              <span class="method-url">github.com/leon-99</span>
             </div>
-            
-            <div class="form-group">
-              <label for="subject">Subject</label>
-              <input 
-                type="text" 
-                id="subject" 
-                v-model="form.subject"
-                required
-                placeholder="Project inquiry / Collaboration"
-              >
+
+          </a>
+          
+          <a 
+            href="https://linkedin.com/in/win-khant-aung-ba1271181" 
+            class="contact-method linkedin"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="method-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
             </div>
-            
-            <div class="form-group">
-              <label for="message">Message</label>
-              <textarea 
-                id="message" 
-                v-model="form.message"
-                required
-                rows="6"
-                placeholder="Tell me about your project or idea..."
-              ></textarea>
+            <div class="method-content">
+              <h4>LinkedIn</h4>
+              <p>Connect with me professionally</p>
+              <span class="method-url">linkedin.com/in/win-khant-aung</span>
             </div>
-            
-            <button type="submit" class="btn-submit" :disabled="isSubmitting">
-              <span v-if="!isSubmitting">Send Message</span>
-              <span v-else>Sending...</span>
-            </button>
-            
-            <p v-if="submitStatus" class="submit-status" :class="submitStatus.type">
-              {{ submitStatus.message }}
+
+          </a>
+          
+          <a 
+            href="mailto:contact.winkhantaung@gmail.com" 
+            class="contact-method email"
+          >
+            <div class="method-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </div>
+            <div class="method-content">
+              <h4>Email</h4>
+              <p>Send me a direct message</p>
+              <span class="method-url">contact.winkhantaung@gmail.com</span>
+            </div>
+
+          </a>
+        </div>
+
+        <!-- Availability Status -->
+        <div class="availability-section">
+          <div class="availability-card glass-card">
+            <div class="availability-status">
+              <div class="status-indicator available"></div>
+              <span>Available for new opportunities</span>
+            </div>
+            <p class="availability-note">
+              Currently based in Dubai, UAE and open to remote work opportunities worldwide.
             </p>
-          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -137,59 +92,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, nextTick } from 'vue'
+import { onMounted, nextTick } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const form = reactive({
-  name: '',
-  email: '',
-  subject: '',
-  message: ''
-})
 
-const isSubmitting = ref(false)
-const submitStatus = ref<{ type: 'success' | 'error', message: string } | null>(null)
-
-const handleSubmit = async () => {
-  isSubmitting.value = true
-  submitStatus.value = null
-  
-  try {
-    // Simulate form submission (replace with actual API call)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // Create mailto link as fallback
-    const subject = encodeURIComponent(form.subject)
-    const body = encodeURIComponent(
-      `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
-    )
-    const mailtoLink = `mailto:contact.winkhantaung@gmail.com?subject=${subject}&body=${body}`
-    
-    // Open email client
-    window.location.href = mailtoLink
-    
-    submitStatus.value = {
-      type: 'success',
-      message: 'Your email client should open now. Thank you for reaching out!'
-    }
-    
-    // Reset form
-    Object.keys(form).forEach(key => {
-      form[key as keyof typeof form] = ''
-    })
-    
-  } catch (error) {
-    submitStatus.value = {
-      type: 'error',
-      message: 'Something went wrong. Please try again or contact me directly via email.'
-    }
-  } finally {
-    isSubmitting.value = false
-  }
-}
 
 onMounted(async () => {
   await nextTick()
@@ -229,69 +138,50 @@ onMounted(async () => {
     delay: 0.3
   })
   
-  // Contact info animation
-  gsap.fromTo('.contact-card', {
+  // Contact intro animation
+  gsap.fromTo('.contact-intro', {
     opacity: 0,
-    x: -100,
-    rotationY: -15,
-    scale: 0.8
+    y: 50,
+    scale: 0.9
   }, {
     opacity: 1,
-    x: 0,
-    rotationY: 0,
+    y: 0,
     scale: 1,
-    duration: 1.2,
+    duration: 1,
     ease: 'back.out(1.7)',
     scrollTrigger: {
-      trigger: '.contact-content',
+      trigger: '.contact-intro',
       start: 'top 85%',
       end: 'bottom 15%',
       toggleActions: 'play none none reverse'
     }
   })
   
-  // Form animation
-  gsap.fromTo('.form', {
-    opacity: 0,
-    x: 100,
-    rotationY: 15,
-    scale: 0.8
-  }, {
-    opacity: 1,
-    x: 0,
-    rotationY: 0,
-    scale: 1,
-    duration: 1.2,
-    ease: 'back.out(1.7)',
-    scrollTrigger: {
-      trigger: '.contact-content',
-      start: 'top 85%',
-      end: 'bottom 15%',
-      toggleActions: 'play none none reverse'
-    }
-  })
+
   
   // Contact methods animation
   gsap.fromTo('.contact-method', {
     opacity: 0,
-    x: -50,
+    y: 50,
     scale: 0.8
   }, {
     opacity: 1,
-    x: 0,
+    y: 0,
     scale: 1,
     duration: 0.8,
     stagger: 0.2,
     ease: 'back.out(1.7)',
     scrollTrigger: {
-      trigger: '.contact-methods',
+      trigger: '.contact-methods-grid',
       start: 'top 90%',
       toggleActions: 'play none none reverse'
     }
   })
   
-  // Form fields animation
-  gsap.fromTo('.form-group', {
+
+  
+  // Availability status animation
+  gsap.fromTo('.availability-card', {
     opacity: 0,
     y: 30,
     scale: 0.9
@@ -299,101 +189,18 @@ onMounted(async () => {
     opacity: 1,
     y: 0,
     scale: 1,
-    duration: 0.6,
-    stagger: 0.1,
-    ease: 'back.out(1.7)',
-    scrollTrigger: {
-      trigger: '.form',
-      start: 'top 85%',
-      toggleActions: 'play none none reverse'
-    }
-  })
-  
-  // Availability status animation
-  gsap.fromTo('.availability', {
-    opacity: 0,
-    y: 20,
-    scale: 0.9
-  }, {
-    opacity: 1,
-    y: 0,
-    scale: 1,
     duration: 0.8,
     ease: 'back.out(1.7)',
     scrollTrigger: {
-      trigger: '.availability',
-      start: 'top 95%',
+      trigger: '.availability-section',
+      start: 'top 90%',
       toggleActions: 'play none none reverse'
     }
   })
   
 
   
-  // Interactive form field effects
-  const formInputs = document.querySelectorAll('.form-group input, .form-group textarea')
-  formInputs.forEach(input => {
-    input.addEventListener('focus', () => {
-      gsap.to(input.closest('.form-group'), {
-        scale: 1.02,
-        duration: 0.3,
-        ease: 'power2.out'
-      })
-      
-      gsap.to(input, {
-        borderColor: '#32CD32',
-        boxShadow: '0 0 20px rgba(50, 205, 50, 0.3)',
-        duration: 0.3,
-        ease: 'power2.out'
-      })
-    })
-    
-    input.addEventListener('blur', () => {
-      gsap.to(input.closest('.form-group'), {
-        scale: 1,
-        duration: 0.3,
-        ease: 'power2.out'
-      })
-      
-      gsap.to(input, {
-        borderColor: 'rgba(34, 139, 34, 0.3)',
-        boxShadow: 'none',
-        duration: 0.3,
-        ease: 'power2.out'
-      })
-    })
-  })
-  
-  // Submit button animation
-  const submitBtn = document.querySelector('.btn-submit')
-  if (submitBtn) {
-    submitBtn.addEventListener('mouseenter', () => {
-      gsap.to(submitBtn, {
-        scale: 1.05,
-        boxShadow: '0 10px 25px rgba(34, 139, 34, 0.4)',
-        duration: 0.3,
-        ease: 'back.out(1.7)'
-      })
-    })
-    
-    submitBtn.addEventListener('mouseleave', () => {
-      gsap.to(submitBtn, {
-        scale: 1,
-        boxShadow: '0 8px 20px rgba(34, 139, 34, 0.3)',
-        duration: 0.3,
-        ease: 'back.out(1.7)'
-      })
-    })
-    
-    submitBtn.addEventListener('click', () => {
-      gsap.to(submitBtn, {
-        scale: 0.95,
-        duration: 0.1,
-        ease: 'power2.out',
-        yoyo: true,
-        repeat: 1
-      })
-    })
-  }
+
   
   // Contact method hover effects
   const contactMethods = document.querySelectorAll('.contact-method')
@@ -401,15 +208,15 @@ onMounted(async () => {
     method.addEventListener('mouseenter', () => {
       gsap.to(method, {
         scale: 1.05,
-        x: 10,
+        y: -5,
         duration: 0.3,
         ease: 'back.out(1.7)'
       })
       
       const icon = method.querySelector('.method-icon')
       gsap.to(icon, {
-        scale: 1.2,
-        rotation: 10,
+        scale: 1.1,
+        rotation: 5,
         duration: 0.3,
         ease: 'back.out(1.7)'
       })
@@ -418,7 +225,7 @@ onMounted(async () => {
     method.addEventListener('mouseleave', () => {
       gsap.to(method, {
         scale: 1,
-        x: 0,
+        y: 0,
         duration: 0.3,
         ease: 'back.out(1.7)'
       })
@@ -444,38 +251,9 @@ onMounted(async () => {
   
 
   
-  // Floating animation for contact card
-  gsap.to('.contact-card', {
-    y: -5,
-    rotation: 0.5,
-    duration: 4,
-    ease: 'sine.inOut',
-    yoyo: true,
-    repeat: -1
-  })
+
   
-  // Form typing animation
-  const formLabels = document.querySelectorAll('.form-group label')
-  formLabels.forEach((label, index) => {
-    const text = label.textContent || ''
-    label.textContent = ''
-    
-    gsap.to(label, {
-      duration: text.length * 0.05,
-      ease: 'none',
-      onUpdate: function() {
-        const progress = this.progress()
-        const currentLength = Math.floor(progress * text.length)
-        label.textContent = text.slice(0, currentLength)
-      },
-      scrollTrigger: {
-        trigger: label.closest('.form-group'),
-        start: 'top 90%',
-        toggleActions: 'play none none reverse'
-      },
-      delay: index * 0.1
-    })
-  })
+
 })
 </script>
 
@@ -503,79 +281,143 @@ onMounted(async () => {
 }
 
 .contact-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  margin-bottom: 5rem;
-}
-
-.contact-card,
-.form {
-  padding: 2.5rem;
-}
-
-.contact-card h3,
-.form h3 {
-  color: #90EE90;
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-}
-
-.contact-card p {
-  color: rgba(232, 245, 232, 0.8);
-  line-height: 1.6;
-  margin-bottom: 2rem;
-}
-
-.contact-methods {
+  max-width: 1000px;
+  margin: 0 auto 5rem auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 3rem;
+}
+
+.contact-intro {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.intro-text {
+  color: rgba(232, 245, 232, 0.8);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.contact-methods-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
   margin-bottom: 2rem;
+}
+
+.availability-section {
+  display: flex;
+  justify-content: center;
+}
+
+.availability-card {
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
 }
 
 .contact-method {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
+  text-align: center;
+  gap: 1.5rem;
+  padding: 2rem;
   background: rgba(34, 139, 34, 0.1);
-  border-radius: 12px;
+  border-radius: 20px;
   text-decoration: none;
   color: inherit;
   transition: all 0.3s ease;
   border: 1px solid rgba(34, 139, 34, 0.2);
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+}
+
+.contact-method::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(50, 205, 50, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.contact-method:hover::before {
+  left: 100%;
 }
 
 .contact-method:hover {
   background: rgba(34, 139, 34, 0.2);
-  transform: translateX(5px);
+  transform: translateY(-2px);
   border-color: rgba(34, 139, 34, 0.4);
+  box-shadow: 0 8px 25px rgba(34, 139, 34, 0.2);
 }
 
+
+
 .method-icon {
-  font-size: 1.5rem;
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(34, 139, 34, 0.2);
   border-radius: 50%;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
-.method-info h4 {
+.method-icon svg {
+  width: 32px;
+  height: 32px;
+  color: #90EE90;
+  transition: all 0.3s ease;
+}
+
+.contact-method:hover .method-icon {
+  background: rgba(50, 205, 50, 0.3);
+  transform: scale(1.1) rotate(5deg);
+}
+
+.contact-method:hover .method-icon svg {
+  color: #32CD32;
+}
+
+.method-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.method-content h4 {
   color: #90EE90;
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  margin: 0;
+  font-size: 1.2rem;
 }
 
-.method-info p {
+.method-content p {
   color: rgba(232, 245, 232, 0.7);
   font-size: 0.9rem;
   margin: 0;
+  text-align: center;
 }
+
+.method-url {
+  color: rgba(232, 245, 232, 0.5);
+  font-size: 0.8rem;
+  font-family: 'Courier New', monospace;
+  margin-top: 0.5rem;
+}
+
+
 
 .availability {
   padding: 1.5rem;
@@ -631,89 +473,7 @@ onMounted(async () => {
   margin: 0;
 }
 
-.form-group {
-  margin-bottom: 1.5rem;
-}
 
-.form-group label {
-  display: block;
-  color: #90EE90;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background: rgba(26, 47, 26, 0.3);
-  border: 1px solid rgba(34, 139, 34, 0.3);
-  border-radius: 8px;
-  color: #e8f5e8;
-  font-family: inherit;
-  transition: all 0.3s ease;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: #32CD32;
-  box-shadow: 0 0 10px rgba(50, 205, 50, 0.2);
-  background: rgba(26, 47, 26, 0.5);
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: rgba(232, 245, 232, 0.5);
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
-.btn-submit {
-  width: 100%;
-  padding: 1rem;
-  background: linear-gradient(135deg, #32CD32, #228B22);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-submit:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(34, 139, 34, 0.3);
-}
-
-.btn-submit:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.submit-status {
-  margin-top: 1rem;
-  padding: 0.75rem;
-  border-radius: 8px;
-  font-weight: 500;
-  text-align: center;
-}
-
-.submit-status.success {
-  background: rgba(50, 205, 50, 0.2);
-  color: #90EE90;
-  border: 1px solid rgba(50, 205, 50, 0.3);
-}
-
-.submit-status.error {
-  background: rgba(220, 38, 38, 0.2);
-  color: #fca5a5;
-  border: 1px solid rgba(220, 38, 38, 0.3);
-}
 
 .contact-footer {
   border-top: 1px solid rgba(34, 139, 34, 0.2);
@@ -795,23 +555,44 @@ onMounted(async () => {
   }
   
   .contact-content {
-    grid-template-columns: 1fr;
+    margin-bottom: 3rem;
     gap: 2rem;
   }
   
-  .contact-card,
-  .form {
-    padding: 2rem;
-  }
-  
-  .footer-content {
+  .contact-methods-grid {
     grid-template-columns: 1fr;
-    text-align: center;
-    gap: 2rem;
+    gap: 1.5rem;
   }
   
-  .footer-social {
-    justify-self: center;
+  .contact-method {
+    padding: 1.5rem;
+    min-height: 180px;
+  }
+  
+  .method-icon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .method-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .method-content h4 {
+    font-size: 1.1rem;
+  }
+  
+  .method-content p {
+    font-size: 0.85rem;
+  }
+  
+  .method-url {
+    font-size: 0.75rem;
+  }
+  
+  .availability-card {
+    padding: 1.5rem;
   }
 }
 </style>
